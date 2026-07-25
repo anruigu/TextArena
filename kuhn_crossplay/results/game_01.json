@@ -1,0 +1,636 @@
+{
+ "game_id": 1,
+ "env": "kuhn",
+ "players": 2,
+ "seed": 8,
+ "seat_models": [
+  "deepseek/deepseek-v4-pro",
+  "z-ai/glm-5.2"
+ ],
+ "rewards": {
+  "0": 0,
+  "1": 0
+ },
+ "winners": [
+  0,
+  1
+ ],
+ "winning_models": [
+  "deepseek-v4-pro",
+  "glm-5.2"
+ ],
+ "win_label": "P0(deepseek-v4-pro), P1(glm-5.2)",
+ "reason": "At the end of 20 rounds, both players had the same number of chips.",
+ "meta": {
+  "final_chips": {
+   "0": -1,
+   "1": -1
+  },
+  "rounds": 21
+ },
+ "n_steps": 50,
+ "timed_out": false,
+ "wall_seconds": 223.7,
+ "transcript": [
+  {
+   "step": 1,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 1",
+   "private": {
+    "card": 1
+   },
+   "obs": "[GAME] You are Player 1 in a 20 round game of Kuhn Poker.\nGame Rules:\n- Kuhn Poker uses a 3-card deck with J, Q, K (J lowest, K highest)\n- Each player antes 1 chip and receives 1 card each round (note that the cards are dealt without replacement, so you cannot have the same card as your opponent).\n- Game continues for 20 rounds\n- The player with the most chips after all rounds wins\n\nAction Rules:\n- '[check]': Pass without betting (only if no bet is on the table)\n- '[bet]': Add 1 chip to the pot (only if no bet is on the table)\n- '[call]': Match an opponent's bet by adding 1 chip to the pot\n- '[fold]': Surrender your hand and let your opponent win the pot\n\n[GAME] ### Starting round 1 out of 20 rounds. Your card is: 'Q'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Check]",
+   "reasoning": "I have a Q in Kuhn Poker. Let me think about the optimal strategy.\n\nIn Kuhn Poker, Player 1 (me) acts first. With Q, I'm in the middle. The opponent has either J or K (50/50).\n\nIf I check:\n- If opponent has J, they'll likely check behind, and I win with Q > J\n- If opponent has K, they might bet, and I'd have to decide whether to call\n\nIf I bet:\n- If opponent has J, they might fold (I win) or call (I win at showdown)\n- If opponent has K, they'll likely call or raise... wait, in Kuhn poker there's only one bet allowed, so they'd call and beat me\n\nWith Q, checking is generally the standard play. If opponent bets after I check, I can call since I beat a J bluff and lose to K. The pot odds make calling reasonable.\n\nLet me think about Nash equilibrium strategy for Kuhn Poker:\n- Player 1 should bet with K always, and sometimes bluff with J\n- Player 1 should check with Q\n- When checked to, Player 2 bets with K and sometimes with J\n\nSo with Q, the standard play is to check. If opponent bets, I should call since I beat their J bluffs and lose to K.\n\nI'll check."
+  },
+  {
+   "step": 2,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 1",
+   "private": {
+    "card": 2
+   },
+   "obs": "[GAME] You are Player 0 in a 20 round game of Kuhn Poker.\nGame Rules:\n- Kuhn Poker uses a 3-card deck with J, Q, K (J lowest, K highest)\n- Each player antes 1 chip and receives 1 card each round (note that the cards are dealt without replacement, so you cannot have the same card as your opponent).\n- Game continues for 20 rounds\n- The player with the most chips after all rounds wins\n\nAction Rules:\n- '[check]': Pass without betting (only if no bet is on the table)\n- '[bet]': Add 1 chip to the pot (only if no bet is on the table)\n- '[call]': Match an opponent's bet by adding 1 chip to the pot\n- '[fold]': Surrender your hand and let your opponent win the pot\n\n[GAME] ### Starting round 1 out of 20 rounds. Your card is: 'K'\n[GAME] ### Starting round 1 out of 20 rounds. Your card is: 'K'\n[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "We are playing Kuhn Poker. Player 0 has K, the highest card. Player 1 checked. Since we have the nuts, we should bet to get value. There's no reason to check back; we want to build the pot. So the correct action is [bet]."
+  },
+  {
+   "step": 3,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 1",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Call]",
+   "reasoning": "I have Q. Player 0 checked... wait, no. I checked first, then Player 0 bet. So Player 0 raised after my check.\n\nIn Kuhn Poker, Player 1 (me) acts first. I checked, and Player 0 bet. Now I need to decide whether to call or fold.\n\nWith Q, I beat J but lose to K. Player 0 bet after my check. They could be betting with K (value) or J (bluff). With Q, they wouldn't bet since checking is better (they can check behind and win, or call if I bet).\n\nThe Nash equilibrium for Kuhn Poker: Player 0 (second player) should bet with K always, and bluff with J some fraction of the time. Player 1 (me) should call with Q some fraction of the time and with K always.\n\nWith Q, calling is correct some of the time. Player 0's range is K (value) and J (bluff). If they bluff with J at the right frequency, calling with Q is break-even. But if they bluff more than equilibrium, calling is profitable.\n\nGiven this is round 1 and I have no read, calling with Q is reasonable - it's a mixed strategy spot but calling is a fine default, especially early when I want to establish an image.\n\nI'll call."
+  },
+  {
+   "step": 4,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 2",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 2 out of 20 rounds. Your card is: 'J'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "We are playing Kuhn Poker. We are Player 0. Round 2, we have a Jack. Our opponent's card is unknown, but from a deck of {J,Q,K} without replacement, so they have either Q or K. We have the worst possible card. We need to decide whether to check or bet. Since we are first to act (no prior action shown? Actually the prompt says: \"[GAME] Your available actions are: '[check]', '[bet]'\" so it's our turn first. In Kuhn Poker, the first player can either check or bet. With a Jack, typically we should sometimes bet as a bluff, but the optimal strategy involves mixing. However, since this is a 20-round game, we want to maximize chips. The game-theoretic optimal strategy for Kuhn Poker: as Player 1 (first to act? Actually in standard Kuhn, positions alternate? But here it seems we are always Player 0 and we act first? Let's check: Round 1: Player 1 checked first? Wait, round 1: \"[Player 1] [Check]\" then we bet. So in round 1, Player 1 acted first. So positions might alternate? The prompt says: \"You are Player 0 in a 20 round game.\" In round 1, Player 1 went first. In round 2, it says \"Your available actions are: '[check]', '[bet]'\" so now we are first to act. So positions alternate each round? Possibly. In Kuhn, the first player acts first. So now we are first to act with a J. Optimal play: With a J, we should mostly check, but sometimes bet as a bluff. However, to avoid being predictable, we can use a mixed strategy. But since this is a text-based game against an unknown opponent, we might try to exploit. In round 1, opponent checked first with a Q? Actually round 1: Player 1 checked, we bet with K, they called with Q. So Player 1 had Q and checked. That might indicate a passive player? Or just standard play: with Q, checking is often correct as first player. Now we have J, we are first to act. Standard GTO: With J, first to act, we should check most of the time, but bet occasionally. Since we want to win chips, and we only have 20 rounds, we might want to balance. But I think the safe play is to check with J, because betting is risky: if opponent has Q or K, they might call or raise? Actually in Kuhn, if we bet, opponent can only call or fold (since there's no raise? Wait, rules: \"Action Rules: - '[check]': Pass without betting (only if no bet is on the table) - '[bet]': Add 1 chip to the pot (only if no bet is on the table) - '[call]': Match an opponent's bet by adding 1 chip to the pot - '[fold]': Surrender your hand and let your opponent win the pot\" There is no raise option. So if we bet, opponent can only call or fold. With J, if we bet and opponent has Q, they might fold sometimes, but often call. If they have K, they definitely call. So betting with J is a pure bluff, hoping opponent folds. But since opponent knows we might bluff, they will call with Q sometimes. In GTO, the first player with J should bet with probability 1/3 (or something like that) and check with 2/3. But since we are just one round, we can decide. To maximize expected value, checking with J is slightly negative (we lose if opponent bets and we fold, or if we call? Actually if we check, opponent can then check or bet. If opponent checks, we go to showdown and we lose unless opponent also has J (impossible) so we lose to Q and K. If opponent bets, we can call or fold. With J, calling a bet is usually bad because we only beat a bluff. So we should usually fold. So checking with J often leads to losing the ante if opponent bets. But betting might steal the pot if opponent folds. However, against an unknown, it's safer to check and then fold if bet into. But we might want to mix it up. I'll go with a check this time, as it's the more common GTO play and we don't want to be too bluff-heavy early. So I'll check."
+  },
+  {
+   "step": 5,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 2",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 2 out of 20 rounds. Your card is: 'Q'\n[GAME] ### Starting round 2 out of 20 rounds. Your card is: 'Q'\n[Player 0] [check]\n[GAME] Player 0, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": "I have Q again. Player 0 checked first. They could have J or K. If they have K, they might be slow-playing. If they have J, they'd check. Let me think about the Nash equilibrium strategy here.\n\nIn Kuhn Poker, with Q, I should sometimes bet and sometimes check. But let me think about what's optimal. With Q, betting is a value bet against J but loses to K. Since Player 0 checked, they might have J (checking with weak card) or K (trapping).\n\nGiven that in round 1, Player 0 bet with K when I checked, they seem to bet with strong hands. Now they checked, which might suggest they have J. Let me bet to extract value."
+  },
+  {
+   "step": 6,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 2",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 0] [check]\n[GAME] Player 0, submitted move: '[check]'.\n[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[fold]",
+   "reasoning": "We are playing Kuhn Poker. We have a Jack (J), the lowest card. The opponent checked initially, we checked, then opponent bet. We must decide whether to call or fold. With a Jack, calling is generally losing because opponent would only bet with a Queen or King (or sometimes bluff with a Jack, but that's less likely). In Kuhn Poker equilibrium, with a Jack after a check-check-bet sequence, we should fold most of the time, but sometimes call as a bluff-catcher? Actually, standard Kuhn Poker strategy: as Player 1 (opponent) after we check, they should bet with a King (value) and sometimes bluff with a Jack, and check with a Queen. But here, opponent checked first (they were first to act? Wait, the sequence: Round 2, our card is J. The initial prompt says \"[GAME] Your available actions are: '[check]', '[bet]'\" meaning we are first to act? Let's check: In round 1, Player 1 checked first, then we bet. So Player 1 is first to act. In round 2, it says \"Your available actions are: '[check]', '[bet]'\", so we are first to act? That would mean we are Player 0 but acting first? Actually, in round 1, it said \"[Player 1] [Check]\" then we bet. So Player 1 acts first. In round 2, it says \"Your available actions are: '[check]', '[bet]'\", which implies we are acting first now. Maybe the roles alternate? In Kuhn Poker, typically the dealer alternates, but the prompt doesn't specify. However, the game says \"You are Player 0\" and in round 1, Player 1 checked first, so Player 1 was first to act. In round 2, we are given actions check/bet, so we are first to act. So we are first to act with a Jack. Standard strategy: with a Jack, we should sometimes check and sometimes bet (as a bluff). But we checked, and now opponent bet. Opponent's bet after we check: they could have a King (value) or a Queen (maybe? But standard strategy says they should check back with a Queen, bet with a King, and sometimes bluff with a Jack). So facing a bet, we have a Jack, we should fold because we are only beating a bluff (Jack), and the pot odds are 3 chips in the pot (1 ante each + opponent's bet of 1) and we need to call 1, so we need to win 25% of the time. With a Jack, we only beat a Jack, and opponent would likely only bet a Jack sometimes. In equilibrium, we should call with a Jack sometimes, but it's marginal. Given we are playing 20 rounds, we might want to play exploitatively. Since it's early, folding is safe. But let's think: if opponent is following equilibrium, they bet all Kings, check all Queens, and bet some Jacks. So when they bet, their range is {K, some J}. We have a J, so we block J. Their bet frequency with J is about 1/3 of the time (in equilibrium). So when they bet, it's mostly Kings. Folding is best. So I'll fold."
+  },
+  {
+   "step": 7,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 3",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[Player 0] [fold]\n[GAME] Player 0, submitted move: '[fold]'.\n[GAME] Player 0 has folded. Current scores: Player 0: '0'; Player 1: '0'\n[GAME] ### Starting round 3 out of 20 rounds. Your card is: 'J'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Check]",
+   "reasoning": "I have J, the lowest card. I should mostly check here and fold if bet into, but occasionally bluff. Early in the game, let me just check."
+  },
+  {
+   "step": 8,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 3",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 0] [fold]\n[GAME] Player 0, submitted move: '[fold]'.\n[GAME] Player 0 has folded. Current scores: Player 0: '0'; Player 1: '0'\n[GAME] ### Starting round 3 out of 20 rounds. Your card is: 'K'\n[GAME] ### Starting round 3 out of 20 rounds. Your card is: 'K'\n[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "We are playing Kuhn Poker heads-up. We have K, the strongest card. Opponent checked. We should bet for value. Opponent might call with Q or fold J, but we want to build the pot. So bet."
+  },
+  {
+   "step": 9,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 3",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Fold]",
+   "reasoning": "I have J, the worst card. Opponent bet after I checked. They could have K or Q. With J, I lose to both. I should fold."
+  },
+  {
+   "step": 10,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 4",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[Player 1] [Fold]\n[GAME] Player 1, submitted move: '[fold]'.\n[GAME] Player 1 has folded. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 4 out of 20 rounds. Your card is: 'J'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "We are Player 0, holding J. Player 1 acts first? Actually, the prompt says \"Your available actions are: '[check]', '[bet]'\" meaning it's our turn first. So we have J, which is the lowest card. Standard strategy: mostly check with J, sometimes bluff. Since it's early in the game, we can mix in some bluffs, but generally checking is safer. Let's check."
+  },
+  {
+   "step": 11,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 4",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 1] [Fold]\n[GAME] Player 1, submitted move: '[fold]'.\n[GAME] Player 1 has folded. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 4 out of 20 rounds. Your card is: 'K'\n[GAME] ### Starting round 4 out of 20 rounds. Your card is: 'K'\n[Player 0] [check]\n[GAME] Player 0, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": "With K, I should bet for value."
+  },
+  {
+   "step": 12,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 4",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 0] [check]\n[GAME] Player 0, submitted move: '[check]'.\n[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[fold]",
+   "reasoning": "We are playing Kuhn Poker. We have a J, the lowest card. Opponent bet after we checked. With a J, we should mostly fold to a bet, as we are only beating a bluff, and opponent's betting range typically includes Q and K. Calling with J is generally losing. Fold is correct."
+  },
+  {
+   "step": 13,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 5",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[Player 0] [fold]\n[GAME] Player 0, submitted move: '[fold]'.\n[GAME] Player 0 has folded. Current scores: Player 0: '0'; Player 1: '0'\n[GAME] ### Starting round 5 out of 20 rounds. Your card is: 'J'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Check]",
+   "reasoning": "With J, I should mostly check. Bluffing with J sometimes is part of a balanced strategy, but let me check here."
+  },
+  {
+   "step": 14,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 5",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 0] [fold]\n[GAME] Player 0, submitted move: '[fold]'.\n[GAME] Player 0 has folded. Current scores: Player 0: '0'; Player 1: '0'\n[GAME] ### Starting round 5 out of 20 rounds. Your card is: 'K'\n[GAME] ### Starting round 5 out of 20 rounds. Your card is: 'K'\n[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "We are playing Kuhn Poker. We have a King, the strongest card. Opponent checked. We should bet for value. Opponent might call with a Queen or fold a Jack. Betting is the best move."
+  },
+  {
+   "step": 15,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 5",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Fold]",
+   "reasoning": "With J, I'm facing a bet. J is the worst card. I should fold here - calling with J is generally not profitable in Kuhn poker unless I'm trying to catch bluffs at a certain frequency. But J loses to both Q and K, so folding is the right play."
+  },
+  {
+   "step": 16,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 6",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[Player 1] [Fold]\n[GAME] Player 1, submitted move: '[fold]'.\n[GAME] Player 1 has folded. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 6 out of 20 rounds. Your card is: 'J'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "We are playing Kuhn Poker. The opponent's behavior so far: when we have K, opponent checks, we bet, opponent sometimes calls (with Q) and sometimes folds. When we have J, we check, opponent bets, we fold. This is standard passive play. We need to consider if we should ever bluff with J or call with J. In Kuhn Poker equilibrium, player 0 (first to act) should bet with K always, check with Q sometimes, and bluff with J occasionally. But here we are not given Q yet. With J, checking is standard, and then folding to a bet is standard because opponent's betting range is strong (they bet with K and sometimes Q). Calling with J is losing because they have at least Q. So folding is correct. But to be unexploitable, we might need to call sometimes with J if opponent bluffs too much. However, opponent seems passive, only betting when we check, likely with strong hands. So folding J is fine. Continue same strategy."
+  },
+  {
+   "step": 17,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 6",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 1] [Fold]\n[GAME] Player 1, submitted move: '[fold]'.\n[GAME] Player 1 has folded. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 6 out of 20 rounds. Your card is: 'K'\n[GAME] ### Starting round 6 out of 20 rounds. Your card is: 'K'\n[Player 0] [check]\n[GAME] Player 0, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": "I have a K, the strongest card. Player 0 checked. I should bet for value."
+  },
+  {
+   "step": 18,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 6",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 0] [check]\n[GAME] Player 0, submitted move: '[check]'.\n[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[fold]",
+   "reasoning": "We are playing Kuhn Poker. We have a Jack (J), the lowest card. The opponent has bet after we checked. With a Jack, we should almost always fold because we are likely behind. The only exception might be if we suspect the opponent is bluffing frequently, but in the early rounds without much history, folding is the standard play. So we fold."
+  },
+  {
+   "step": 19,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 7",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[Player 0] [fold]\n[GAME] Player 0, submitted move: '[fold]'.\n[GAME] Player 0 has folded. Current scores: Player 0: '0'; Player 1: '0'\n[GAME] ### Starting round 7 out of 20 rounds. Your card is: 'J'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Check]",
+   "reasoning": "I have J, the worst card. Let me think about whether to bluff here. My opponent has been folding when I bet with K. Let me try bluffing with J to see if I can get them to fold. Sometimes bluffing with the worst card can be profitable if the opponent folds enough."
+  },
+  {
+   "step": 20,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 7",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 0] [fold]\n[GAME] Player 0, submitted move: '[fold]'.\n[GAME] Player 0 has folded. Current scores: Player 0: '0'; Player 1: '0'\n[GAME] ### Starting round 7 out of 20 rounds. Your card is: 'K'\n[GAME] ### Starting round 7 out of 20 rounds. Your card is: 'K'\n[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "We have K again, opponent checked. We should bet for value. Opponent has been folding when we bet with K, but calling with Q? Actually previous rounds: round 1 we bet K, opponent called with Q and lost. Round 3 we bet K, opponent folded. Round 5 we bet K, opponent folded. So opponent seems to be adjusting, maybe folding weaker hands. But with K, we always want to bet because we have the nuts. If we check, we only win if opponent has J or Q and checks behind, but we miss value from Q that might call. Since opponent checked, they likely have J or Q. With K, betting is correct. So I'll bet."
+  },
+  {
+   "step": 21,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 7",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Fold]",
+   "reasoning": "I have J, the lowest card. Opponent is betting. They could have Q or K. Either way, I lose. Fold is correct."
+  },
+  {
+   "step": 22,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 8",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[Player 1] [Fold]\n[GAME] Player 1, submitted move: '[fold]'.\n[GAME] Player 1 has folded. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 8 out of 20 rounds. Your card is: 'K'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "We are Player 0, we have a King. The game is heads-up Kuhn Poker. Our opponent has been playing a consistent strategy: when we have the King and they check, we bet and they fold. When we have a Jack, we check, they bet, and we fold. So far, they seem to be playing a passive/defensive style, maybe only calling or betting with strong hands. But we haven't seen them call our bet yet except in round 1 where they called with a Queen and lost. They might be adjusting.\n\nNow it's round 8, we have a King. The action starts with us? Wait, the prompt says: \"[GAME] ### Starting round 8 out of 20 rounds. Your card is: 'K'\" and then \"[GAME] Your available actions are: '[check]', '[bet]'\". That means we are first to act this round. In Kuhn Poker, usually the first player to act alternates? Actually, in standard Kuhn Poker, the first player acts first preflop? But here it seems the order might be alternating: in previous rounds, sometimes Player 1 acted first (checked), sometimes Player 0 acted first. Looking back: Round 1: Player 1 checked first. Round 2: Player 0 acted first? Actually round 2: \"Your available actions are: '[check]', '[bet]'\" so Player 0 first. Round 3: Player 1 first. Round 4: Player 0 first. Round 5: Player 1 first. Round 6: Player 0 first. Round 7: Player 1 first. So it alternates: odd rounds Player 1 first, even rounds Player 0 first. Round 8 is even, so we are first to act.\n\nWe have a King, the nuts. We should bet for value. If we check, they might check behind with a Jack or Queen, and we win only the ante. Betting could induce a call from a Queen or a fold from a Jack, but we want to extract value. So bet is correct.\n\nThus, our action: [bet]"
+  },
+  {
+   "step": 23,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 8",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 1] [Fold]\n[GAME] Player 1, submitted move: '[fold]'.\n[GAME] Player 1 has folded. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 8 out of 20 rounds. Your card is: 'J'\n[GAME] ### Starting round 8 out of 20 rounds. Your card is: 'J'\n[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Fold]",
+   "reasoning": "I have J and opponent bet. J is the worst card - I should fold."
+  },
+  {
+   "step": 24,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 9",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 1] [Fold]\n[GAME] Player 1, submitted move: '[fold]'.\n[GAME] Player 1 has folded. Current scores: Player 0: '2'; Player 1: '-2'\n[GAME] ### Starting round 9 out of 20 rounds. Your card is: 'K'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": "I have K, the strongest card. I should bet for value. Player 0 has been folding when I bet with K, so they might fold again. But I should still bet to extract value when they have Q and call, or when they have J and bluff-call. Let me bet."
+  },
+  {
+   "step": 25,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 9",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[Player 1] [Fold]\n[GAME] Player 1, submitted move: '[fold]'.\n[GAME] Player 1 has folded. Current scores: Player 0: '2'; Player 1: '-2'\n[GAME] ### Starting round 9 out of 20 rounds. Your card is: 'Q'\n[GAME] ### Starting round 9 out of 20 rounds. Your card is: 'Q'\n[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[fold]",
+   "reasoning": "We are playing Kuhn Poker. Player 1 bet first. We have a Q. In Kuhn Poker, the optimal strategy from the first player's perspective (we are second to act here) when facing a bet: we should call with Q some of the time? Actually, the standard game theory solution: As second player, when first player bets, we should call with K and Q? Wait, standard Kuhn Poker: There are two players, each ante 1. First player can check or bet. If check, second can check or bet. If bet, second can call or fold. The equilibrium: First player: bet all K, check all Q, and bet some J (bluff). Second player: if first checks, bet all K, check all Q, bet some J? Actually, let's recall the standard solution: For the first player (we are second here, but in this game, the first move alternates? Actually, in this round, Player 1 acted first and bet. So we are second to act facing a bet. Our card is Q. According to equilibrium, the second player facing a bet should call with K, fold with J, and call with Q with some probability? Actually, the standard solution: When first player bets, second player's calling range: always call with K, sometimes call with Q? Let's think: The pot is 2 chips after the bet (antes 1 each, bet 1). We need to call 1 to win 3? Actually, antes: each put 1, so pot is 2. First player bets 1, pot becomes 3. We need to call 1 to win 3. So we need 25% equity to call. With Q, against a betting range of {K, some J}, what is our equity? If first player bets all K and some J as bluffs, then with Q we beat J and lose to K. The optimal bluffing frequency for first player is to bet J with probability such that second player is indifferent between calling and folding with Q. That probability is 1/3 of J? Actually, the standard equilibrium: First player bets K always, checks Q always, and bets J with probability 1/3 (bluff). Then when first player bets, the distribution is: K: 1, J: 1/3 (since there is 1 J, but only bet 1/3 of the time). So total bets: 1 + 1/3 = 4/3? Actually, the probabilities: There are 3 cards. First player gets one. Conditional on first player betting, the chance it's K is (1/3) / (1/3 + (1/3)*(1/3))? Let's compute: First player bets with K always (1/3 of the time they have K), checks Q always, bets J with 1/3. So overall betting frequency = P(K) + P(J)*1/3 = 1/3 + (1/3)*(1/3) = 1/3 + 1/9 = 4/9. Given a bet, P(K|bet) = (1/3) / (4/9) = (1/3)*(9/4) = 3/4. P(J|bet) = (1/9) / (4/9) = 1/4. So when first player bets, they have K 75% and J 25%. With Q, we beat J and lose to K. So equity = 25%. The pot odds: we need to call 1 to win 3 (the pot after his bet is 3). So we need 1/(3+1) = 1/4 = 25% equity. So we are exactly indifferent. So optimal strategy is to call with Q with some probability. Usually, the equilibrium is to call with Q with probability 1/3? Actually, let's derive: Second player's strategy facing a bet: call with K always, fold J always, and call with Q with probability such that first player is indifferent to bluffing with J. If second player calls with Q with probability c, then when first player bluffs with J, they win when second folds (probability 1 - c if second has Q? Wait, need to consider all cards). Actually, the standard solution: Second player calls with K, folds J, and calls with Q with probability 1/3. That makes first player's bluff with J have EV=0. So the equilibrium is to call with Q 1/3 of the time. But in practice, we can just play exploitatively if the opponent is not playing optimally. However, we are told to \"play to win the most chips over all rounds\". We have observed previous rounds. Let's analyze opponent's tendencies.\n\nFrom rounds so far:\nRound 1: We had K, Player 1 checked, we bet, Player 1 called with Q. So Player 1 called a bet with Q. That is a deviation from equilibrium? In equilibrium, when first player checks and second bets, first player should call with Q? Actually, when first player checks and second bets, first player should call with Q and K? Standard: After first checks, second bets with K and some J. First then calls with K and Q? Let's recall: If first player checks, second can bet. First then faces a bet. The equilibrium: First player after checking and facing a bet should call with K and Q? Actually, the pot is 2 after check-check? Wait, sequence: First checks, second bets 1. Pot becomes 3. First needs to call 1 to win 3. With Q, equity against second's betting range? Second bets K always, checks Q always, bets J with 1/3. So similar: second's betting range is 3/4 K, 1/4 J. So Q has 25% equity, so indifferent. So optimal is to call with Q with some probability. In round 1, Player 1 called with Q. That's not necessarily a mistake; it could be part of a mixed strategy. But we don't know their exact mixing probability.\n\nRound 2: We had J, checked, Player 1 bet. We folded. That's standard: fold J to a bet.\n\nRound 3: We had K, Player 1 checked, we bet, Player 1 folded. So Player 1 checked then folded to a bet. That suggests they had J? Because with Q they might call sometimes, with K they would call or raise? Actually, after checking, facing a bet, they should call with K and Q (at least sometimes) and fold J. So folding likely indicates J.\n\nRound 4: We had J, checked, Player 1 bet, we folded.\n\nRound 5: We had K, Player 1 checked, we bet, Player 1 folded. Again, likely J.\n\nRound 6: We had J, checked, Player 1 bet, we folded.\n\nRound 7: We had K, Player 1 checked, we bet, Player 1 folded. Likely J.\n\nRound 8: We had K, we were first to act? Wait, round 8: \"Starting round 8 out of 20 rounds. Your card is: 'K'\". Then it shows \"Your available actions are: '[check]', '[bet]'\". So we were first to act in round 8. We bet, Player 1 folded. So when we were first with K, we bet, they folded. That suggests they had J or maybe Q? If they had Q, they might call sometimes. But they folded, so likely J.\n\nRound 9: We have Q, and Player 1 bet first. So they acted first. They bet. We need to decide fold or call.\n\nNow, what have we learned about Player 1? When they are first to act:\n- They checked with Q in round 1 (they had Q and checked).\n- They checked with something in rounds 3,5,7? Actually, in rounds 3,5,7 we were second to act after they checked. They checked, we bet, they folded. So they checked and folded. That means they had J? Because with Q they might call, with K they would likely bet or call? Actually, if they had K and were first, they should bet, not check. In equilibrium, first player bets K, checks Q, and checks J (sometimes bets J). So if they checked, they likely have Q or J. When we bet, they folded, so they likely had J. So in rounds 3,5,7 they had J and checked (which is standard for J, but sometimes they should bet J as bluff). They checked J all those times, never bet as first with J? So they seem to be playing a passive strategy with J: always check J. With Q they check (as in round 1). With K? We haven't seen them be first with K yet. In round 8, we were first with K. In round 9, they are first and bet. So this is the first time they bet as first player. So they could have K (value bet) or they could be bluffing with J. Given they haven't bluffed with J before (they always checked J when first), it's possible they are only betting with K here. But small sample size. In round 1 they had Q and checked. So their pattern: first with Q -> check; first with J -> check; first with K -> ? Probably bet. So this bet likely indicates K. But we can't be sure. Also, they called with Q in round 1 when we bet after they checked. So they are willing to call with Q. But here they are betting, so they are the aggressor.\n\nGiven our card is Q, and they bet, we are in a tough spot. If they have K, we lose. If they have J, we win. What is the probability? If they are playing equilibrium, they bet K always and J with 1/3. But from history, they have never bet with J as first player (they checked J three times: rounds 3,5,7? Actually, in rounds 3,5,7 we were second, they checked, we bet, they folded. They had J? We don't know their cards for sure, but likely J. In round 1 they had Q and checked. So they haven't bet as first with J yet. So maybe they are not bluffing with J. If they only bet K, then we should fold. If they are capable of bluffing, we might consider calling. But we have 20 rounds, we want to maximize chips. We are currently up 2 chips. We can afford to fold and lose 1 chip (the ante) rather than risk 2 chips. But calling and winning would gain 2 chips (net +2 from this round). Folding loses 1 chip (ante). So the decision is: fold and lose 1, or call and either win 2 or lose 2. If we assume they only bet K, then calling always loses 2, so folding is better. If they bluff sometimes, we need to estimate the frequency.\n\nGiven their passive play, I lean towards them having K here. So I'll fold. But wait, the instruction: \"play to win the most chips over all rounds -- value-bet strong cards, bluff or check-call weak ones when the spot is right, fold when beaten.\" With Q facing a bet, it's a marginal spot. Against an unknown, the equilibrium is to call sometimes. But exploiting their tendency to not bluff, we should fold. Let's check the history again: In round 1, they checked with Q. In round 2, they bet after we checked? Actually, round 2: we had J, we checked, they bet. We folded. They might have had K or J? They bet after we checked. That was as second player. When we check, they can bet with K or bluff with J. They bet, we folded. So they might have had K or J there. In round 4: we checked J, they bet, we folded. Round 6: same. So as second player, they bet when we check. That could be with K or J. So they are willing to bet as second player when we show weakness. But as first player, they have only bet in this round 9. So they might be more aggressive as second player. But as first player, they've been passive. So this first-player bet is suspicious. I think folding is safer.\n\nBut let's think about the metagame. We are up 2 chips. We can afford to make a disciplined fold. I'll fold."
+  },
+  {
+   "step": 26,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 10",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 0] [fold]\n[GAME] Player 0, submitted move: '[fold]'.\n[GAME] Player 0 has folded. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 10 out of 20 rounds. Your card is: 'K'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "We are Player 0 with K, acting first. We should bet with K."
+  },
+  {
+   "step": 27,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 10",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[Player 0] [fold]\n[GAME] Player 0, submitted move: '[fold]'.\n[GAME] Player 0 has folded. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 10 out of 20 rounds. Your card is: 'J'\n[GAME] ### Starting round 10 out of 20 rounds. Your card is: 'J'\n[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Fold]",
+   "reasoning": "With J, I'm behind both Q and K. Calling with J is generally bad - I lose to everything. But I'm down 2 chips and it's round 10 of 20. Sometimes bluffing with a call can be profitable if opponent is bluffing with... no, J is the worst card. I should fold."
+  },
+  {
+   "step": 28,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 11",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 1] [Fold]\n[GAME] Player 1, submitted move: '[fold]'.\n[GAME] Player 1 has folded. Current scores: Player 0: '2'; Player 1: '-2'\n[GAME] ### Starting round 11 out of 20 rounds. Your card is: 'Q'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": "I have Q. I'm down 2 chips. Need to start being more aggressive. With Q, I should sometimes bet to balance my range. Let me bet here to potentially get folds from J or win value."
+  },
+  {
+   "step": 29,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 11",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[Player 1] [Fold]\n[GAME] Player 1, submitted move: '[fold]'.\n[GAME] Player 1 has folded. Current scores: Player 0: '2'; Player 1: '-2'\n[GAME] ### Starting round 11 out of 20 rounds. Your card is: 'K'\n[GAME] ### Starting round 11 out of 20 rounds. Your card is: 'K'\n[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[call]",
+   "reasoning": "We hold the King, the absolute nuts. The opponent has bet into us. We can only call (there is no raise option in Kuhn). Folding is out of the question. We call and win the pot."
+  },
+  {
+   "step": 30,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 12",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 0] [call]\n[GAME] Player 0, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '3'; Player 1: '-3'\n[GAME] ### Starting round 12 out of 20 rounds. Your card is: 'J'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "We are in round 12, card is J. Player 1 has been folding to our bets with K, and betting into us when we check with J (and we folded). But we also saw Player 1 bet with Q in round 11 and we called with K and won. So Player 1 is betting with Q sometimes. With J, we should check, and if he bets, we should fold because J is the worst card, and he is likely betting with Q or K. However, we might consider calling occasionally to avoid being exploited, but standard Kuhn strategy says to fold J to a bet. So [check] first. If he checks, we see showdown and likely lose unless he has J (impossible, cards without replacement, but we have J so he can't have J). So we check, and if he bets, fold."
+  },
+  {
+   "step": 31,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 12",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[Player 0] [call]\n[GAME] Player 0, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '3'; Player 1: '-3'\n[GAME] ### Starting round 12 out of 20 rounds. Your card is: 'K'\n[GAME] ### Starting round 12 out of 20 rounds. Your card is: 'K'\n[Player 0] [check]\n[GAME] Player 0, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": "I have K, the strongest card. Player 0 checked. I should bet for value. They might call or fold. Either way I win with K."
+  },
+  {
+   "step": 32,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 12",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 0] [check]\n[GAME] Player 0, submitted move: '[check]'.\n[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[fold]",
+   "reasoning": "We are on round 12, Player 0 has J, the lowest card. Player 1 checked initially, then Player 0 checked, and now Player 1 bet. With a J, calling is generally unprofitable because we only beat a bluff. In Kuhn poker, the optimal strategy is to never call with a J when facing a bet, because the opponent's betting range is polarized to strong hands (K, sometimes Q) and bluffs (sometimes J). But given the opponent's behavior so far, they have been mostly passive with checks and then betting only when we check? Actually, in this round, we acted first? Wait, the game says \"Your available actions are: '[check]', '[bet]'\" initially, meaning we are first to act. We checked, then Player 1 bet. So we are facing a bet from Player 1 after we checked. With J, we should fold. Our previous pattern: with J we always check then fold to a bet. With K we bet or call. With Q we folded when facing a bet. That seems reasonable. So here, fold.\n\nResponse: [fold]"
+  },
+  {
+   "step": 33,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 13",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[Player 0] [fold]\n[GAME] Player 0, submitted move: '[fold]'.\n[GAME] Player 0 has folded. Current scores: Player 0: '2'; Player 1: '-2'\n[GAME] ### Starting round 13 out of 20 rounds. Your card is: 'K'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": "I have a K, which is the strongest card. I should bet for value. The opponent has been folding to my bets when I have K, so betting is still the right move. I want to maximize value when they do call."
+  },
+  {
+   "step": 34,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 13",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 0] [fold]\n[GAME] Player 0, submitted move: '[fold]'.\n[GAME] Player 0 has folded. Current scores: Player 0: '2'; Player 1: '-2'\n[GAME] ### Starting round 13 out of 20 rounds. Your card is: 'Q'\n[GAME] ### Starting round 13 out of 20 rounds. Your card is: 'Q'\n[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[call]",
+   "reasoning": "We are at round 13, scores: Player 0: 2, Player 1: -2. My card is Q. Opponent bet first. In Kuhn poker, Q is a medium hand. Against a bet, calling with Q is often correct because opponent could be bluffing with J, and we beat bluffs. But we also lose to K. Given the opponent's history, they have been betting with some frequency. We need to consider optimal play. Typically, with Q, when facing a bet, we should call sometimes and fold sometimes to remain balanced. But since we are ahead, we might want to minimize losses. However, in equilibrium, calling with Q is part of the strategy. But here, opponent bet first. If we call, we risk losing 1 more chip if they have K, but we win if they have J. Since we are up, maybe play safe? But we need to think long-term. The opponent seems to be betting when they have initiative. In round 9, we had Q and folded to a bet; that was correct? Actually, with Q facing a bet, it's a marginal call. In standard Kuhn equilibrium, the first player should bet with K and sometimes with J (bluff), and check with Q. The second player should call with Q and K when facing a bet. So calling with Q is correct. But earlier I folded Q in round 9. That might have been a mistake. Now I have Q again. Should I call? Yes, to avoid being exploited. If I always fold Q, opponent can bluff me profitably. I'll call."
+  },
+  {
+   "step": 35,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 14",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 0] [call]\n[GAME] Player 0, submitted move: '[call]'.\n[GAME] Showdown: Player 1's K beats Player 0's Q. Player 1 wins pot of 2 chips. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 14 out of 20 rounds. Your card is: 'K'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "We are playing Kuhn Poker. We have a K, the best card. We act first. We should always bet with a K to build the pot. So [bet]."
+  },
+  {
+   "step": 36,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 14",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[Player 0] [call]\n[GAME] Player 0, submitted move: '[call]'.\n[GAME] Showdown: Player 1's K beats Player 0's Q. Player 1 wins pot of 2 chips. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 14 out of 20 rounds. Your card is: 'Q'\n[GAME] ### Starting round 14 out of 20 rounds. Your card is: 'Q'\n[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Call]",
+   "reasoning": "With Q, opponent bet. They could have K or J. In round 11 I bet Q and they called with K. They seem to call with K. When they bet, they could have K or be bluffing with J. Q beats J but loses to K. I should call sometimes but Q vs a bet is marginal. I'm down 2 chips with 7 rounds left. I need to take some risks. Let me call here - if they have J I win, if K I lose. They've been betting aggressively."
+  },
+  {
+   "step": 37,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 15",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '2'; Player 1: '-2'\n[GAME] ### Starting round 15 out of 20 rounds. Your card is: 'Q'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Check]",
+   "reasoning": "I have Q. Opponent has J or K (50/50 each). I'm down 2 chips with 6 rounds left. I need to be strategic.\n\nWith Q, if I bet and opponent has K, they'll call and I lose 2. If I bet and opponent has J, they might fold or call. Let me check instead to minimize losses, then if they bet I can fold since they tend to bet with K.\n\nActually, let me think about this more carefully. I'm down 2 with 6 rounds left. I need to win more. With Q, checking is safer - if they check behind, I win against J. If they bet, they likely have K and I fold.\n\nLet me check."
+  },
+  {
+   "step": 38,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 15",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '2'; Player 1: '-2'\n[GAME] ### Starting round 15 out of 20 rounds. Your card is: 'J'\n[GAME] ### Starting round 15 out of 20 rounds. Your card is: 'J'\n[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "We are in round 15, holding J. Player 1 checked. We can check or bet. J is the lowest card, so betting is generally a bluff. But if we check, we go to showdown and likely lose unless Player 1 also has J (which is impossible since cards are dealt without replacement, so if we have J, opponent cannot have J). So opponent has either Q or K. If we check, we lose the pot (opponent wins 1 chip from ante). If we bet, we might get a fold from a Q? But Player 1 checked, which often indicates weakness, but they could be trapping with K. In Kuhn poker, optimal strategy involves sometimes bluffing with J. However, from the history, Player 1 has been somewhat passive: they check with K sometimes? Actually, looking back: in rounds where we had K and they checked, they folded to our bet (rounds 3,5,7,8,10) or called with Q (round 1) or bet with K? In round 11, they bet with K? Wait, round 11: we had K, they bet, we called, they had Q? Actually, showdown: Player 0's K beats Player 1's Q. So Player 1 bet with Q. That's aggressive. In round 13, they bet with K. So they bet both Q and K sometimes. Here they checked, which could be a Q or K. If they have K, they might check to trap, but they've also bet K before. It's unclear. Standard GTO for Kuhn poker: as Player 0 with J facing a check, we should sometimes bet as a bluff. But we need to consider our overall strategy. Since we're ahead 2 to -2, we might want to play conservatively. However, the goal is to maximize chips over 20 rounds. Bluffing with J occasionally is part of equilibrium. But we've been very predictable: always bet K, check-fold J, and with Q we've been inconsistent (folded to bet once, called once). Player 1 might exploit that. To be less predictable, we could occasionally bluff with J. But the prompt says: \"play to win the most chips over all rounds -- value-bet strong cards, bluff or check-call weak ones when the spot is right, fold when beaten.\" With J, the spot might be right to bluff sometimes, especially since Player 1 checked, indicating potential weakness. However, if they have K, they'll call or raise? No, they can only call or fold after we bet. They can't raise because we are the first to act after their check? Actually, action: Player 1 checked, now it's our turn. We can check or bet. If we bet, they can fold or call. So if they have K, they'll call and we lose 2 chips (ante + our bet). If they have Q, they might fold sometimes. The pot is 2 chips (antes). A bet risks 1 to win 2. We need them to fold more than 1/3 of the time. Do they fold Q often? In previous rounds, when we bet after they checked, they folded all times (rounds 3,5,7,8,10). In those rounds, we had K, so they might have had Q or J. Since we had K, they couldn't have K, so they had Q or J. They folded. So they fold Q and J to a bet. That means if we bet, they will likely fold unless they have K. So if they have K, they call; if Q or J, they fold. Since we have J, they cannot have J, so they have either Q or K. There are 2 cards left: Q and K. They are equally likely? Not exactly, because we know our card is J, so opponent's card is either Q or K with 50% each (since deck has one Q and one K). If we bet, they fold Q (we win 2 chips) and call with K (we lose 1 chip from the bet, but actually we lose the pot: we put in 1 bet, they call, pot is 4, we lose because K beats J, so net -1 for that round? Let's calculate: current scores before round: we have 2, they have -2. If we check: we lose the ante pot (2 chips) to opponent, so we lose 1 chip net? Actually, each round starts with 1 chip ante each, pot 2. If we check-check, showdown: we lose, opponent wins pot of 2. So our chip change: we lose our ante (1 chip) and opponent gains 1 chip. So our score goes from 2 to 1, opponent from -2 to -1. If we bet and they fold: we win the pot of 2, so we gain 1 chip (since we only put in ante, but we also put in a bet? Wait, careful: The pot starts with 2 chips (1 from each). If we bet, we add 1, making pot 3. If they fold, we win the pot of 3? Actually, in Kuhn poker, if they fold, we win the pot before our bet? No: The pot after antes is 2. We bet 1, pot becomes 3. If they fold, we get the pot of 3, which includes our bet. So net gain: we invested 1 ante + 1 bet = 2, and we get back 3, so profit 1 chip. If we check and lose, we lose our ante: net -1. If we bet and they call and we lose: we invested 1 ante + 1 bet = 2, they invested 1 ante + 1 call = 2, pot 4, we lose, so we get 0, net -2. So outcomes:\n- Check: lose 1 chip (score -1)\n- Bet, they fold: win 1 chip (score +1)\n- Bet, they call: lose 2 chips (score -2)\n\nGiven they have Q or K with 50% each, and they fold Q (100% based on history) and call K (100%), expected value of betting: 0.5*(+1) + 0.5*(-2) = 0.5 - 1 = -0.5. Checking gives -1. So betting is better than checking (-0.5 > -1). So we should bet. But wait, is it certain they fold Q? History: they always folded to our bet after checking. But they might adjust. However, we have to assume they continue their pattern. Even if they call with Q sometimes, the EV might change. But given the history, betting is slightly better. Also, from a game theory perspective, with J, we should bluff sometimes to balance our value bets with K. Since we've been value betting K every time, we need to bluff with J occasionally to keep opponent indifferent. So I'll bet.\n\nBut the prompt says: \"bluff or check-call weak ones when the spot is right\". Here, the spot might be right for a bluff because opponent checked, showing weakness. So I'll bet."
+  },
+  {
+   "step": 39,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 15",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Call]",
+   "reasoning": "With Q, I'm facing a bet. Opponent could have K or J. They've been betting aggressively. With Q, calling is reasonable since they might bluff with J, but they could also have K. Given the score deficit (-2 vs 2), I need to be careful but also can't fold too much. Q is a middle card - calling is the standard play since opponent should bet K for value and sometimes bluff J. I should call."
+  },
+  {
+   "step": 40,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 16",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 1's Q beats Player 0's J. Player 1 wins pot of 2 chips. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 16 out of 20 rounds. Your card is: 'K'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "We are playing Kuhn Poker, heads-up. The deck has J, Q, K. Each player antes 1 chip, so the pot starts at 2 chips. We are Player 0. In round 16, our card is K, the highest card. We act first? The prompt says: \"Your available actions are: '[check]', '[bet]'\". That means we are first to act because if the opponent had acted first, we would have options like call or fold after a bet. So we are first to act with a K.\n\nOptimal strategy in Kuhn Poker: With the K, we should always bet if we are first to act, because it's the nuts and we want to build the pot. If we check, the opponent might check behind with a Q or J, and we miss value. So betting is correct.\n\nThus, we respond with [bet]."
+  },
+  {
+   "step": 41,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 16",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 1's Q beats Player 0's J. Player 1 wins pot of 2 chips. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 16 out of 20 rounds. Your card is: 'Q'\n[GAME] ### Starting round 16 out of 20 rounds. Your card is: 'Q'\n[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Call]",
+   "reasoning": "I have Q. Opponent bet. They could have K or J. If they have K, I lose. If they have J, I win. Since cards are dealt without replacement, opponent has either K or J. \n\nLooking at the pattern, opponent bets aggressively. When I have Q and they bet, they could have K or J. It's 50/50. But I'm down by 1 chip with 5 rounds left. I need to be strategic.\n\nActually, let me think about the odds. With Q, opponent has either K or J with equal probability. Calling costs 1 chip. If they have K, I lose 1. If they have J, I win 2 (the pot). So EV = 0.5*(-1) + 0.5*(+2) = +0.5. \n\nWait, let me recalculate. Pot is 2 (1 ante each + 1 bet from opponent = 3? No, each antes 1, pot is 2, opponent bets 1, so pot is 3. I need to call 1 to win 2 (opponent's ante + opponent's bet). EV = 0.5*(-1) + 0.5*(+2) = +0.5. \n\nCalling is +EV. Let me call."
+  },
+  {
+   "step": 42,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 17",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '2'; Player 1: '-2'\n[GAME] ### Starting round 17 out of 20 rounds. Your card is: 'Q'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Check]",
+   "reasoning": "I have Q. I'm down 2 chips with 4 rounds left. I need to be more strategic. With Q, I'm a slight favorite against J but lose to K. Let me check and see what happens, or bet to try to get value. Given the pattern, when I bet with Q, opponent called with K and I lost. When I check with Q, opponent bets and I've been calling - sometimes winning against J, sometimes losing to K.\n\nI'm down 2 with 4 rounds left. I need to try to win some chips. Let me bet here - if opponent has J they'll fold or I win at showdown, if they have K they'll call and I lose. But checking gives opponent control. Let me try betting to potentially get folds from J.\n\nActually, looking at the pattern - when I have Q and bet, opponent called with K. When I check and opponent bets, they could have K or J. I've been calling and it's been mixed. \n\nLet me just check here and if opponent bets, I'll call since they might have J."
+  },
+  {
+   "step": 43,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 17",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '2'; Player 1: '-2'\n[GAME] ### Starting round 17 out of 20 rounds. Your card is: 'J'\n[GAME] ### Starting round 17 out of 20 rounds. Your card is: 'J'\n[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "We have a Jack, the lowest card. The opponent checked, so we can check or bet. Bluffing with a Jack after a check can sometimes work, but it's risky. Given the opponent's tendencies, they might call with a Queen or better. Since we are ahead by 2 chips with 4 rounds left, we might want to play conservatively. Checking is safer. Let's check."
+  },
+  {
+   "step": 44,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 18",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 0] [check]\n[GAME] Player 0, submitted move: '[check]'.\n[GAME] Showdown: Player 1's Q beats Player 0's J. Player 1 wins pot of 2 chips. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 18 out of 20 rounds. Your card is: 'K'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "We are in round 18, leading by 1 chip. We have a K, the strongest card. We act first. Standard play with K is to bet for value. Opponent may call or fold, but we want to build the pot. Bet."
+  },
+  {
+   "step": 45,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 18",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[Player 0] [check]\n[GAME] Player 0, submitted move: '[check]'.\n[GAME] Showdown: Player 1's Q beats Player 0's J. Player 1 wins pot of 2 chips. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 18 out of 20 rounds. Your card is: 'Q'\n[GAME] ### Starting round 18 out of 20 rounds. Your card is: 'Q'\n[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Call]",
+   "reasoning": "With Q, opponent is betting. They could have K or J. I'm down 2 chips with 3 rounds left. Calling with Q is marginal - I beat J but lose to K. But I need to take some risks to catch up. The opponent has been betting aggressively. Let me call - if they have J I win, if K I lose. It's a coin flip roughly. But I'm behind and need to catch up. Let me call."
+  },
+  {
+   "step": 46,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 19",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '2'; Player 1: '-2'\n[GAME] ### Starting round 19 out of 20 rounds. Your card is: 'Q'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Check]",
+   "reasoning": "I have Q. Opponent has either J or K. I'm down 2 chips with 2 rounds left. I need to try to win this. Let me think about the optimal strategy.\n\nLooking at the pattern, when opponent bets first, they tend to have K (I've called with Q and lost to K multiple times). When I have Q and check, opponent sometimes bets (with K) and sometimes checks (with J).\n\nIf I bet with Q, opponent might fold if they have J, or call if they have K. If I check, opponent might check with J (I win) or bet with K (I lose either way).\n\nLet me bet here to try to get value from J (they fold) or potentially bluff. Actually, if I bet and they have J, they fold and I win 1 chip. If I check and they have J, they check and I win 1 chip. Same outcome vs J.\n\nIf they have K and I bet, they call and I lose 2 chips. If I check and they bet, I call and lose 2 chips, or I fold and lose 1 chip.\n\nActually, let me just check and if they bet, I should fold since they seem to bet with K. But I called every time and kept losing... Let me fold if they bet this time.\n\nActually wait - I need to maximize chips. I'm at -2 with 2 rounds left. Let me just check. If they bet, I'll fold (saving 1 chip vs calling and losing to K). If they check, I win with Q vs J."
+  },
+  {
+   "step": 47,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 19",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '2'; Player 1: '-2'\n[GAME] ### Starting round 19 out of 20 rounds. Your card is: 'J'\n[GAME] ### Starting round 19 out of 20 rounds. Your card is: 'J'\n[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "We are in round 19, card is J. Opponent checked. With a J, the standard play is usually to check behind, as bluffing with a J is sometimes done but typically against opponents who fold enough. Given the opponent's history, they have been calling with Q and folding with J? Not sure. But with J, checking is safer to avoid losing an extra bet. However, we are up 2 chips, so maybe just play safe. I'll check."
+  },
+  {
+   "step": 48,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 20",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 0] [check]\n[GAME] Player 0, submitted move: '[check]'.\n[GAME] Showdown: Player 1's Q beats Player 0's J. Player 1 wins pot of 2 chips. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 20 out of 20 rounds. Your card is: 'Q'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "We are in the final round (round 20) with card Q. Player 1 acts first? Wait, the game says \"Your available actions are: '[check]', '[bet]'\", meaning we are first to act this round. With Q, we should typically check, as Q is a medium-strength hand. Betting with Q is not standard in Kuhn poker equilibrium; we usually check-call with Q when acting first, or sometimes check and then call a bet. Since we are first, we check. Then if opponent bets, we call. So the correct move is [check]."
+  },
+  {
+   "step": 49,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 20",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[Player 0] [check]\n[GAME] Player 0, submitted move: '[check]'.\n[GAME] Showdown: Player 1's Q beats Player 0's J. Player 1 wins pot of 2 chips. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 20 out of 20 rounds. Your card is: 'J'\n[GAME] ### Starting round 20 out of 20 rounds. Your card is: 'J'\n[Player 0] [check]\n[GAME] Player 0, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": "I have J, the worst card. Player 0 checked. I can check or bet. If I check, showdown I lose unless opponent has... wait, J is the lowest card, so I lose at showdown for sure. If I bet, I'm bluffing - opponent might fold. But opponent has been calling/folding in various spots. They checked, which could mean they have Q or K (slowplaying) or J (but they can't have J since I have J). So opponent has Q or K. If I bet, they'll likely call with Q or K since they only lose to K which I can't have. So bluffing won't work here. I should just check and lose the ante.\n\nActually wait - I'm down 1 chip. If I check, I lose 1 chip (the ante), ending at -2. If I bet and they fold, I win 1 chip, ending at 0. If I bet and they call, I lose 2 chips, ending at -3.\n\nThe opponent has Q or K. With Q they might call (beating J, losing to K - but I can't have K since... wait, they don't know my card). They might fold Q thinking I have K. But looking at the pattern, when I bet with K they fold, and when I bet with Q they called once. They seem to fold to my bets sometimes.\n\nActually, I'm at -1 and opponent at +1. If I check, I lose ante, going to -2 and opponent to +2. If I bluff and they fold, I go to 0 and opponent to 0. If I bluff and they call, I go to -3 and opponent to +3.\n\nThe opponent checked - in Kuhn poker, checking can be with Q (not wanting to bet) or K (trapping). With Q they might fold to a bet since I could have K. Let me try bluffing.\n\nActually, looking at the history: when I bet with K, opponent folded twice and called once. When I bet with Q, opponent called. So opponent calls my bets fairly often. With J, bluffing is risky. But I have nothing to lose by trying since checking guarantees a loss.\n\nLet me bluff."
+  },
+  {
+   "step": 50,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "round 20",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 0] [check]\n[GAME] Player 0, submitted move: '[check]'.\n[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[fold]",
+   "reasoning": "We are in the final round, round 20. The scores are Player 0: 1, Player 1: -1. We have a Q. Player 1 bet after we checked. In Kuhn Poker, with a Q, it's typically a bluff-catcher. We need to consider the opponent's tendencies. Over the game, Player 1 has been somewhat passive but has bet when we checked with J and sometimes with Q. In round 13, we called with Q and lost to K. In round 20, if we fold, we still win the overall game because we have 1 chip lead. Folding guarantees victory. Calling risks losing 2 chips and the game if we lose, but if we win we increase our lead. However, since it's the last round and we are ahead, the optimal play is to fold to secure the win. There's no need to take unnecessary risks. So the action is to fold."
+  }
+ ]
+}

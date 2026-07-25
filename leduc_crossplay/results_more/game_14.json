@@ -1,0 +1,498 @@
+{
+ "game_id": 14,
+ "env": "leduc",
+ "players": 2,
+ "seed": 113,
+ "seat_models": [
+  "z-ai/glm-5.2",
+  "moonshotai/kimi-k3"
+ ],
+ "rewards": {
+  "0": -1,
+  "1": 1
+ },
+ "winners": [
+  1
+ ],
+ "winning_models": [
+  "kimi-k3"
+ ],
+ "win_label": "P1(kimi-k3)",
+ "reason": "Reached hand limit | stacks 123>77",
+ "meta": {
+  "final_bank": {
+   "0": 77,
+   "1": 123
+  },
+  "hands_dealt": 6
+ },
+ "n_steps": 29,
+ "timed_out": false,
+ "wall_seconds": 153.1,
+ "transcript": [
+  {
+   "step": 1,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand1/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 2,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[GAME] You are Player 1 in Leduc Hold'em.\nRespond with one action token like '[check]', '[bet]', '[call]', '[raise]', or '[fold]' when it is your turn.\nFixed bet sizes: 2 chips pre-flop, 4 chips post-flop (max 2 raises per round).\n[GAME] ### New hand - your private card: Q\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "Let me think about this Leduc Hold'em situation.\n\nI'm Player 1 with a Queen. Pre-flop, first to act. Valid actions: check or bet.\n\nIn Leduc Hold'em with a 6-card deck (JJQQKK), a Queen is a middle-strength card. Pre-flop hand values: King > Queen > Jack.\n\nAs the first player pre-flop, with a Queen, this is a decent but not premium hand. Standard strategy in Leduc: Kings bet/raise, Queens can bet or check, Jacks mostly check/fold or bluff.\n\nWith a Queen, betting pre-flop is reasonable - it's a value bet against Jacks and can build the pot. But checking also has merit to keep the pot small and see the flop.\n\nActually, in most Leduc strategies, betting with Queen pre-flop as P1 is standard. The Queen beats Jacks (1/3 of remaining cards roughly - well, there are 2 Jacks, 1 other Queen, 2 Kings among the 5 remaining cards). So my Queen beats 2 cards (JJ), ties 1 (Q), loses to 2 (KK). \n\nBetting pre-flop with Q is a reasonable value/semi-bluff play. Many equilibrium strategies bet Q pre-flop. Let me bet.\n\nActually, let me think more carefully. In Leduc, being first to act pre-flop, common strategy: bet with K, sometimes Q, check with J. Betting with Q puts pressure on J to fold, and K will raise anyway. Checking with Q allows J to check behind.\n\nI'll bet with the Queen - it's a solid middle hand and I want to charge Jacks and build value."
+  },
+  {
+   "step": 2,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand1/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 2,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[GAME] You are Player 0 in Leduc Hold'em.\nRespond with one action token like '[check]', '[bet]', '[call]', '[raise]', or '[fold]' when it is your turn.\nFixed bet sizes: 2 chips pre-flop, 4 chips post-flop (max 2 raises per round).\n[GAME] ### New hand - your private card: J\n[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[fold]",
+   "reasoning": "I have a J in Leduc Hold'em with a 6-card deck (JJQQKK). Player 1 bet 2 pre-flop.\n\nLet me think about this. In Leduc Hold'em, J is the lowest card. The deck is JJQQKK, so there are 2 of each card.\n\nPlayer 1 opened with a bet. They could have J, Q, or K. If they have Q or K, they're betting for value. If they have J, they might be bluffing or betting weakly.\n\nWith a J, I'm in a weak spot. If I call, I'll see the flop. If the flop is J, I have a pair which is strong. If the flop is Q or K, I have the lowest card with no pair.\n\nThe probability of hitting a J on the board is 1/5 (since one J is with me, one J is in the remaining 5 cards). So 20% chance I hit a pair.\n\nIf I don't hit, I'm likely behind. If I call 2 and miss, I'll probably face another bet and lose more.\n\nRaising with J is not great - I'd be inflating the pot with the worst card.\n\nFolding seems reasonable here. I'm facing a bet with the lowest card, and even if I call, I only hit a pair 20% of the time. When I miss, I'll likely face more aggression.\n\nBut in heads-up Leduc, calling with any card is sometimes done since the deck is small. Let me think about pot odds. I need to call 2 to win the pot (1 ante + 1 ante + 2 bet = 4). So I'm getting 2:1 or 33% equity needed.\n\nWith a J, my equity against a random hand:\n- Against K: I win only if board is J (1/5 chance) \u2248 20%\n- Against Q: I win only if board is J (1/5 chance) \u2248 20%\n- Against J: I win if board is J (we tie, both have pair J) or if board is Q/K (higher card... we both have J, so it's a tie). Actually if we both have J, we always tie unless the board pairs something. If board is J, we both have pair J (tie). If board is Q, we both have J high (tie). If board is K, we both have J high (tie). So against another J, it's always a tie \u2192 50% equity.\n\nPlayer 1 bet, so they might have a stronger range (Q or K more likely than J). Let's say roughly:\n- P(J) = 1/5 (one J left out of 5 cards)\n- P(Q) = 2/5\n- P(K) = 2/5\n\nMy equity:\n- vs J: 50%\n- vs Q: ~20%\n- vs K: ~20%\n\nAverage equity: 0.2 * 0.5 + 0.4 * 0.2 + 0.4 * 0.2 = 0.1 + 0.08 + 0.08 = 0.26 = 26%\n\nI need 33% equity to call. I'm short. Folding seems correct.\n\nActually, let me reconsider. The bet could be a standard open with any card in heads-up play. If Player 1 bets with all cards, then their range is uniform: 1/5 J, 2/5 Q, 2/5 K.\n\nEven so, my equity is ~26%, which is less than the 33% I need. Folding is the right play."
+  },
+  {
+   "step": 3,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand2/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 99; Player 1: 101\n\n[GAME] ### New hand - your private card: J\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "I have J again. Let me think about this.\n\nIn Leduc Hold'em with a 6-card deck (J J Q Q K K), having a J is the weakest private card. There are 5 remaining cards: J, Q, Q, K, K.\n\nIf I check, I see the flop for free. If I bet, I'm risking 2 chips with the weakest card.\n\nLet me think about the strategy. With J, I'm at a disadvantage. Checking to see the flop for free is reasonable. If the board comes J, I have a pair which is strong. If it comes Q or K, I have a weak high card.\n\nProbability of board being J: 1/5 = 20%\nProbability of board being Q: 2/5 = 40%\nProbability of board being K: 2/5 = 40%\n\nIf I hit a J on the board, I have a pair of Jacks, which beats any high card. But if the board is Q or K, I have J high which is weak.\n\nChecking is the better play here with the weakest card. Let me see the flop for free and then decide."
+  },
+  {
+   "step": 4,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand2/rd0",
+   "private": {
+    "card": 2,
+    "board_card": 1,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 99; Player 1: 101\n\n[GAME] ### New hand - your private card: K\n[Player 0] [check]\n[GAME] Player 0 checks.\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "We have a King, the strongest card. Player 0 checks to us. Bet for value."
+  },
+  {
+   "step": 5,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand2/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 0] [check]\n[GAME] Player 0 checks.\n[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": "I have J and opponent bets 2 after I check. J is a weak card in Leduc. Opponent could be betting with Q, K, or bluffing with J. I'm out of position. Let me just call and see the flop - if I hit a J on the board I have trips which is strong, and if not I can fold post-flop.\n\nActually, calling with J is reasonable since I get to see the flop and potentially hit a pair."
+  },
+  {
+   "step": 6,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand2/rd1",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 1,
+    "pot": 6,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [call]\n[GAME] Player 0 calls 2.\n[GAME] Flop card revealed: Q\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "I have J, board is Q. I don't have a pair. My opponent could have J, Q, or K. If they have Q they have a pair. If they have K they have high card K which beats my J. If they have J we tie with high card Q on board.\n\nI should check here since I have a weak hand (no pair, second-lowest card). If opponent bets, I can fold."
+  },
+  {
+   "step": 7,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand2/rd1",
+   "private": {
+    "card": 2,
+    "board_card": 1,
+    "round": 1,
+    "pot": 6,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[Player 0] [call]\n[GAME] Player 0 calls 2.\n[GAME] Flop card revealed: Q\n[Player 0] [check]\n[GAME] Player 0 checks.\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 8,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand2/rd1",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 1,
+    "pot": 10,
+    "current_bet": 4
+   },
+   "obs": "[Player 0] [check]\n[GAME] Player 0 checks.\n[Player 1] [bet]\n[GAME] Player 1 bets 4.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[fold]",
+   "reasoning": "I have J, board is Q. I don't have a pair. My opponent bet pre-flop and now bets post-flop. They could have a Q (pair), K (high card), or J. If they have a Q or K, I lose. If they have a J, we tie (both have J high, no pair). The opponent has been aggressive. I should fold here since I can only tie at best against a J, and lose to Q or K."
+  },
+  {
+   "step": 9,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand3/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 1,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 4.\n[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 96; Player 1: 104\n\n[GAME] ### New hand - your private card: Q\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 10,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand3/rd0",
+   "private": {
+    "card": 2,
+    "board_card": 1,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 96; Player 1: 104\n\n[GAME] ### New hand - your private card: K\n[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[raise]",
+   "reasoning": "I have a K, which is the highest card in Leduc. Player 1 bet 2 pre-flop. With a K, I should raise for value since it's the strongest private card."
+  },
+  {
+   "step": 11,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand3/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 1,
+    "round": 0,
+    "pot": 6,
+    "current_bet": 4
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[Player 0] [raise]\n[GAME] Player 0 raises 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": ""
+  },
+  {
+   "step": 12,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand3/rd1",
+   "private": {
+    "card": 1,
+    "board_card": 1,
+    "round": 1,
+    "pot": 10,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [call]\n[GAME] Player 1 calls 4.\n[GAME] Flop card revealed: Q\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "We have Q, flop Q \u2014 we have a pair of queens. We are first to act post-flop? Wait, Player 1... pre-flop Player 1 acted first (we bet, opponent raised, we called). Post-flop: \"Valid actions: [check], [bet]\" and no prior player 0 action shown, so we act first post-flop.\n\nWe have the nuts-ish: pair of queens. Board Q, our Q. Opponent raised pre-flop, likely has K or Q (Q would give them a pair too \u2014 but there are only 2 Qs; we hold one, board one, so opponent can't have Q... wait deck is JJQQKK, 6 cards. We hold Q, board Q, so both queens accounted for. Opponent holds J or K. So we have the winning hand unless... opponent with K has high card K but our pair beats high card. Pair beats high card. So we win at showdown guaranteed? Opponent could have K high, we have pair of Qs \u2014 pair wins. Yes we win for sure.\n\nMax value: bet, hope they raise or call. Bet 4. If they raise, raise again (max 2 raises per round \u2014 we can raise once after their raise). Let's bet."
+  },
+  {
+   "step": 13,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand3/rd1",
+   "private": {
+    "card": 2,
+    "board_card": 1,
+    "round": 1,
+    "pot": 14,
+    "current_bet": 4
+   },
+   "obs": "[Player 0] [raise]\n[GAME] Player 0 raises 2.\n[Player 1] [call]\n[GAME] Player 1 calls 4.\n[GAME] Flop card revealed: Q\n[Player 1] [bet]\n[GAME] Player 1 bets 4.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": "I have K, board is Q. My opponent bet pre-flop and called my raise, now bets post-flop on Q. \n\nWith K and Q on board, I have high card K. If opponent has Q, they have a pair and beat me. If opponent has K, we tie. If opponent has J, I win with K high.\n\nOpponent has been aggressive - betting pre-flop, calling my raise, now betting post-flop. They could have Q (pair) or K. The Q on board is concerning since they're betting into me. But they could also be bluffing with J or value-betting K.\n\nGiven that I raised pre-flop showing strength, and they called, then bet into me on the flop - this looks like they likely have Q or K. If they have Q, I lose. If they have K, we tie. If they have J, I win.\n\nI think calling is reasonable here - I have a decent hand (K high) and the pot is already large. Raising would be risky since I could be behind to a pair of Q's. Calling lets me see showdown cheaply.\n\nActually, let me think more carefully. They bet pre-flop (aggressive), I raised, they called. Now they bet 4 on Q flop. If they had Q, they'd definitely bet. If they had K, they might bet too. If they had J, they might bluff.\n\nI'll call - K high is decent enough and I want to see if I win at showdown."
+  },
+  {
+   "step": 14,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand4/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [call]\n[GAME] Player 0 calls 4.\n[GAME] Showdown - Player 1 wins. Current banks: Player 0: 89; Player 1: 111\n\n[GAME] ### New hand - your private card: Q\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "I have Q. Let me bet for value since Q is a strong card in Leduc."
+  },
+  {
+   "step": 15,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand4/rd0",
+   "private": {
+    "card": 2,
+    "board_card": 0,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 4.\n[Player 0] [call]\n[GAME] Player 0 calls 4.\n[GAME] Showdown - Player 1 wins. Current banks: Player 0: 89; Player 1: 111\n\n[GAME] ### New hand - your private card: K\n[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[raise]",
+   "reasoning": ""
+  },
+  {
+   "step": 16,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand4/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 0,
+    "pot": 6,
+    "current_bet": 4
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[Player 1] [raise]\n[GAME] Player 1 raises 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": "I have Q and opponent raised. They could have K or Q. Let me call and see the flop."
+  },
+  {
+   "step": 17,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand4/rd1",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 1,
+    "pot": 10,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [call]\n[GAME] Player 0 calls 4.\n[GAME] Flop card revealed: J\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "I have Q, board is J. I have a pair (Q high, no pair with board - wait, Q and J, no pair). Actually my card is Q and board is J, so I have Q high, no pair. The opponent raised pre-flop which suggests strength. But I have Q which is the middle card. Let me think - if opponent has K, they beat me. If opponent has Q, we tie/split. If opponent has J, they have a pair with the board and beat me.\n\nGiven opponent raised pre-flop, they likely have K or Q. If they have K, I lose. If they have Q, we split. I should probably check and see what they do."
+  },
+  {
+   "step": 18,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand4/rd1",
+   "private": {
+    "card": 2,
+    "board_card": 0,
+    "round": 1,
+    "pot": 10,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [raise]\n[GAME] Player 1 raises 2.\n[Player 0] [call]\n[GAME] Player 0 calls 4.\n[GAME] Flop card revealed: J\n[Player 0] [check]\n[GAME] Player 0 checks.\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 19,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand4/rd1",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 1,
+    "pot": 14,
+    "current_bet": 4
+   },
+   "obs": "[Player 0] [check]\n[GAME] Player 0 checks.\n[Player 1] [bet]\n[GAME] Player 1 bets 4.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[fold]",
+   "reasoning": "I have Q private card, J on board. I don't have a pair. My opponent bet pre-flop (raised my bet) and now bets post-flop. They could have K (high card) or Q (which would beat me since they'd have pair with board... wait, board is J, so Q doesn't pair with board). Actually with Q and board J, I have high card Q. If opponent has K, they beat me. If opponent has J, they have a pair and beat me. If opponent has Q, we tie.\n\nGiven opponent raised pre-flop and bets post-flop, they likely have K or Q. If they have K, I lose. If they have Q, we tie. I should probably fold here since I'm behind or tying at best, and calling costs 4.\n\nActually, let me think more carefully. The opponent raised my pre-flop bet, suggesting strength. Post-flop they bet again. With K they'd bet, with Q they might bet too. I'm either losing to K or tying with Q. Not great spots to call. I'll fold."
+  },
+  {
+   "step": 20,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand5/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 0,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 4.\n[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 82; Player 1: 118\n\n[GAME] ### New hand - your private card: J\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": ""
+  },
+  {
+   "step": 21,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand5/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 82; Player 1: 118\n\n[GAME] ### New hand - your private card: Q\n[Player 1] [check]\n[GAME] Player 1 checks.\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "I have Q and opponent checked. Let me bet for value."
+  },
+  {
+   "step": 22,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand5/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 0,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 1] [check]\n[GAME] Player 1 checks.\n[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": ""
+  },
+  {
+   "step": 23,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand5/rd1",
+   "private": {
+    "card": 0,
+    "board_card": 0,
+    "round": 1,
+    "pot": 6,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [call]\n[GAME] Player 1 calls 2.\n[GAME] Flop card revealed: J\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 24,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand5/rd1",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 1,
+    "pot": 10,
+    "current_bet": 4
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[Player 1] [call]\n[GAME] Player 1 calls 2.\n[GAME] Flop card revealed: J\n[Player 1] [bet]\n[GAME] Player 1 bets 4.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[fold]",
+   "reasoning": "I have Q and the flop is J. I have a high card Q, which beats J but doesn't pair with the board. Opponent bet into me post-flop. They could have a pair (J or Q on board pairing), or K high. Let me think about this.\n\nWith Q private and J board, I beat any J private card (they'd have a pair of J's though, which beats my high card Q). Actually wait - if opponent has J, they have a pair with the board (J,J), which beats my high card Q. If opponent has Q, they have a pair of Q's, which beats me. If opponent has K, they have K high which beats my Q high.\n\nSo actually, I only beat... nobody? If opponent has J, they have a pair. If opponent has Q, they have a pair. If opponent has K, they have K high which beats Q high.\n\nWait, that's not right. Let me reconsider. The deck is J J Q Q K K. I have one Q, board is J. Remaining cards: J, Q, K, K.\n\nIf opponent has J: pair of J's (beats my Q high)\nIf opponent has Q: pair of Q's (beats my Q high)  \nIf opponent has K: K high (beats my Q high)\n\nSo I lose to everything! I should fold.\n\nBut wait, I already bet pre-flop and they called. Now they're betting post-flop. I can't beat any hand. Fold."
+  },
+  {
+   "step": 25,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand6/rd0",
+   "private": {
+    "card": 2,
+    "board_card": 0,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 79; Player 1: 121\n\n[GAME] ### New hand - your private card: K\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "Let me think about this situation. I have a K, which is a strong card in Leduc Hold'em. The deck is J J Q Q K K.\n\nI've been losing quite a bit. Let me think about my strategy. I have K, which is the highest card. I should bet for value here.\n\nActually, let me reconsider. I've been folding a lot and losing chips. With K, I should be aggressive. Let me bet."
+  },
+  {
+   "step": 26,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand6/rd0",
+   "private": {
+    "card": 2,
+    "board_card": 0,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 4.\n[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 79; Player 1: 121\n\n[GAME] ### New hand - your private card: K\n[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[raise]",
+   "reasoning": ""
+  },
+  {
+   "step": 27,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand6/rd0",
+   "private": {
+    "card": 2,
+    "board_card": 0,
+    "round": 0,
+    "pot": 6,
+    "current_bet": 4
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[Player 1] [raise]\n[GAME] Player 1 raises 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": "I have K, opponent raises. K is the highest card. Let me think about this.\n\nWith K, I have the strongest non-paired hand pre-flop. Opponent raised after my bet. They could have K, Q, or J. If they have K, we split. If they have Q or J, I'm ahead.\n\nLet me call and see the flop. Raising again (3-betting) could be good but let me just call to keep pot manageable and see the flop."
+  },
+  {
+   "step": 28,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand6/rd1",
+   "private": {
+    "card": 2,
+    "board_card": 0,
+    "round": 1,
+    "pot": 10,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [call]\n[GAME] Player 0 calls 4.\n[GAME] Flop card revealed: J\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "I have K and the flop is J. I have a high card K which beats J. Let me bet for value here since K is likely the best hand - opponent could have J, Q, or K. Against J I'm ahead, against Q I'm ahead, against K I'm tied. Let me bet."
+  },
+  {
+   "step": 29,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand6/rd1",
+   "private": {
+    "card": 2,
+    "board_card": 0,
+    "round": 1,
+    "pot": 14,
+    "current_bet": 4
+   },
+   "obs": "[Player 1] [raise]\n[GAME] Player 1 raises 2.\n[Player 0] [call]\n[GAME] Player 0 calls 4.\n[GAME] Flop card revealed: J\n[Player 0] [bet]\n[GAME] Player 0 bets 4.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": ""
+  }
+ ]
+}

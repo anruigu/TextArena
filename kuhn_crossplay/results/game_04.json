@@ -1,0 +1,562 @@
+{
+ "game_id": 4,
+ "env": "kuhn",
+ "players": 2,
+ "seed": 11,
+ "seat_models": [
+  "moonshotai/kimi-k3",
+  "z-ai/glm-5.2"
+ ],
+ "rewards": {
+  "0": 1,
+  "1": -1
+ },
+ "winners": [
+  0
+ ],
+ "winning_models": [
+  "kimi-k3"
+ ],
+ "win_label": "P0(kimi-k3)",
+ "reason": "Player 0 won by having more chips at the end of all 20 rounds.",
+ "meta": {
+  "final_chips": {
+   "0": 1,
+   "1": -3
+  },
+  "rounds": 21
+ },
+ "n_steps": 44,
+ "timed_out": false,
+ "wall_seconds": 156.1,
+ "transcript": [
+  {
+   "step": 1,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 1",
+   "private": {
+    "card": 2
+   },
+   "obs": "[GAME] You are Player 1 in a 20 round game of Kuhn Poker.\nGame Rules:\n- Kuhn Poker uses a 3-card deck with J, Q, K (J lowest, K highest)\n- Each player antes 1 chip and receives 1 card each round (note that the cards are dealt without replacement, so you cannot have the same card as your opponent).\n- Game continues for 20 rounds\n- The player with the most chips after all rounds wins\n\nAction Rules:\n- '[check]': Pass without betting (only if no bet is on the table)\n- '[bet]': Add 1 chip to the pot (only if no bet is on the table)\n- '[call]': Match an opponent's bet by adding 1 chip to the pot\n- '[fold]': Surrender your hand and let your opponent win the pot\n\n[GAME] ### Starting round 1 out of 20 rounds. Your card is: 'K'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": "I have a King, the strongest card in Kuhn Poker. I should bet for value."
+  },
+  {
+   "step": 2,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 1",
+   "private": {
+    "card": 0
+   },
+   "obs": "[GAME] You are Player 0 in a 20 round game of Kuhn Poker.\nGame Rules:\n- Kuhn Poker uses a 3-card deck with J, Q, K (J lowest, K highest)\n- Each player antes 1 chip and receives 1 card each round (note that the cards are dealt without replacement, so you cannot have the same card as your opponent).\n- Game continues for 20 rounds\n- The player with the most chips after all rounds wins\n\nAction Rules:\n- '[check]': Pass without betting (only if no bet is on the table)\n- '[bet]': Add 1 chip to the pot (only if no bet is on the table)\n- '[call]': Match an opponent's bet by adding 1 chip to the pot\n- '[fold]': Surrender your hand and let your opponent win the pot\n\n[GAME] ### Starting round 1 out of 20 rounds. Your card is: 'J'\n[GAME] ### Starting round 1 out of 20 rounds. Your card is: 'J'\n[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Fold]",
+   "reasoning": "I have J, the worst card. Opponent bet. In Kuhn Poker, with J facing a bet, standard equilibrium play is to fold (J never calls a bet in equilibrium... actually in the standard equilibrium, the first player checks with J sometimes bets as bluff; when facing a bet with J, always fold since you can never win).\n\nWith J, I cannot beat anything. Opponent has Q or K. If they bet, calling loses an extra chip for sure (they have at least Q). Folding loses just ante. So fold.\n\nAnswer: [Fold]"
+  },
+  {
+   "step": 3,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 2",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 0] [Fold]\n[GAME] Player 0, submitted move: '[fold]'.\n[GAME] Player 0 has folded. Current scores: Player 0: '-1'; Player 1: '1'\n[GAME] ### Starting round 2 out of 20 rounds. Your card is: 'Q'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Check]",
+   "reasoning": "I have Q, and I'm first to act. With Q, I should check and then call a bet (check-call strategy), or bet. Standard Kuhn equilibrium: first player with Q checks, then calls a bet.\n\nLet me think: Player 0 (first to act) equilibrium strategy:\n- J: check with probability 2/3, bet 1/3 (bluff); if check and opponent bets, fold (actually with J, facing a bet after check, fold... in equilibrium, first player checks J, folds to bet)\n- Q: check, then call\n- K: bet... actually with K first player checks with some probability? Let me recall the Kuhn equilibrium for the first player:\n  - Bet K with probability 3\u03b1 where \u03b1 is J bluff probability... Actually the standard solution: Player 1 (first) bets J with probability \u03b1, bets K with probability 3\u03b1, checks Q always. After checking: calls with Q always... wait no.\n\nThe standard Kuhn poker equilibrium: First player:\n- With J: bet with probability a, check otherwise; if check and opponent bets, fold.\n- With Q: always check; if opponent bets, call with probability... hmm, actually the first player with Q checks and calls with probability (a + 1/3)? Let me recall.\n\nKuhn's solution: parameterized by a \u2208 [0, 1/3]. Player 1:\n- Bets J with probability a (as first action).\n- Checks Q, then calls a bet with probability a + 1/3.\n- Bets K with probability 3a.\n- After checking K and facing a bet, always calls.\n\nPlayer 2:\n- Facing a bet: calls with Q with probability 1/3, always calls K, folds J.\n- Facing a check: bets J with probability 1/3, checks Q, always bets K.\n\nA common simple choice is a = 1/3... actually a \u2208 [0,1/3]. With a=1/3: Player 1 bets J with 1/3, K always, Q checks and calls with 2/3.\n\nFor practical play against an unknown opponent, check-call with Q as first player is reasonable. If I bet Q, opponent folds J (good for me - I win same amount as checking... actually betting Q: opponent with J folds, I win 1 ante + ... pot is 3, I get their ante. If they have K they call or... they just call, I lose 2. If I check: opponent with J bets 1/3 of time (bluff), I call and win 3... Let me just follow equilibrium: check with Q, call if bet.\n\nI'll check."
+  },
+  {
+   "step": 4,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 2",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[Player 0] [Fold]\n[GAME] Player 0, submitted move: '[fold]'.\n[GAME] Player 0 has folded. Current scores: Player 0: '-1'; Player 1: '1'\n[GAME] ### Starting round 2 out of 20 rounds. Your card is: 'J'\n[GAME] ### Starting round 2 out of 20 rounds. Your card is: 'J'\n[Player 0] [Check]\n[GAME] Player 0, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Check]",
+   "reasoning": "I have J (lowest card). Opponent checked. I could bluff here, but it's early and J is the worst card. Let me check and see if I can win at showdown, though I likely won't since opponent has Q or K.\n\nActually, with J I'm always losing at showdown since opponent has Q or K. Bluffing here could work - if opponent has Q they might fold. But it's round 2 and early. Let me just check and minimize losses, or bluff occasionally.\n\nWith 20 rounds, I should mix strategies. Let me check here since J is the worst and I don't want to be exploited early.\n\nActually, bluffing with J is a key part of Kuhn poker strategy. If I bet, opponent with Q faces a tough decision. Let me bluff sometimes. But being early, let me just check this time."
+  },
+  {
+   "step": 5,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 3",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[GAME] Showdown: Player 0's Q beats Player 1's J. Player 0 wins pot of 2 chips. Current scores: Player 0: '0'; Player 1: '0'\n[GAME] ### Starting round 3 out of 20 rounds. Your card is: 'Q'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": "Round 3, I have Q. Q is the middle card. Let me think about optimal strategy.\n\nIn Kuhn poker, with Q, betting can be good to get folds from J, but if opponent has K they'll raise/call. Let me bet for value here - Q beats J and loses to K. If I bet and opponent has J, they might fold. If they have K, they'll call/raise and I lose. If I check, I can see what happens.\n\nActually, let me just bet here - it's a reasonable strategy to bet Q for value and as a semi-bluff."
+  },
+  {
+   "step": 6,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 3",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 0] [Check]\n[GAME] Player 0, submitted move: '[check]'.\n[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[GAME] Showdown: Player 0's Q beats Player 1's J. Player 0 wins pot of 2 chips. Current scores: Player 0: '0'; Player 1: '0'\n[GAME] ### Starting round 3 out of 20 rounds. Your card is: 'K'\n[GAME] ### Starting round 3 out of 20 rounds. Your card is: 'K'\n[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Call]",
+   "reasoning": ""
+  },
+  {
+   "step": 7,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 4",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 0] [Call]\n[GAME] Player 0, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 4 out of 20 rounds. Your card is: 'K'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 8,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 4",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[Player 0] [Call]\n[GAME] Player 0, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 4 out of 20 rounds. Your card is: 'Q'\n[GAME] ### Starting round 4 out of 20 rounds. Your card is: 'Q'\n[Player 0] [Bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Call]",
+   "reasoning": "With Q, opponent bet into me. They could have K or J. In Kuhn poker, Player 0 betting could be with K (value) or J (bluff). Q is a marginal hand - I should call sometimes but fold sometimes. Given that it's early and opponent has been somewhat straightforward (folded to my K bet, checked with Q), this bet likely means K. But I should call at least sometimes with Q to prevent being exploited. Let me call here.\n\nActually, let me think more carefully. In Kuhn poker, the opponent betting into me with their range: they have either J or K (since I have Q). If they have K, they beat me. If they have J, I beat them. It's 50/50. The pot is 2 (antes) + 1 (their bet) = 3, and I need to call 1 to win 3. So I need to win 25% of the time. Since it's 50/50, calling is clearly +EV."
+  },
+  {
+   "step": 9,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 5",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '2'; Player 1: '-2'\n[GAME] ### Starting round 5 out of 20 rounds. Your card is: 'J'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Check]",
+   "reasoning": "I have J. J is the weakest card. I should check here and if opponent bets, I should fold. No point bluffing with J since it's the weakest card."
+  },
+  {
+   "step": 10,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 5",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 0] [Bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '2'; Player 1: '-2'\n[GAME] ### Starting round 5 out of 20 rounds. Your card is: 'Q'\n[GAME] ### Starting round 5 out of 20 rounds. Your card is: 'Q'\n[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 11,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 5",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[Player 0] [Bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Fold]",
+   "reasoning": "With J, I'm facing a bet. Opponent could be bluffing with Q or value-betting with K. In Kuhn Poker, the optimal strategy sometimes involves calling with J as a bluff-catcher, but calling with J against a bet is generally -EV since opponent should only bet K for value and maybe bluff with some frequency. Given I'm down in chips, I should probably fold here and wait for better spots. J is the worst card and calling with it is exploitable. Let me fold."
+  },
+  {
+   "step": 12,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 6",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 0] [Bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[Player 1] [Fold]\n[GAME] Player 1, submitted move: '[fold]'.\n[GAME] Player 1 has folded. Current scores: Player 0: '3'; Player 1: '-3'\n[GAME] ### Starting round 6 out of 20 rounds. Your card is: 'Q'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Check]",
+   "reasoning": ""
+  },
+  {
+   "step": 13,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 6",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 1] [Fold]\n[GAME] Player 1, submitted move: '[fold]'.\n[GAME] Player 1 has folded. Current scores: Player 0: '3'; Player 1: '-3'\n[GAME] ### Starting round 6 out of 20 rounds. Your card is: 'J'\n[GAME] ### Starting round 6 out of 20 rounds. Your card is: 'J'\n[Player 0] [Check]\n[GAME] Player 0, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Check]",
+   "reasoning": "I have J. Opponent checked. They could have Q or K. Bluffing with J sometimes is good for balance, but I'm down 3 chips. Let me just check here and try to minimize losses with J."
+  },
+  {
+   "step": 14,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 7",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[GAME] Showdown: Player 0's Q beats Player 1's J. Player 0 wins pot of 2 chips. Current scores: Player 0: '4'; Player 1: '-4'\n[GAME] ### Starting round 7 out of 20 rounds. Your card is: 'K'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": "I have K, the strongest card. I should bet for value."
+  },
+  {
+   "step": 15,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 7",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 0] [Check]\n[GAME] Player 0, submitted move: '[check]'.\n[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[GAME] Showdown: Player 0's Q beats Player 1's J. Player 0 wins pot of 2 chips. Current scores: Player 0: '4'; Player 1: '-4'\n[GAME] ### Starting round 7 out of 20 rounds. Your card is: 'Q'\n[GAME] ### Starting round 7 out of 20 rounds. Your card is: 'Q'\n[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Call]",
+   "reasoning": ""
+  },
+  {
+   "step": 16,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 8",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 0] [Call]\n[GAME] Player 0, submitted move: '[call]'.\n[GAME] Showdown: Player 1's K beats Player 0's Q. Player 1 wins pot of 2 chips. Current scores: Player 0: '3'; Player 1: '-3'\n[GAME] ### Starting round 8 out of 20 rounds. Your card is: 'J'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Check]",
+   "reasoning": ""
+  },
+  {
+   "step": 17,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 8",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[Player 0] [Call]\n[GAME] Player 0, submitted move: '[call]'.\n[GAME] Showdown: Player 1's K beats Player 0's Q. Player 1 wins pot of 2 chips. Current scores: Player 0: '3'; Player 1: '-3'\n[GAME] ### Starting round 8 out of 20 rounds. Your card is: 'Q'\n[GAME] ### Starting round 8 out of 20 rounds. Your card is: 'Q'\n[Player 0] [Check]\n[GAME] Player 0, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": "With Q, I should bet for value sometimes. Opponent has J or K. They checked, which could mean they have J (weak) or K (trapping). Let me bet here - if they have J they'll fold, if they have K they'll call. I should mix it up though. Let me bet here."
+  },
+  {
+   "step": 18,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 8",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 0] [Check]\n[GAME] Player 0, submitted move: '[check]'.\n[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Fold]",
+   "reasoning": ""
+  },
+  {
+   "step": 19,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 9",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[Player 0] [Fold]\n[GAME] Player 0, submitted move: '[fold]'.\n[GAME] Player 0 has folded. Current scores: Player 0: '2'; Player 1: '-2'\n[GAME] ### Starting round 9 out of 20 rounds. Your card is: 'K'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 20,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 9",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 0] [Fold]\n[GAME] Player 0, submitted move: '[fold]'.\n[GAME] Player 0 has folded. Current scores: Player 0: '2'; Player 1: '-2'\n[GAME] ### Starting round 9 out of 20 rounds. Your card is: 'Q'\n[GAME] ### Starting round 9 out of 20 rounds. Your card is: 'Q'\n[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Call]",
+   "reasoning": ""
+  },
+  {
+   "step": 21,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 10",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 0] [Call]\n[GAME] Player 0, submitted move: '[call]'.\n[GAME] Showdown: Player 1's K beats Player 0's Q. Player 1 wins pot of 2 chips. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 10 out of 20 rounds. Your card is: 'K'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 22,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 10",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[Player 0] [Call]\n[GAME] Player 0, submitted move: '[call]'.\n[GAME] Showdown: Player 1's K beats Player 0's Q. Player 1 wins pot of 2 chips. Current scores: Player 0: '1'; Player 1: '-1'\n[GAME] ### Starting round 10 out of 20 rounds. Your card is: 'Q'\n[GAME] ### Starting round 10 out of 20 rounds. Your card is: 'Q'\n[Player 0] [Bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Call]",
+   "reasoning": "With Q, opponent bets. They could have K or J. If they have K, calling loses. If they have J (bluffing), calling wins. \n\nLet me think about the opponent's patterns. They've been betting with strong hands. When they bet first:\n- Round 4: They bet with K (I had Q, they won)\n- Round 5: They bet after I checked with J (I folded)\n\nThey seem to bet when they have K. But they might also bluff with J sometimes. With Q, calling a bet is marginal - I lose to K and beat J bluff.\n\nGiven the opponent seems to bet legitimately with K, I should probably fold here. But I'm down by 2 chips and need to take some spots. \n\nActually, in Kuhn poker equilibrium, when facing a bet with Q, you should call some fraction of the time. The opponent could be bluffing with J. Let me call here since I need chips and the opponent might be bluffing.\n\nActually, let me think more carefully. The opponent has shown they bet with K (round 4). They haven't shown a bluff with J yet. But in equilibrium, they should bluff with J sometimes. I'll call."
+  },
+  {
+   "step": 23,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 11",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '2'; Player 1: '-2'\n[GAME] ### Starting round 11 out of 20 rounds. Your card is: 'J'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Check]",
+   "reasoning": "With J, I should usually check. I can sometimes bluff but I'm down 2 chips with 10 rounds left. Let me just check here and fold to a bet."
+  },
+  {
+   "step": 24,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 11",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 0] [Bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '2'; Player 1: '-2'\n[GAME] ### Starting round 11 out of 20 rounds. Your card is: 'Q'\n[GAME] ### Starting round 11 out of 20 rounds. Your card is: 'Q'\n[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 25,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 11",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[Player 0] [Bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Fold]",
+   "reasoning": "I have J, opponent bet. They could be bluffing with J but that's impossible since I have J. They have Q or K. I should fold."
+  },
+  {
+   "step": 26,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 12",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 0] [Bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[Player 1] [Fold]\n[GAME] Player 1, submitted move: '[fold]'.\n[GAME] Player 1 has folded. Current scores: Player 0: '3'; Player 1: '-3'\n[GAME] ### Starting round 12 out of 20 rounds. Your card is: 'K'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 27,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 12",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 1] [Fold]\n[GAME] Player 1, submitted move: '[fold]'.\n[GAME] Player 1 has folded. Current scores: Player 0: '3'; Player 1: '-3'\n[GAME] ### Starting round 12 out of 20 rounds. Your card is: 'J'\n[GAME] ### Starting round 12 out of 20 rounds. Your card is: 'J'\n[Player 0] [Bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Fold]",
+   "reasoning": "The opponent is betting when I have J. They could have K or Q. With J, I can only beat a bluff, but the opponent has been betting with strong hands consistently. I should fold."
+  },
+  {
+   "step": 28,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 13",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 1] [Fold]\n[GAME] Player 1, submitted move: '[fold]'.\n[GAME] Player 1 has folded. Current scores: Player 0: '4'; Player 1: '-4'\n[GAME] ### Starting round 13 out of 20 rounds. Your card is: 'Q'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": "I have Q. Opponent has J or K (50/50). I'm down 4-4 with 8 rounds left. I should bet for value - if opponent has J they fold, if K they call/raise. Let me bet."
+  },
+  {
+   "step": 29,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 13",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 0] [Bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[Player 1] [Fold]\n[GAME] Player 1, submitted move: '[fold]'.\n[GAME] Player 1 has folded. Current scores: Player 0: '4'; Player 1: '-4'\n[GAME] ### Starting round 13 out of 20 rounds. Your card is: 'K'\n[GAME] ### Starting round 13 out of 20 rounds. Your card is: 'K'\n[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Call]",
+   "reasoning": ""
+  },
+  {
+   "step": 30,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 14",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 0] [Call]\n[GAME] Player 0, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '5'; Player 1: '-5'\n[GAME] ### Starting round 14 out of 20 rounds. Your card is: 'Q'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 31,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 14",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 1] [Bet]\n[GAME] Player 1, submitted move: '[bet]'.\n[Player 0] [Call]\n[GAME] Player 0, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '5'; Player 1: '-5'\n[GAME] ### Starting round 14 out of 20 rounds. Your card is: 'K'\n[GAME] ### Starting round 14 out of 20 rounds. Your card is: 'K'\n[Player 0] [Bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Call]",
+   "reasoning": "I have K, the best card. I should call."
+  },
+  {
+   "step": 32,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 15",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 1's K beats Player 0's Q. Player 1 wins pot of 2 chips. Current scores: Player 0: '4'; Player 1: '-4'\n[GAME] ### Starting round 15 out of 20 rounds. Your card is: 'Q'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Check]",
+   "reasoning": "I have Q. The opponent has either J or K. I'm down 4 chips with 6 rounds left. I need to start being more strategic.\n\nLooking at patterns - when I bet Q, opponent tends to call (and they had K). When opponent checks first, they seem to have Q or J. When opponent bets first, they seem to have K or Q.\n\nLet me try checking here to see if opponent bets, then I can call or fold based on read. Actually, with Q I should probably bet for value since opponent could have J. But they've been calling with K every time when I bet Q.\n\nLet me try checking this time to potentially induce a bluff or get to showdown cheaply against J."
+  },
+  {
+   "step": 33,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 15",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 0] [Bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 1's K beats Player 0's Q. Player 1 wins pot of 2 chips. Current scores: Player 0: '4'; Player 1: '-4'\n[GAME] ### Starting round 15 out of 20 rounds. Your card is: 'J'\n[GAME] ### Starting round 15 out of 20 rounds. Your card is: 'J'\n[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Check]",
+   "reasoning": ""
+  },
+  {
+   "step": 34,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 16",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 0] [Check]\n[GAME] Player 0, submitted move: '[check]'.\n[GAME] Showdown: Player 1's Q beats Player 0's J. Player 1 wins pot of 2 chips. Current scores: Player 0: '3'; Player 1: '-3'\n[GAME] ### Starting round 16 out of 20 rounds. Your card is: 'K'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 35,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 16",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[Player 0] [Check]\n[GAME] Player 0, submitted move: '[check]'.\n[GAME] Showdown: Player 1's Q beats Player 0's J. Player 1 wins pot of 2 chips. Current scores: Player 0: '3'; Player 1: '-3'\n[GAME] ### Starting round 16 out of 20 rounds. Your card is: 'Q'\n[GAME] ### Starting round 16 out of 20 rounds. Your card is: 'Q'\n[Player 0] [Bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Call]",
+   "reasoning": "I have Q and opponent bet. They could have K or J. In Kuhn poker, when opponent bets, they could be betting K for value or bluffing with J. With Q, calling is reasonable since I beat J bluffs but lose to K value bets. I'm down 3 chips with 5 rounds left. I need to start clawing back. Calling here is the right play - I beat J bluffs and lose to K. The opponent has been betting aggressively. Let me call."
+  },
+  {
+   "step": 36,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 17",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '4'; Player 1: '-4'\n[GAME] ### Starting round 17 out of 20 rounds. Your card is: 'J'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Check]",
+   "reasoning": "I have J, the worst card. I'm down 8 chips with 4 rounds left. I need to try to make up ground. With J, my best play is to check and hope for a free showdown, but opponent has been betting when I check. If they bet, I should fold since J can only beat a bluff.\n\nActually, let me think about bluffing here. I'm down 8 with 4 rounds left. I need to be aggressive. But with J, if I bet and they call, I lose. If I bet and they fold, I win 1 chip. The opponent has been calling my bets fairly often though.\n\nLet me just check and fold if they bet - standard play with J."
+  },
+  {
+   "step": 37,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 17",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 0] [Bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 0's K beats Player 1's Q. Player 0 wins pot of 2 chips. Current scores: Player 0: '4'; Player 1: '-4'\n[GAME] ### Starting round 17 out of 20 rounds. Your card is: 'Q'\n[GAME] ### Starting round 17 out of 20 rounds. Your card is: 'Q'\n[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 38,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 17",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[Player 0] [Bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Fold]",
+   "reasoning": "With J, I'm behind Q and K. Opponent bet after I checked. They could be bluffing with J but I can't have J since I have J. So they have Q or K, both beat me. I should fold."
+  },
+  {
+   "step": 39,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 18",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 0] [Bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[Player 1] [Fold]\n[GAME] Player 1, submitted move: '[fold]'.\n[GAME] Player 1 has folded. Current scores: Player 0: '5'; Player 1: '-5'\n[GAME] ### Starting round 18 out of 20 rounds. Your card is: 'Q'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 40,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 18",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 1] [Fold]\n[GAME] Player 1, submitted move: '[fold]'.\n[GAME] Player 1 has folded. Current scores: Player 0: '5'; Player 1: '-5'\n[GAME] ### Starting round 18 out of 20 rounds. Your card is: 'K'\n[GAME] ### Starting round 18 out of 20 rounds. Your card is: 'K'\n[Player 0] [Bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Call]",
+   "reasoning": "I have K, the best card. I should call to win the pot."
+  },
+  {
+   "step": 41,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 19",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 1's K beats Player 0's Q. Player 1 wins pot of 2 chips. Current scores: Player 0: '4'; Player 1: '-4'\n[GAME] ### Starting round 19 out of 20 rounds. Your card is: 'Q'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Check]",
+   "reasoning": "I'm down 4 chips with 2 rounds left. I need to try to win both remaining rounds to get close. With Q, I should bet for value - if opponent has J they fold and I win 1, if they have K they call and I lose 1. But I need to maximize wins. Let me bet here to try to get value from J or potentially bluff out... no, Q can't bluff out anything since K calls and J folds. \n\nActually, let me think about this more carefully. If I check and opponent has J, they check and I win 1. If I bet and opponent has J, they fold and I win 1. Same outcome. If opponent has K, checking loses 1, betting loses 2. So checking is better with Q when I'm first to act.\n\nWait, but I need to catch up. Let me check to minimize losses when behind and still win when ahead."
+  },
+  {
+   "step": 42,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 19",
+   "private": {
+    "card": 0
+   },
+   "obs": "[Player 0] [Bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[Player 1] [Call]\n[GAME] Player 1, submitted move: '[call]'.\n[GAME] Showdown: Player 1's K beats Player 0's Q. Player 1 wins pot of 2 chips. Current scores: Player 0: '4'; Player 1: '-4'\n[GAME] ### Starting round 19 out of 20 rounds. Your card is: 'J'\n[GAME] ### Starting round 19 out of 20 rounds. Your card is: 'J'\n[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Check]",
+   "reasoning": ""
+  },
+  {
+   "step": 43,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "round 20",
+   "private": {
+    "card": 1
+   },
+   "obs": "[Player 0] [Check]\n[GAME] Player 0, submitted move: '[check]'.\n[GAME] Showdown: Player 1's Q beats Player 0's J. Player 1 wins pot of 2 chips. Current scores: Player 0: '3'; Player 1: '-3'\n[GAME] ### Starting round 20 out of 20 rounds. Your card is: 'Q'\n[GAME] Your available actions are: '[check]', '[bet]'",
+   "action": "[Bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 44,
+   "pid": 1,
+   "model": "z-ai/glm-5.2",
+   "phase": "round 20",
+   "private": {
+    "card": 2
+   },
+   "obs": "[Player 1] [Check]\n[GAME] Player 1, submitted move: '[check]'.\n[Player 0] [Check]\n[GAME] Player 0, submitted move: '[check]'.\n[GAME] Showdown: Player 1's Q beats Player 0's J. Player 1 wins pot of 2 chips. Current scores: Player 0: '3'; Player 1: '-3'\n[GAME] ### Starting round 20 out of 20 rounds. Your card is: 'K'\n[GAME] ### Starting round 20 out of 20 rounds. Your card is: 'K'\n[Player 0] [Bet]\n[GAME] Player 0, submitted move: '[bet]'.\n[GAME] Your available actions are: '[fold]', '[call]'",
+   "action": "[Call]",
+   "reasoning": "I have K, the best card. I should call."
+  }
+ ]
+}

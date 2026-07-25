@@ -13,14 +13,22 @@ import matplotlib.pyplot as plt
 D = Path(__file__).resolve().parent
 COLOR = {"gpt-5.6-sol-pro": "#2a78d6", "claude-opus-4.8": "#008300", "kimi-k3": "#eda100",
          "deepseek-v4-pro": "#e87ba4", "qwen3.7-max": "#eb6834", "gemini-3.6-flash": "#4a3aa7",
-         "llama-4-maverick": "#e34948", "glm-5.2": "#1baf7a"}
+         "llama-4-maverick": "#e34948", "glm-5.2": "#1baf7a",
+         "gpt-5.5": "#6699cc", "claude-sonnet-5": "#55aa55", "gemma-4-31b-it": "#cc66aa",
+         "qwen3.6-27b": "#d9a300", "qwen3.5-9b": "#cc6633"}
 PANELS = [
     ("Poker  (pt = one game/model)", "poker_bluff_results.json", "tell", "final_chips",
      "type-leakage: hand-strength tell (AUROC)", "end chips"),
+    # KuhnPoker is omitted here: per-single-game AUROC is undefined (too few decisions
+    # per game to have both a K and a non-K), so its per-instance leakage has no points.
+    ("LiarsDice  (pt = one game/model)", "liarsdice_vod_results.json", "leakage", "gain",
+     "type-leakage: bids reveal dice (ownFrac−1/6)", "rank reward"),
     ("BlindAuction  (pt = one player-game)", "blindauction_vod_results.json", "leakage", "profit",
      "type-leakage: ρ(stated interest, true value)", "profit"),
     ("New Recruit  (pt = one scored deal)", "newrecruit_vod_results.json", "leakage", "surplus",
      "type-leakage: ρ(stated, true importance)", "surplus vs baseline"),
+    ("Negotiation/trade  (diff. pool · pt = player-game)", "negotiation_vod_results.json", "leakage", "gain",
+     "leakage: reader→you ρ (others infer you)", "value gain"),
 ]
 
 
@@ -61,7 +69,10 @@ def declutter(ax, means, xr, yr):
 
 
 def main():
-    fig, axes = plt.subplots(1, 3, figsize=(17, 5.8))
+    ncol = 3
+    nrow = -(-len(PANELS) // ncol)
+    fig, axes = plt.subplots(nrow, ncol, figsize=(ncol * 5.5, nrow * 5.4))
+    axes = axes.flatten()
     seen = set()
     for ax, (title, fn, lk, gk, xl, yl) in zip(axes, PANELS):
         rows = json.load(open(D / fn))["rows"]
@@ -93,6 +104,8 @@ def main():
         for s in ("top", "right"):
             ax.spines[s].set_visible(False)
         ax.tick_params(colors="#52514e", labelsize=8)
+    for ax in axes[len(PANELS):]:
+        ax.set_visible(False)
     handles = [plt.Line2D([0], [0], marker="o", ls="", mfc=COLOR[m], mec="#0b0b0b",
                ms=8, label=short(m)) for m in COLOR if m in seen]
     fig.legend(handles=handles, loc="lower center", ncol=len(handles), frameon=False,

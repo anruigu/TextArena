@@ -1,0 +1,386 @@
+{
+ "game_id": 2,
+ "env": "leduc",
+ "players": 2,
+ "seed": 101,
+ "seat_models": [
+  "deepseek/deepseek-v4-pro",
+  "anthropic/claude-opus-4.8"
+ ],
+ "rewards": {
+  "0": -1,
+  "1": 1
+ },
+ "winners": [
+  1
+ ],
+ "winning_models": [
+  "claude-opus-4.8"
+ ],
+ "win_label": "P1(claude-opus-4.8)",
+ "reason": "Reached hand limit | stacks 108>92",
+ "meta": {
+  "final_bank": {
+   "0": 92,
+   "1": 108
+  },
+  "hands_dealt": 6
+ },
+ "n_steps": 22,
+ "timed_out": false,
+ "wall_seconds": 110.2,
+ "transcript": [
+  {
+   "step": 1,
+   "pid": 1,
+   "model": "anthropic/claude-opus-4.8",
+   "phase": "hand1/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[GAME] You are Player 1 in Leduc Hold'em.\nRespond with one action token like '[check]', '[bet]', '[call]', '[raise]', or '[fold]' when it is your turn.\nFixed bet sizes: 2 chips pre-flop, 4 chips post-flop (max 2 raises per round).\n[GAME] ### New hand - your private card: J\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "I'm holding the weakest card preflop, so checking makes sense here rather than risking a bet, though I could occasionally bluff to keep things unpredictable."
+  },
+  {
+   "step": 2,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand1/rd0",
+   "private": {
+    "card": 2,
+    "board_card": 1,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[GAME] You are Player 0 in Leduc Hold'em.\nRespond with one action token like '[check]', '[bet]', '[call]', '[raise]', or '[fold]' when it is your turn.\nFixed bet sizes: 2 chips pre-flop, 4 chips post-flop (max 2 raises per round).\n[GAME] ### New hand - your private card: K\n[Player 1] [check]\n[GAME] Player 1 checks.\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "We are in a heads-up Leduc Hold'em game. The deck has six cards: J, J, Q, Q, K, K. I am Player 0 with private card K. The ante is 1 chip each. Pre-flop betting round, bet size is 2 chips. Player 1 checked. Now it's my turn. Valid actions: check or bet.\n\nI have a K, which is the highest card in the deck. This is a very strong hand. Since Player 1 checked, they might have a weaker hand or be slow-playing. With a K, I should bet for value to build the pot. I can bet 2 chips. There's no reason to check and give a free card, especially since the board card will come later and could pair with my opponent's card. I should bet.\n\nThus, I'll respond with [bet]."
+  },
+  {
+   "step": 3,
+   "pid": 1,
+   "model": "anthropic/claude-opus-4.8",
+   "phase": "hand1/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 1] [check]\n[GAME] Player 1 checks.\n[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[fold]",
+   "reasoning": "I'm holding J, the worst possible hand in this spot. My opponent bet after I checked, and calling with the lowest card is risky. Pre-flop I was already behind, so folding makes sense, but I need to check the pot odds\u2014with antes at 2 and their bet at 2, the pot is 4 and I'm calling 2, which means I need about one-third equity to break even. J is weak against Q or K, though I could catch a pair, but with only six cards in play, my outs are limited.\n\nLooking at the equity more carefully: if my opponent also has J, we'd split. But J is the weakest hand overall, and standard Leduc poker strategy with J facing a bet is typically to fold. I'll fold here to preserve chips."
+  },
+  {
+   "step": 4,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand2/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 2,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[Player 1] [fold]\n[GAME] Player 1 folds.Current banks: Player 0: 101; Player 1: 99\n\n[GAME] ### New hand - your private card: J\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "We are playing heads-up Leduc hold'em. Ante 1 each, so pot is 2. I have a J. Pre-flop, I am first to act? Actually, the game says \"Valid actions: '[check]', '[bet]'\", so it's my turn. Since I have a J, which is the lowest card in the deck (J, J, Q, Q, K, K), I should be cautious. Pre-flop, I can check or bet. With a J, it's generally a weak hand. I could consider betting as a bluff sometimes, but the standard strategy is to check with a J pre-flop. So I'll check."
+  },
+  {
+   "step": 5,
+   "pid": 1,
+   "model": "anthropic/claude-opus-4.8",
+   "phase": "hand2/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 2,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [fold]\n[GAME] Player 1 folds.Current banks: Player 0: 101; Player 1: 99\n\n[GAME] ### New hand - your private card: J\n[Player 0] [check]\n[GAME] Player 0 checks.\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "I've got the weakest card here, and my opponent checked. I could bluff or check through to the flop\u2014checking seems simpler and keeps things straightforward, though occasionally mixing in a bluff wouldn't hurt."
+  },
+  {
+   "step": 6,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand2/rd1",
+   "private": {
+    "card": 0,
+    "board_card": 2,
+    "round": 1,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [check]\n[GAME] Player 0 checks.\n[Player 1] [check]\n[GAME] Flop card revealed: K\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "We are post-flop with a J and the board is K. We have a weak hand (high card J, no pair). The opponent checked pre-flop and checked again. They could have a weak hand or a draw. Since we are first to act post-flop, we can check or bet. Betting here would be a bluff representing a K or a pair. But it's risky because the opponent might have a K or a better hand. Given the passive play from opponent, they likely have a weak hand too, maybe a J or Q. Bluffing might work, but we have to consider pot odds and opponent tendencies. Since we checked pre-flop, our range is capped. A bet here might be suspicious. I'll check to see a cheap showdown or maybe fold to a bet."
+  },
+  {
+   "step": 7,
+   "pid": 1,
+   "model": "anthropic/claude-opus-4.8",
+   "phase": "hand2/rd1",
+   "private": {
+    "card": 0,
+    "board_card": 2,
+    "round": 1,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [check]\n[GAME] Flop card revealed: K\n[Player 0] [check]\n[GAME] Player 0 checks.\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "I'm holding Jack-high with a low kicker, and my opponent checked twice, which suggests weakness. Betting could represent a King and might win the pot, but if I'm called and lose, that's costly. I'll check it down instead\u2014if my opponent also has a Jack, we tie, and checking gives me that chance without risking more chips."
+  },
+  {
+   "step": 8,
+   "pid": 1,
+   "model": "anthropic/claude-opus-4.8",
+   "phase": "hand3/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [check]\n[GAME] Exact tie.\n[GAME] ### New hand - your private card: Q\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "I've got a Queen, which is a reasonable middle card preflop, so I'm going to put in a bet."
+  },
+  {
+   "step": 9,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand3/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 0] [check]\n[GAME] Player 0 checks.\n[Player 1] [check]\n[GAME] Exact tie.\n[GAME] ### New hand - your private card: Q\n[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": "We are in a new hand. We have a Q. Preflop, Player 1 bet (2 chips). We can fold, call, or raise. With a Q, it's a medium hand. In Leduc Hold'em, Q is in the middle. Preflop, raising with Q might be okay, but calling is also standard. Since we have position? Actually, it's heads-up, Player 1 acts first preflop? Wait, the game description: \"You ante 1 and get one private card; there is a pre-flop betting round (bet size 2), then one public board card is revealed and a post-flop round (bet size 4), max 2 raises per round.\" It doesn't specify who acts first preflop. From the previous hands: In the first hand, we had K, Player 1 checked (so Player 1 acted first preflop?). Then we bet. In the second hand, we had J, we checked first? Actually, the second hand: \"New hand - your private card: J\" and then \"Valid actions: '[check]', '[bet]'\" so we acted first. So it seems the first player alternates? In the first hand, Player 1 checked first. In the second hand, we acted first. So it alternates. Now in the third hand: \"New hand - your private card: Q\" and then \"Player 1 [bet]\" so Player 1 acted first and bet. So we are second to act. We have Q. Against a bet, Q is a call preflop usually. Folding is too weak, raising might be too aggressive without knowing the board. So I'll call."
+  },
+  {
+   "step": 10,
+   "pid": 1,
+   "model": "anthropic/claude-opus-4.8",
+   "phase": "hand3/rd1",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 1,
+    "pot": 6,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[Player 0] [call]\n[GAME] Player 0 calls 2.\n[GAME] Flop card revealed: J\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "I'm holding queen high with a jack on the board, and my opponent called preflop, so they likely have a jack or better\u2014I need to reassess my position here."
+  },
+  {
+   "step": 11,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand3/rd1",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 1,
+    "pot": 6,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [call]\n[GAME] Player 0 calls 2.\n[GAME] Flop card revealed: J\n[Player 1] [check]\n[GAME] Player 1 checks.\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "We are playing heads-up Leduc Hold'em. Ante is 1 chip each, so pot starts at 2. Pre-flop betting round, bet size 2. I have Q. Player 1 bet pre-flop, I called. Flop is J. Player 1 checks. Now it's my turn. I can check or bet (bet size 4 post-flop).\n\nMy hand: Q. Board: J. My hand strength: I have a Queen high. The board is a Jack. Since there are pairs possible, if I had a pair with the board (i.e., if I had a J), that would be strong. But I have Q, so no pair. My hand is just Q high. The deck has two J, two Q, two K. I hold one Q. So remaining cards: J, J, Q, K, K? Wait, deck is J J Q Q K K. I have one Q, so remaining: J J Q K K. The board is J. So remaining: J, Q, K, K. So opponent could have a pair of Jacks if they hold a J, or they could have K or Q. Since they bet pre-flop, they likely have a strong hand: maybe a K or a J, or maybe they bluffed with a Q? But they bet pre-flop, so they might have a premium hand like K or J. Now they check on the flop. That could indicate weakness or a trap. With Q high, I have a mediocre hand. If I bet, I risk 4 chips to win a pot of 4 (2 antes + 2 pre-flop bets). I only get called by better hands probably. If opponent has a J, they might check to trap, or they might have a K and check because they missed the pair. But a K high is still better than my Q high. So if I bet, I might get called by K high or J, and fold out worse hands (like maybe a Q, but there's only one Q left, so unlikely). So betting is probably not good. Checking behind is safe, and I get to showdown. If I check, I might win if opponent has Q or maybe a weaker hand? But there's only one Q left, and opponent bet pre-flop, so they probably don't have Q. They could have a K and we both have high cards, but K beats Q. So likely I lose at showdown. But betting would just lose more. So I should check.\n\nThus, action: check."
+  },
+  {
+   "step": 12,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand4/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [check]\n[GAME] Exact tie.\n[GAME] ### New hand - your private card: J\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "We are playing Leduc Hold'em heads-up. We have J. Pre-flop, we are first to act? The game says \"Valid actions: '[check]', '[bet]'\" and it's our turn. So we are Player 0, and we have the option to check or bet. Our private card is J. In Leduc, J is the worst card. With J, we should generally check pre-flop, as betting would be a bluff. Since it's the first action, we can check. So we check."
+  },
+  {
+   "step": 13,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand4/rd1",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 1,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [check]\n[GAME] Flop card revealed: Q\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "We are playing Leduc Hold'em with a 6-card deck: J, J, Q, Q, K, K. We are Player 0. Our private card is J. The flop is Q. So we have a pair of Jacks? No, in Leduc, a pair is when your private card matches the board card. Our private card is J, board is Q, so we have no pair, just a high card J. The board is Q, so if opponent has a Q, they have a pair of Queens, which beats our J. If opponent has a K, they have a high card K, which beats our J. If opponent has a J, it's a tie (both have J with board Q, so pair of Jacks? Wait, no: a pair is only if your card matches the board. So if opponent has J, they also have no pair, and their high card is J, same as us, so tie). So our hand is very weak: we lose to any Q or K, tie only with another J. There are two Js, two Qs, two Ks. We have one J, so remaining: one J, two Qs, two Ks. So we lose to 4 cards, tie with 1. So our hand is terrible.\n\nThe action: Pre-flop, we checked (we had the option to check or bet, we checked). Then flop came Q. Now it's our turn with options [check] or [bet]. We are first to act post-flop? Actually, the sequence: Pre-flop we checked, then it says \"Flop card revealed: Q\", then \"Valid actions: [check], [bet]\". So it seems we are first to act on the flop. But we didn't see any action from Player 1 pre-flop? In the previous hand, when we checked pre-flop, Player 1 also checked. But here, after we checked pre-flop, it just shows flop revealed and our turn. Possibly Player 1 also checked pre-flop automatically? The game state: \"New hand - your private card: J\" then we responded [check], then \"Flop card revealed: Q\" and our turn. It implies Player 1 must have also checked pre-flop, because there was no bet. So pre-flop went check-check. So now post-flop, pot is 2 (each ante 1). We are first to act. We can check or bet 4.\n\nGiven our hand strength: we have a J on a Q board. Very weak. We should probably check and then fold if opponent bets, or check and hope opponent also checks and we might win if they have a J? But they are more likely to have Q or K. Betting would be a bluff. Is this a good spot to bluff? We have no pair, no draw. In Leduc, bluffing is often done with the worst hands because they have no showdown value. Our hand has almost no showdown value: we only beat nothing (if opponent had a worse card, but J is the lowest, so we only tie with J). So we can consider bluffing. But we need to think about balance. In heads-up Leduc, optimal strategy often involves betting strong hands (pairs, high cards) and some bluffs. Here, we have a J, which is the worst card. On a Q board, a Q is a strong pair, K is a decent high card, J is weak. Typically, we might check our J here because if we bet, we only get called by better hands (Q or K) and fold out worse (only another J, which we tie with anyway). So betting doesn't accomplish much. Checking is better, hoping opponent checks behind and we might get to showdown cheaply. If opponent bets, we can fold.\n\nSo I'll check."
+  },
+  {
+   "step": 14,
+   "pid": 1,
+   "model": "anthropic/claude-opus-4.8",
+   "phase": "hand4/rd1",
+   "private": {
+    "card": 2,
+    "board_card": 1,
+    "round": 1,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [check]\n[GAME] Player 1 checks.\n[Player 0] [check]\n[GAME] Exact tie.\n[GAME] ### New hand - your private card: K\n[Player 0] [check]\n[GAME] Flop card revealed: Q\n[Player 0] [check]\n[GAME] Player 0 checks.\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "I'm holding king-high with no pair, so I should bet to extract value from weaker hands like queen or jack."
+  },
+  {
+   "step": 15,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand4/rd1",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 1,
+    "pot": 6,
+    "current_bet": 4
+   },
+   "obs": "[Player 0] [check]\n[GAME] Player 0 checks.\n[Player 1] [bet]\n[GAME] Player 1 bets 4.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[fold]",
+   "reasoning": "We are in a heads-up Leduc Hold'em hand. Our private card is J, and the flop is Q. We checked pre-flop, and checked on the flop. Now Player 1 bets 4 (post-flop bet size). We have a pair of Jacks? No, in Leduc Hold'em, a pair is only if our private card matches the board. Our private card is J, board is Q, so we have just J high. The board is Q, so if opponent has a Q, they have a pair of Queens. If they have a K, they have K high. If they have a J, it's a tie (J high). Since we checked twice, we appear weak. Opponent is betting. We need to decide whether to fold, call, or raise. With J high on a Q board, we are behind any Q or K, and only tie with another J. Given that opponent bet, they likely have at least a Q or are bluffing. With J high, calling is risky because we are only beating a bluff. The pot is: pre-flop we both ante 1? Actually, in Leduc Hold'em, antes are 1 each. Then pre-flop we both checked, so no additional bets. On flop, we both checked until now opponent bets 4. So pot before opponent's bet: 2 (antes). Opponent bets 4, pot becomes 6. We need to call 4 to win 6, so pot odds are 1.5:1. We need to win about 40% of the time to break even. Our hand is weak. Opponent could be bluffing with a J or a K? Actually, with a K, they might check or bet? In standard Leduc, a K is a bluffing hand sometimes. But here, opponent checked pre-flop, then checked flop, then bet after we checked. That line could represent a Q (value) or a J (bluff) or maybe a K (bluff). But we hold a J, so there is only one other J. So opponent has either Q, K, or the other J. Against Q we lose, against K we lose (K high beats J high), against J we tie. So we are never winning, only tying at best. Calling to win half the pot (if it's a tie) is not worth it. Even if opponent bluffs with K, we lose. So we should fold.\n\nBut wait, we are Player 0, and we have a J. The board is Q. If we call, we lose to any Q or K, and tie with J. So our expected value is negative. Folding is correct. Raising would be a bluff, but with no fold equity? Opponent bet, they might have a Q and call. Not a good spot to bluff. So fold."
+  },
+  {
+   "step": 16,
+   "pid": 1,
+   "model": "anthropic/claude-opus-4.8",
+   "phase": "hand5/rd0",
+   "private": {
+    "card": 2,
+    "board_card": 1,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 4.\n[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 100; Player 1: 100\n\n[GAME] ### New hand - your private card: K\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 17,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand5/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 100; Player 1: 100\n\n[GAME] ### New hand - your private card: J\n[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[fold]",
+   "reasoning": "We are in a new hand. Player 0 has J (private). Player 1 bet pre-flop. We need to decide fold, call, or raise. With J, it's the lowest card. Against a bet, calling is marginal; folding is often correct but we can consider calling sometimes to avoid being exploited. However, with J, we are behind most of the time. Since we have position? Actually, we are Player 0, so we act first pre-flop? Wait: the sequence: Player 1 bet, so Player 1 acted first? In the prompt: \"[Player 1] [bet]\" meaning Player 1 bet. Then it's our turn. So we are second to act pre-flop. With J, calling a bet is not great. Folding is standard. But we might call occasionally to balance. However, the opponent just bet, and we have a weak hand. I'll fold."
+  },
+  {
+   "step": 18,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand6/rd0",
+   "private": {
+    "card": 2,
+    "board_card": 1,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 99; Player 1: 101\n\n[GAME] ### New hand - your private card: K\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "We are in a new hand with private card K. This is a strong hand in Leduc Hold'em (6-card deck: J J Q Q K K). Pre-flop, we are first to act (Player 0). We should consider betting for value, as K is the highest card. A bet of 2 is standard. Player 1 might call or fold. Since K is strong, we want to build the pot. No reason to slow-play pre-flop. So we bet."
+  },
+  {
+   "step": 19,
+   "pid": 1,
+   "model": "anthropic/claude-opus-4.8",
+   "phase": "hand6/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 1,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 99; Player 1: 101\n\n[GAME] ### New hand - your private card: Q\n[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": "I'm holding Queen and deciding to call the opponent's bet to see what comes on the flop."
+  },
+  {
+   "step": 20,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand6/rd1",
+   "private": {
+    "card": 2,
+    "board_card": 1,
+    "round": 1,
+    "pot": 6,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[Player 1] [call]\n[GAME] Player 1 calls 2.\n[GAME] Flop card revealed: Q\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "We are playing Leduc Hold'em with a 6-card deck: J, J, Q, Q, K, K. We are Player 0, and we have K. The flop is Q. Our hand is a pair? No, we have a K, flop is Q, so we have K high. But we have a K, which is the highest card. The board is Q, so if opponent has a Q, they have a pair. If opponent has a J, they have J high, we beat them. If opponent has K, it's a tie. If opponent has Q, they have a pair of Qs, which beats our K high. So we are only ahead if opponent has J, behind if Q, tie if K. Since there are two Js, two Qs, two Ks, and we have one K, opponent's card distribution: J: 2/5, Q: 2/5, K: 1/5. So we are ahead 40% of the time, tie 20%, lose 40%. We bet pre-flop and got called. Now post-flop, we are first to act. We can check or bet 4. Betting here would be a bluff, because we only get called by better hands (Q) and maybe sometimes K? Actually, if opponent has K, they might call or fold? With K high on Q board, they might call if they think we are bluffing, but it's a tie. Betting with K high is thin. We could check, hoping to get to showdown cheaply. If we check, opponent might bet with a Q or bluff with a J. We would then have to decide whether to call. Since we have some showdown value, checking is standard. Betting would be a semi-bluff, but we have no draw, just high card. It's better to check and evaluate. So I'll check."
+  },
+  {
+   "step": 21,
+   "pid": 1,
+   "model": "anthropic/claude-opus-4.8",
+   "phase": "hand6/rd1",
+   "private": {
+    "card": 1,
+    "board_card": 1,
+    "round": 1,
+    "pot": 6,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [call]\n[GAME] Player 1 calls 2.\n[GAME] Flop card revealed: Q\n[Player 0] [check]\n[GAME] Player 0 checks.\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "I'm holding Queen-high with a pair on the board, which is a strong hand worth betting for value."
+  },
+  {
+   "step": 22,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand6/rd1",
+   "private": {
+    "card": 2,
+    "board_card": 1,
+    "round": 1,
+    "pot": 10,
+    "current_bet": 4
+   },
+   "obs": "[Player 0] [check]\n[GAME] Player 0 checks.\n[Player 1] [bet]\n[GAME] Player 1 bets 4.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": "We have a private King, and the board is a Queen. So our hand is just King-high (no pair). We bet pre-flop and got called, then checked the flop and opponent bets 4 into a pot of 4 (since pre-flop pot was 4, post-flop bet is 4). We need to decide whether to fold, call, or raise.\n\nGiven the opponent called our pre-flop bet, they likely have something decent. The board is a Queen, so if they have a Queen they have a pair. If they have a Jack, they have Jack-high. If they have a King, it's a chop. Since we have a King, the only cards that beat us are a Queen (pair) or another King? Actually, a King vs King is a tie. So we lose to any Queen, and we beat any Jack. The opponent could also be bluffing with a Jack. But given the action, they called pre-flop and now bet when we checked. This line is often a value bet with a Queen, or a bluff with a Jack. Since we have a King, we are essentially bluff-catching. The pot odds: we need to call 4 to win a pot of 8 (4 pre-flop + 4 bet). That's 2:1 odds, so we need to be good 33% of the time. In Leduc Hold'em, with a King on a Queen board, it's a classic bluff-catching spot. The opponent's range after calling pre-flop: they could have a Queen (value), a King (would likely check back or bet sometimes?), or a Jack (bluff). Since we have a King, there's one less King available. The deck has two Queens, two Jacks, two Kings. We have one King, so remaining: 2 Queens, 2 Jacks, 1 King. Opponent's possible holdings: Q (2 combos), J (2 combos), K (1 combo). If they always bet with Q and sometimes with J, we need to estimate their bluff frequency. In equilibrium, they should bluff with some Jacks to make us indifferent. Given the pot odds, if they bluff too much we call, if too little we fold. Without specific reads, this is a close spot. In many Leduc strategies, a King is a marginal call on a Queen board when facing a bet. Given that we showed weakness by checking, the opponent might be more inclined to bluff with a Jack. I think calling is slightly profitable in the long run if they bluff enough. Also, we have a King, which blocks some of their value hands (since there's only one King left, they are less likely to have a King). But they could have a Queen. I'll lean towards calling because we're getting decent odds and we have a decent bluff-catcher. However, note that we bet pre-flop, so our range is strong. The opponent called, so their range is somewhat capped. They might not have many Jacks because they would fold pre-flop? In Leduc, pre-flop with a Jack, facing a bet, they should sometimes fold, sometimes call or raise. So their range after calling pre-flop includes some Jacks. It's a standard spot. I'll call.\n\nBut wait, the game is heads-up and we are trying to play optimally. I'll call."
+  }
+ ]
+}

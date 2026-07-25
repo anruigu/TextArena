@@ -1,0 +1,291 @@
+{
+ "game_id": 8,
+ "env": "poker",
+ "players": 2,
+ "seed": 107,
+ "seat_models": [
+  "z-ai/glm-5.2",
+  "openai/gpt-5.6-sol-pro"
+ ],
+ "rewards": {
+  "0": 1.0,
+  "1": -1.0
+ },
+ "final_chips": {
+  "0": 1200,
+  "1": 800
+ },
+ "winners": [
+  0
+ ],
+ "winning_models": [
+  "glm-5.2"
+ ],
+ "win_label": "P0(glm-5.2)",
+ "reason": "Final ranking (low\u2192high): [1, 0]. Winner: Player 0",
+ "meta": {
+  "final_chips": {
+   "0": 1200,
+   "1": 800
+  },
+  "hands_played": 10,
+  "elimination_order": []
+ },
+ "n_steps": 28,
+ "timed_out": false,
+ "wall_seconds": 130.7,
+ "transcript": [
+  {
+   "step": 1,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand 1/10 bet-round 0",
+   "obs": "[GAME] You are Player 0 in a 2-player Texas Hold'em Poker game.\nGame Information:\n- 10 hands total\n- Starting stack: 1000 chips\n- Blinds: 10/20\n\nAvailable actions (exact tokens):\n  '[Check]'  - when no bet is live\n  '[Call]'   - match the current bet\n  '[Fold]'   - discard your hand\n  '[Bet N]'  - open for N chips\n  '[Raise N]'- raise by N chips\n\n[GAME] Starting a new 10-round Texas Hold'em game with 2 players.\n[GAME] ===== Hand 1 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 990.00 chips | bet 10.00 | active\nP1 (SB): 980.00 chips | bet 20.00 | active\nYour hole: 4\u2665, 2\u2663\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "I have 4\u2665, 2\u2663 - a very weak hand. The SB has raised to 20 (or just completed the blind). Current bet is 20, I'm in the BB with 10 already in.\n\nThis is a trash hand. I should just check/fold. But wait - current bet is 20 and I have 10 in, so I need to call 10 to see a flop. With 4-2 offsuit, this is the weakest hand in poker. Even getting 3:1 pot odds, I should fold.\n\nPot is 30, I need to call 10, so pot odds are 3:1. But 4-2o has almost no playability. I'll fold."
+  },
+  {
+   "step": 2,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand 2/10 bet-round 0",
+   "obs": "[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 30 chips (all others folded).\n[GAME] ===== Hand 2 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 970.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1000.00 chips | bet 10.00 | active\nYour hole: Q\u2660, 3\u2665\n==============================================",
+   "action": "[Call]",
+   "reasoning": "I'm in the small blind with Q3 offsuit. The pot is 30, and I've already posted 20 (SB). The big blind has posted 10. It's my turn to act pre-flop. I can fold, call (match the BB's 10 to make it 20 total), or raise.\n\nQ3 offsuit is a weak hand. In heads-up play, queen-high has some value, but Q3o is still quite marginal. I'm out of position for the rest of the hand. Folding here is reasonable, but calling is also fine in heads-up since the blinds are small relative to stacks. Let me just call and see a flop. The cost is only 10 more chips.\n\nActually, in heads-up, Q3o is below average but not terrible. Calling 10 to win 30 gives me pot odds of 3:1. I think calling is fine here."
+  },
+  {
+   "step": 3,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 2/10 bet-round 0",
+   "obs": "[GAME] You are Player 1 in a 2-player Texas Hold'em Poker game.\nGame Information:\n- 10 hands total\n- Starting stack: 1000 chips\n- Blinds: 10/20\n\nAvailable actions (exact tokens):\n  '[Check]'  - when no bet is live\n  '[Call]'   - match the current bet\n  '[Fold]'   - discard your hand\n  '[Bet N]'  - open for N chips\n  '[Raise N]'- raise by N chips\n\n[GAME] Starting a new 10-round Texas Hold'em game with 2 players.\n[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 30 chips (all others folded).\n[GAME] ===== Hand 2 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 970.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1000.00 chips | bet 10.00 | active\nYour hole: K\u2663, Q\u2666\n==============================================\n[Player 0] [Call]\n[GAME] ===== Hand 2 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 970.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1000.00 chips | bet 10.00 | active\nYour hole: K\u2663, Q\u2666\n==============================================",
+   "action": "[Raise 60]",
+   "reasoning": ""
+  },
+  {
+   "step": 4,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand 2/10 bet-round 0",
+   "obs": "[Player 0] [Call]\n[Player 1] [Raise 60]\n[GAME] Player 1 raises to 80.\n[GAME] ===== Hand 2 / 10 - Pre\u2011flop =====\nPot: 100 | Current bet: 80\nVisible board: []\nP0 (SB): 970.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 930.00 chips | bet 80.00 | active\nYour hole: Q\u2660, 3\u2665\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "Q3o is a very weak hand. Opponent raised to 80 (4x) after I limped. I should fold."
+  },
+  {
+   "step": 5,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 3/10 bet-round 0",
+   "obs": "[Player 1] [Raise 60]\n[GAME] Player 1 raises to 80.\n[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 100 chips (all others folded).\n[GAME] ===== Hand 3 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 960.00 chips | bet 10.00 | active\nP1 (SB): 1010.00 chips | bet 20.00 | active\nYour hole: 8\u2663, 10\u2663\n==============================================",
+   "action": "[Raise 40]",
+   "reasoning": "**Evaluating betting strategy**\n\nI\u2019m considering our current situation where the positions seem reversed. It looks like we're matched against an opponent\u2019s bet of 10 with our bet at 20. It might be a heads-up situation. The state doesn't show any action from the opponent, so maybe we should check. With a preflop hand of T8s on the button, I think a standard open raise could be effective. Raising to 40 or 60 might exploit the opponent\u2019s tendency to fold."
+  },
+  {
+   "step": 6,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand 3/10 bet-round 0",
+   "obs": "[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 100 chips (all others folded).\n[GAME] ===== Hand 3 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 960.00 chips | bet 10.00 | active\nP1 (SB): 1010.00 chips | bet 20.00 | active\nYour hole: 5\u2665, 5\u2660\n==============================================\n[Player 1] [Raise 40]\n[GAME] Player 1 raises to 60.\n[GAME] ===== Hand 3 / 10 - Pre\u2011flop =====\nPot: 70 | Current bet: 60\nVisible board: []\nP0 (Dealer/BB): 960.00 chips | bet 10.00 | active\nP1 (SB): 970.00 chips | bet 60.00 | active\nYour hole: 5\u2665, 5\u2660\n==============================================",
+   "action": "[Call]",
+   "reasoning": "I have pocket 5s. Opponent raised to 60 from SB. I should call or raise. With pocket pair heads-up, I should at least call. Let me call and see the flop."
+  },
+  {
+   "step": 7,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 3/10 bet-round 1",
+   "obs": "[Player 1] [Raise 40]\n[GAME] Player 1 raises to 60.\n[Player 0] [Call]\n[GAME] Player 0 calls 50.\n[GAME] ===== Hand 3 / 10 - Flop =====\nPot: 120 | Current bet: 0\nVisible board: [5\u2666, 6\u2665, 9\u2663]\nP0 (Dealer/BB): 910.00 chips | bet 0.00 | active\nP1 (SB): 970.00 chips | bet 0.00 | active\nYour hole: 8\u2663, 10\u2663\n==============================================",
+   "action": "[Bet 40]",
+   "reasoning": "**Analyzing poker strategy**\n\nI\u2019m considering a gutshot scenario with an 8-T hand on a 5-6-9 board. The 7 adds a straight draw. The overcards are modest, and as the pre-flop raiser, the low connected board tends to favor the big blind caller. I think checking is likely. In a heads-up situation, I could c-bet around 40% of the pot, balancing equity and fold equity. My opponent has folded previously but chose to call this time, so I need to be aware of board dynamics and ranges. I\u2019ll plan to bet 40 (about one-third of the pot)."
+  },
+  {
+   "step": 8,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand 3/10 bet-round 1",
+   "obs": "[Player 0] [Call]\n[GAME] Player 0 calls 50.\n[Player 1] [Bet 40]\n[GAME] Player 1 bets to 40.\n[GAME] ===== Hand 3 / 10 - Flop =====\nPot: 160 | Current bet: 40\nVisible board: [5\u2666, 6\u2665, 9\u2663]\nP0 (Dealer/BB): 910.00 chips | bet 0.00 | active\nP1 (SB): 930.00 chips | bet 40.00 | active\nYour hole: 5\u2665, 5\u2660\n==============================================",
+   "action": "[Raise 120]",
+   "reasoning": "I flopped a set of 5s (555). The board is 5\u2666, 6\u2665, 9\u2663. My opponent bet 40 into a pot of 160. I should raise to build the pot and extract value. Let me think about sizing - I could raise to maybe 120-160 to build the pot while keeping worse hands in."
+  },
+  {
+   "step": 9,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 3/10 bet-round 1",
+   "obs": "[Player 1] [Bet 40]\n[GAME] Player 1 bets to 40.\n[Player 0] [Raise 120]\n[GAME] Player 0 raises to 160.\n[GAME] ===== Hand 3 / 10 - Flop =====\nPot: 320 | Current bet: 160\nVisible board: [5\u2666, 6\u2665, 9\u2663]\nP0 (Dealer/BB): 750.00 chips | bet 160.00 | active\nP1 (SB): 930.00 chips | bet 40.00 | active\nYour hole: 8\u2663, 10\u2663\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "**Evaluating a poker hand**\n\nI'm analyzing a poker hand here. With gutshot straight possibilities and questionable overcards, it's looking tough. Plus, the backdoor flush draw only has one club on the board and two in my hand, making it impossible to complete. I'm facing a bet of 120 into a pot of 440, which puts me at 27.3% equity for the gutshot. Considering the implied odds are dangerous here, I think it\u2019s safe to fold."
+  },
+  {
+   "step": 10,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand 4/10 bet-round 0",
+   "obs": "[Player 0] [Raise 120]\n[GAME] Player 0 raises to 160.\n[Player 1] [Fold]\n[GAME] Player 1 folds.\n[GAME] Player 0 wins the pot of 320 chips (all others folded).\n[GAME] ===== Hand 4 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 1050.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 920.00 chips | bet 10.00 | active\nYour hole: 5\u2665, 7\u2665\n==============================================",
+   "action": "[Call]",
+   "reasoning": "Hand 4: I'm SB with 5\u2665 7\u2665. Suited connector, but pretty weak. I'm down to just calling the 20 or folding. With 7 hands left after this, I should be selective but not too tight. 57s is a marginal hand heads-up. I could limp in or fold.\n\nActually, I'm SB and the current bet is 20 (my SB). P1 has bet 10 (BB). I can call 10 more to see the flop, or fold. With a suited connector heads-up, calling is reasonable. Let me call.\n\nWait, let me check the pot odds. Pot is 30, I need to call 10 to win 30, so 3:1. That's pretty good odds for a suited connector heads-up."
+  },
+  {
+   "step": 11,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 4/10 bet-round 0",
+   "obs": "[Player 1] [Fold]\n[GAME] Player 1 folds.\n[GAME] Player 0 wins the pot of 320 chips (all others folded).\n[GAME] ===== Hand 4 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 1050.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 920.00 chips | bet 10.00 | active\nYour hole: Q\u2663, 10\u2665\n==============================================\n[Player 0] [Call]\n[GAME] ===== Hand 4 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 1050.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 920.00 chips | bet 10.00 | active\nYour hole: Q\u2663, 10\u2665\n==============================================",
+   "action": "[Raise 50]",
+   "reasoning": ""
+  },
+  {
+   "step": 12,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand 4/10 bet-round 0",
+   "obs": "[Player 0] [Call]\n[Player 1] [Raise 50]\n[GAME] Player 1 raises to 70.\n[GAME] ===== Hand 4 / 10 - Pre\u2011flop =====\nPot: 90 | Current bet: 70\nVisible board: []\nP0 (SB): 1050.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 860.00 chips | bet 70.00 | active\nYour hole: 5\u2665, 7\u2665\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "Hand 4, I have 5\u2665 7\u2665. Opponent raised to 70 after I limped. I'm getting 90+50=140 pot odds on calling 50, so about 2.8:1. 5\u26657\u2665 is a connected suited hand that can flop well. With position (I'm SB but act first post-flop since heads-up SB acts first... wait, actually in heads-up, the SB is the dealer and acts first pre-flop but the BB acts first post-flop? No, in heads-up, the dealer/SB acts first pre-flop, and the BB acts first post-flop. Wait, let me reconsider.\n\nActually in heads-up, the dealer button is the SB and acts first pre-flop. Post-flop, the BB acts first. So I'm the SB here and will be out of position post-flop.\n\n5\u26657\u2665 is a marginal hand. Getting 2.8:1 pot odds. It's not great but suited connectors can be playable. However, opponent has been aggressive (raising pre-flop a lot). I'm out of position with a weak hand. I think folding is the right play here.\n\nActually, let me reconsider. 5\u26657\u2665 is quite weak. Out of position against an aggressive opponent who has been raising. I should fold."
+  },
+  {
+   "step": 13,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 5/10 bet-round 0",
+   "obs": "[Player 1] [Raise 50]\n[GAME] Player 1 raises to 70.\n[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 90 chips (all others folded).\n[GAME] ===== Hand 5 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 1040.00 chips | bet 10.00 | active\nP1 (SB): 930.00 chips | bet 20.00 | active\nYour hole: J\u2666, 8\u2665\n==============================================",
+   "action": "[Raise 40]",
+   "reasoning": ""
+  },
+  {
+   "step": 14,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand 5/10 bet-round 0",
+   "obs": "[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 90 chips (all others folded).\n[GAME] ===== Hand 5 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 1040.00 chips | bet 10.00 | active\nP1 (SB): 930.00 chips | bet 20.00 | active\nYour hole: 3\u2665, A\u2663\n==============================================\n[Player 1] [Raise 40]\n[GAME] Player 1 raises to 60.\n[GAME] ===== Hand 5 / 10 - Pre\u2011flop =====\nPot: 70 | Current bet: 60\nVisible board: []\nP0 (Dealer/BB): 1040.00 chips | bet 10.00 | active\nP1 (SB): 890.00 chips | bet 60.00 | active\nYour hole: 3\u2665, A\u2663\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "I have A\u2663, 3\u2665 - a weak ace with a bad kicker. The opponent has been raising pre-flop frequently (hands 2, 3, 4, and now 5). They seem aggressive pre-flop. I'm in the BB facing a raise to 60, need to call 50 more into a pot of 70. With A3o, I'm likely behind most raising ranges but the opponent seems to raise a lot. However, A3o is quite weak - even if I hit an ace, my kicker is terrible. I think folding is the right play here."
+  },
+  {
+   "step": 15,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand 6/10 bet-round 0",
+   "obs": "[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 70 chips (all others folded).\n[GAME] ===== Hand 6 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 1020.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 950.00 chips | bet 10.00 | active\nYour hole: 10\u2666, 6\u2665\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "Hand 6 of 10. I'm SB with 10\u2666 6\u2665, a weak hand. I'm down 1020 vs 950, so I'm ahead by 70 chips. Opponent has been aggressive, raising pre-flop frequently. 10-6 offsuit is pretty bad. I could just fold and save chips, or I could limp/call and see a flop. Given opponent's aggression, calling would likely face a raise. Let me just fold this trash hand."
+  },
+  {
+   "step": 16,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 7/10 bet-round 0",
+   "obs": "[Player 1] [Raise 40]\n[GAME] Player 1 raises to 60.\n[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 70 chips (all others folded).\n[GAME] ===== Hand 6 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 1020.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 950.00 chips | bet 10.00 | active\nYour hole: 4\u2665, Q\u2666\n==============================================\n[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 30 chips (all others folded).\n[GAME] ===== Hand 7 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 1010.00 chips | bet 10.00 | active\nP1 (SB): 960.00 chips | bet 20.00 | active\nYour hole: J\u2663, 5\u2665\n==============================================",
+   "action": "[Raise 40]",
+   "reasoning": "**Evaluating poker strategy**\n\nI think we need to take action here. It\u2019s interesting that the cutoff and SB have posted 20. The betting labels seem reversed, which is unusual. Since we\u2019re first, we could raise or maybe just call? The current bet matches ours at 20, and I wonder if there's merit in checking since they raised directly earlier. With J5o as a marginal hand, I might raise to 40 or even up to 60, considering the opponent's tendency to fold."
+  },
+  {
+   "step": 17,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand 7/10 bet-round 0",
+   "obs": "[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 30 chips (all others folded).\n[GAME] ===== Hand 7 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 1010.00 chips | bet 10.00 | active\nP1 (SB): 960.00 chips | bet 20.00 | active\nYour hole: A\u2663, 5\u2666\n==============================================\n[Player 1] [Raise 40]\n[GAME] Player 1 raises to 60.\n[GAME] ===== Hand 7 / 10 - Pre\u2011flop =====\nPot: 70 | Current bet: 60\nVisible board: []\nP0 (Dealer/BB): 1010.00 chips | bet 10.00 | active\nP1 (SB): 920.00 chips | bet 60.00 | active\nYour hole: A\u2663, 5\u2666\n==============================================",
+   "action": "[Call]",
+   "reasoning": "A5 offsuit against a raise. Opponent has been raising frequently. I'm in position with A5. I could call and see a flop, but A5o is not great. However, opponent has been aggressive and I'm down in chips. Let me just call and see if I hit an ace."
+  },
+  {
+   "step": 18,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 7/10 bet-round 1",
+   "obs": "[Player 1] [Raise 40]\n[GAME] Player 1 raises to 60.\n[Player 0] [Call]\n[GAME] Player 0 calls 50.\n[GAME] ===== Hand 7 / 10 - Flop =====\nPot: 120 | Current bet: 0\nVisible board: [K\u2665, 4\u2663, 2\u2660]\nP0 (Dealer/BB): 960.00 chips | bet 0.00 | active\nP1 (SB): 920.00 chips | bet 0.00 | active\nYour hole: J\u2663, 5\u2665\n==============================================",
+   "action": "[Bet 40]",
+   "reasoning": ""
+  },
+  {
+   "step": 19,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand 7/10 bet-round 1",
+   "obs": "[Player 0] [Call]\n[GAME] Player 0 calls 50.\n[Player 1] [Bet 40]\n[GAME] Player 1 bets to 40.\n[GAME] ===== Hand 7 / 10 - Flop =====\nPot: 160 | Current bet: 40\nVisible board: [K\u2665, 4\u2663, 2\u2660]\nP0 (Dealer/BB): 960.00 chips | bet 0.00 | active\nP1 (SB): 880.00 chips | bet 40.00 | active\nYour hole: A\u2663, 5\u2666\n==============================================",
+   "action": "[Call]",
+   "reasoning": "I have A\u2663, 5\u2666 on a board of K\u2665, 4\u2663, 2\u2660. I have ace high with a gutshot straight draw (need a 3 to make a wheel: A-2-3-4-5). The pot is 160 and the bet is 40, so I'm getting 160:40 = 4:1 pot odds.\n\nMy opponent has been aggressive, raising pre-flop frequently and betting the flop. I have ace high and a gutshot. The gutshot gives me 4 outs to a straight, which is about 8% to hit by the turn, or roughly 16% by the river if I see both cards. But I'd need to call potentially two streets.\n\nWith just the gutshot and ace high, I'm not in great shape. The king on the board means my ace high might not be good if opponent has a king. But the pot odds are decent at 4:1, and I might be able to steal on later streets.\n\nActually, let me think more carefully. I have a gutshot (4 outs to a 3) and ace high. If I hit the straight, I likely win. If I don't, ace high might not be good enough against an aggressive player who raised pre-flop and bet the flop.\n\nThe opponent has been very aggressive - raising pre-flop almost every hand. This could mean they have a wide range. On a K-4-2 board, they could be continuation betting with a wide range that doesn't necessarily have a king.\n\nI think calling here is reasonable with the pot odds and the possibility that I can hit my straight or improve. But I could also consider raising as a bluff since the opponent might not have a king.\n\nActually, with just a gutshot and ace high, I think calling is the better play. Folding is also reasonable. Let me call and see the turn.\n\nWait, I should consider that this opponent raises a lot pre-flop and bets the flop. Their range is wide. On K-4-2, they might not have a king. If I call and hit an ace or a 3 on the turn, I could win. But if I call and miss, I might face another bet.\n\nI'll call with the pot odds and my draw."
+  },
+  {
+   "step": 20,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 7/10 bet-round 2",
+   "obs": "[Player 1] [Bet 40]\n[GAME] Player 1 bets to 40.\n[Player 0] [Call]\n[GAME] Player 0 calls 40.\n[GAME] ===== Hand 7 / 10 - Turn =====\nPot: 200 | Current bet: 0\nVisible board: [K\u2665, 4\u2663, 2\u2660, 10\u2665]\nP0 (Dealer/BB): 920.00 chips | bet 0.00 | active\nP1 (SB): 880.00 chips | bet 0.00 | active\nYour hole: J\u2663, 5\u2665\n==============================================",
+   "action": "[Check]",
+   "reasoning": ""
+  },
+  {
+   "step": 21,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand 7/10 bet-round 2",
+   "obs": "[Player 0] [Call]\n[GAME] Player 0 calls 40.\n[Player 1] [Check]\n[GAME] Player 1 checks.\n[GAME] ===== Hand 7 / 10 - Turn =====\nPot: 200 | Current bet: 0\nVisible board: [K\u2665, 4\u2663, 2\u2660, 10\u2665]\nP0 (Dealer/BB): 920.00 chips | bet 0.00 | active\nP1 (SB): 880.00 chips | bet 0.00 | active\nYour hole: A\u2663, 5\u2666\n==============================================",
+   "action": "[Check]",
+   "reasoning": "I have A\u2663, 5\u2666 with board K\u2665, 4\u2663, 2\u2660, 10\u2665. I have ace high and a gutshot straight draw (need a 3 to make a wheel: A-2-3-4-5). The pot is 200 and it's checked to me. I could check for a free card or bet as a bluff. My hand is weak - just ace high with a gutshot. With 4 hands left and I'm ahead in chips (920 vs 880), I should probably check and see the river for free."
+  },
+  {
+   "step": 22,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 7/10 bet-round 3",
+   "obs": "[Player 1] [Check]\n[GAME] Player 1 checks.\n[Player 0] [Check]\n[GAME] Player 0 checks.\n[GAME] ===== Hand 7 / 10 - River =====\nPot: 200 | Current bet: 0\nVisible board: [K\u2665, 4\u2663, 2\u2660, 10\u2665, 3\u2663]\nP0 (Dealer/BB): 920.00 chips | bet 0.00 | active\nP1 (SB): 880.00 chips | bet 0.00 | active\nYour hole: J\u2663, 5\u2665\n==============================================",
+   "action": "[Bet 130]",
+   "reasoning": ""
+  },
+  {
+   "step": 23,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand 7/10 bet-round 3",
+   "obs": "[Player 0] [Check]\n[GAME] Player 0 checks.\n[Player 1] [Bet 130]\n[GAME] Player 1 bets to 130.\n[GAME] ===== Hand 7 / 10 - River =====\nPot: 330 | Current bet: 130\nVisible board: [K\u2665, 4\u2663, 2\u2660, 10\u2665, 3\u2663]\nP0 (Dealer/BB): 920.00 chips | bet 0.00 | active\nP1 (SB): 750.00 chips | bet 130.00 | active\nYour hole: A\u2663, 5\u2666\n==============================================",
+   "action": "[Raise 300]",
+   "reasoning": "The river is 3\u2663, giving me A\u2663, 5\u2666 with board K\u2665, 4\u2663, 2\u2660, 10\u2665, 3\u2663. I have A-5 which is ace high. The 3 gives me a wheel draw completed? No - I have A,5 and the board has 4,2,3 so I have A-2-3-4-5 which is a wheel straight! That's a 5-high straight.\n\nWait, let me check: my hand is A\u2663, 5\u2666. Board: K\u2665, 4\u2663, 2\u2660, 10\u2665, 3\u2663. So my five cards would be A, 5, 4, 3, 2 - that's a wheel (5-high straight). \n\nThe opponent bet 130 into a pot of 200 on the turn, and now bets 130 on the river. This is a pretty big bet. I have a wheel straight which is a strong hand. The only hands that beat me would be a higher straight (6-5-4-3-2 would need a 6, or 10-J would need J, etc.) or a flush (two hearts on board: K\u2665, 10\u2665 - but only two hearts so no flush possible). Sets or two pair don't beat a straight.\n\nActually, could they have a higher straight? 6-7 would give 3-4-5-6-7. Or A-6 would give 2-3-4-5-6. But those are specific holdings. With the 3\u2663 on the river completing the wheel, this is a strong hand. I should raise for value.\n\nPot is 330, bet is 130. I have 920 chips. I should raise here. Let me raise to maybe 300 or so to get value.\n\nActually, let me think about the sizing. The pot is 330, they bet 130. A raise to around 350-400 seems reasonable. Let me go with [Raise 300] which would make it 430 total.\n\nWait, I need to understand the raise mechanics. \"Raise N\" means raise by N chips. So if current bet is 130, and I raise by 300, the total bet would be 130 + 300 = 430? Or does it mean raise to N?\n\nLooking at the game history: In hand 3, P1 bet 40, and I did [Raise 120] which resulted in \"Player 0 raises to 160.\" So the bet was 40, I raised 120, total became 160. That means Raise N means the total bet becomes N? No, 40 + 120 = 160. So raise by N means adding N to the current bet.\n\nWait, actually looking more carefully: the opponent bet 40, and I raised 120, and it says \"raises to 160.\" 40 + 120 = 160. So [Raise N] means raise by N, making the total bet current_bet + N.\n\nCurrent bet is 130. If I raise by 300, total would be 430. I have 920 chips, so I can afford this.\n\nLet me raise by 300 to make it 430 total. That's a solid value raise with the wheel."
+  },
+  {
+   "step": 24,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 7/10 bet-round 3",
+   "obs": "[Player 1] [Bet 130]\n[GAME] Player 1 bets to 130.\n[Player 0] [Raise 300]\n[GAME] Player 0 raises to 430.\n[GAME] ===== Hand 7 / 10 - River =====\nPot: 760 | Current bet: 430\nVisible board: [K\u2665, 4\u2663, 2\u2660, 10\u2665, 3\u2663]\nP0 (Dealer/BB): 490.00 chips | bet 430.00 | active\nP1 (SB): 750.00 chips | bet 130.00 | active\nYour hole: J\u2663, 5\u2665\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "**Analyzing poker hands**\n\nI'm trying to figure out the situation with the hand I have. It looks like I need an Ace for a straight, and I've only got 5 on the board with cards 2, 3, 4, and 5. There's no straight \u2013 just a Jack high, which isn't great. And since the river bluff raised, I think it\u2019s better to fold rather than risk it here. That doesn\u2019t seem like a smart play!"
+  },
+  {
+   "step": 25,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand 8/10 bet-round 0",
+   "obs": "[Player 0] [Raise 300]\n[GAME] Player 0 raises to 430.\n[Player 1] [Fold]\n[GAME] Player 1 folds.\n[GAME] Player 0 wins the pot of 760 chips (all others folded).\n[GAME] ===== Hand 8 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 1230.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 740.00 chips | bet 10.00 | active\nYour hole: 6\u2660, J\u2663\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "Hand 8/10. I'm SB with 6\u2660, J\u2663. Stack: 1230, opponent: 740. Pot: 30, current bet: 20 (my SB).\n\nJ6 offsuit is a weak hand. I'm SB. I could just call and see a flop cheaply, or fold. Given my chip lead and the weak hand, folding is fine. But calling 10 more to see a flop isn't terrible with position post-flop (I'm SB but act first post-flop... actually in heads-up, SB acts first post-flop).\n\nLet me just fold this weak hand."
+  },
+  {
+   "step": 26,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 9/10 bet-round 0",
+   "obs": "[Player 1] [Fold]\n[GAME] Player 1 folds.\n[GAME] Player 0 wins the pot of 760 chips (all others folded).\n[GAME] ===== Hand 8 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 1230.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 740.00 chips | bet 10.00 | active\nYour hole: 3\u2666, A\u2665\n==============================================\n[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 30 chips (all others folded).\n[GAME] ===== Hand 9 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 1220.00 chips | bet 10.00 | active\nP1 (SB): 750.00 chips | bet 20.00 | active\nYour hole: 3\u2666, A\u2660\n==============================================",
+   "action": "[Raise 40]",
+   "reasoning": "**Considering poker strategy**\n\nI think we need to take action here. With an A3o and 37.5bb, the opponent in the BB sometimes folds but also calls. Maybe I should raise to 60. I'm contemplating the idea of a \"token raise\" for increment semantics. I could also consider a shove strategy since there are only two hands left. Still, I want to maximize chips throughout the match since I'm at a disadvantage. So, a standard raise of 40 seems like the right move."
+  },
+  {
+   "step": 27,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand 9/10 bet-round 0",
+   "obs": "[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 30 chips (all others folded).\n[GAME] ===== Hand 9 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 1220.00 chips | bet 10.00 | active\nP1 (SB): 750.00 chips | bet 20.00 | active\nYour hole: 5\u2666, 9\u2660\n==============================================\n[Player 1] [Raise 40]\n[GAME] Player 1 raises to 60.\n[GAME] ===== Hand 9 / 10 - Pre\u2011flop =====\nPot: 70 | Current bet: 60\nVisible board: []\nP0 (Dealer/BB): 1220.00 chips | bet 10.00 | active\nP1 (SB): 710.00 chips | bet 60.00 | active\nYour hole: 5\u2666, 9\u2660\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "Hand 9 of 10. I have 5\u2666, 9\u2660 - a weak hand. Opponent has been raising pre-flop frequently. I'm up 1220 to 750, so I have a big chip lead. With 2 hands left, I should be careful but this hand is quite weak. Let me just fold and maintain my lead."
+  },
+  {
+   "step": 28,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand 10/10 bet-round 0",
+   "obs": "[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 70 chips (all others folded).\n[GAME] ===== Hand 10 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 1200.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 770.00 chips | bet 10.00 | active\nYour hole: 2\u2665, 8\u2665\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "Last hand. I'm SB with 2\u2665 8\u2665. I have 1200 chips, opponent has 770. I'm up 430 chips overall. This is a weak hand but it's the last hand and I have a chip lead. Let me just fold and lock in the win."
+  }
+ ]
+}

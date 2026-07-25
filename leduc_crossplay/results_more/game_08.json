@@ -1,0 +1,402 @@
+{
+ "game_id": 8,
+ "env": "leduc",
+ "players": 2,
+ "seed": 107,
+ "seat_models": [
+  "z-ai/glm-5.2",
+  "openai/gpt-5.6-sol-pro"
+ ],
+ "rewards": {
+  "0": -1,
+  "1": 1
+ },
+ "winners": [
+  1
+ ],
+ "winning_models": [
+  "gpt-5.6-sol-pro"
+ ],
+ "win_label": "P1(gpt-5.6-sol-pro)",
+ "reason": "Reached hand limit | stacks 118>82",
+ "meta": {
+  "final_bank": {
+   "0": 82,
+   "1": 118
+  },
+  "hands_dealt": 6
+ },
+ "n_steps": 23,
+ "timed_out": false,
+ "wall_seconds": 166.0,
+ "transcript": [
+  {
+   "step": 1,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand1/rd0",
+   "private": {
+    "card": 2,
+    "board_card": 1,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[GAME] You are Player 1 in Leduc Hold'em.\nRespond with one action token like '[check]', '[bet]', '[call]', '[raise]', or '[fold]' when it is your turn.\nFixed bet sizes: 2 chips pre-flop, 4 chips post-flop (max 2 raises per round).\n[GAME] ### New hand - your private card: K\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 2,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand1/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[GAME] You are Player 0 in Leduc Hold'em.\nRespond with one action token like '[check]', '[bet]', '[call]', '[raise]', or '[fold]' when it is your turn.\nFixed bet sizes: 2 chips pre-flop, 4 chips post-flop (max 2 raises per round).\n[GAME] ### New hand - your private card: J\n[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": "I have a J and Player 1 bets 2 pre-flop. In Leduc with a 6-card deck (JJQQKK), having a J is the lowest card. Pre-flop, a bet from the opponent could be with any card, but J is weak. Let me think about whether to call or fold.\n\nWith a J, I'm behind to Q and K. The opponent could be betting with anything. If I call and hit a J on the board, I have a pair which is strong. The probability of hitting a J on the board is 1/5 (since there's one J left in 5 remaining cards). That's 20% chance of hitting a pair.\n\nIf I don't hit, I lose to any Q or K. The opponent betting suggests they might have a Q or K, or they could be bluffing with a J.\n\nCalling costs 2 to potentially win. If I hit a J, I can win a big pot. If I miss, I can fold post-flop. The pot would be 1+1+2+2 = 6 after I call. I'm calling 2 to win 4 (the opponent's bet + antes).\n\nActually, let me think more carefully. With a J, I'm at the bottom of the range. But calling to see the flop has some value because if I pair the board, I have a very strong hand (trips actually - wait, no, pair with board means my private card matches the board card, so I'd have a pair of Js, which beats any high card).\n\nProbability of hitting J on board: 1 remaining J out of 5 remaining cards = 20%.\n\nIf I hit, I win most of the time. If I miss, I can fold. This seems like a reasonable call. In equilibrium, you should defend enough of your range pre-flop, and calling with J is part of a balanced strategy.\n\nI'll call."
+  },
+  {
+   "step": 3,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand1/rd1",
+   "private": {
+    "card": 2,
+    "board_card": 1,
+    "round": 1,
+    "pot": 6,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[Player 0] [call]\n[GAME] Player 0 calls 2.\n[GAME] Flop card revealed: Q\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 4,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand1/rd1",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 1,
+    "pot": 10,
+    "current_bet": 4
+   },
+   "obs": "[Player 0] [call]\n[GAME] Player 0 calls 2.\n[GAME] Flop card revealed: Q\n[Player 1] [bet]\n[GAME] Player 1 bets 4.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[fold]",
+   "reasoning": "I have J, board is Q. Opponent bet pre-flop and now bets post-flop. I have a J with a Q on board - no pair, just high card J. Opponent's range: they could have Q (pair on board, strong), K (high card, still beats me), or J (same as me, but then it's a chop since board Q is higher than both our J's... wait, no. If opponent has J and I have J, we both have J high with Q on board, so it's a chop).\n\nOpponent bet pre-flop and post-flop. With Q they'd bet (strong pair). With K they might bet (high card K beats my J). With J they might bet (bluff or value).\n\nI lose to Q (pair) and K (higher high card). I only chop with J. There's only 1 J left and 2 Q's and 2 K's remaining unseen (5 cards unseen: 1 J, 2 Q, 2 K). So probability opponent has Q is 2/5, K is 2/5, J is 1/5. I lose 4/5 of the time and chop 1/5.\n\nCalling costs 4 chips. If I call and lose, I lose 4. If I call and chop, I get half the pot back. Not worth it. Folding is best here."
+  },
+  {
+   "step": 5,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand2/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 0,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 97; Player 1: 103\n\n[GAME] ### New hand - your private card: J\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "I have a J again. Let me think about the situation. I'm down 3 chips over the match so far. With J in a 6-card deck (JJQQKK), J is the lowest card. \n\nLet me think about strategy. With J, I have the weakest private card. Pre-flop, I could check or bet. Betting with the worst card isn't great for value, but could work as a bluff. Checking is more standard with the weakest card.\n\nLet me check and see what happens."
+  },
+  {
+   "step": 6,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand2/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 4.\n[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 97; Player 1: 103\n\n[GAME] ### New hand - your private card: Q\n[Player 0] [check]\n[GAME] Player 0 checks.\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "**Evaluating preflop Q choice**\n\nI'm considering how to choose the preflop Q after my opponent checks in a heads-up limit Leduc game. Should I bet with a Q, perhaps mixing my strategy? It's a little tricky since I'm not sure about stack exploitation, and I want to make the right choice. I'll need to be precise in my analysis to determine the best move. Let's explore this further!"
+  },
+  {
+   "step": 7,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand2/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 0,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 0] [check]\n[GAME] Player 0 checks.\n[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[fold]",
+   "reasoning": "I have J again. Opponent bet after I checked. Let me think about this.\n\nIn Leduc with a 6-card deck (JJQQKK), my J is the lowest card. Opponent is betting 2. They could have J, Q, or K. If they have Q or K, I'm behind. If they have J, we're tied. \n\nThe pot is currently 2 (antes) + 2 (their bet) = 4. Calling costs 2. I'm behind to Q and K, tied with J. That's not great - 2/3 of their range beats me. But calling to see the flop could be worth it if I hit a pair on the board.\n\nActually, with J, if the flop comes J, I have a pair and likely win. If flop comes Q or K, I still have just a high card J which loses to Q and K. So I need a J on the flop to improve, which happens with probability roughly 1/5 (one J left out of 5 unknown cards).\n\nThat's not great odds. I should probably fold here since I'm the worst card and opponent is showing aggression.\n\nBut wait - I've been folding a lot. Let me think about whether I should call occasionally to not be too exploitable. Still, calling with the worst card against a bet is generally bad. I'll fold."
+  },
+  {
+   "step": 8,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand3/rd0",
+   "private": {
+    "card": 2,
+    "board_card": 1,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 96; Player 1: 104\n\n[GAME] ### New hand - your private card: K\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 9,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand3/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 96; Player 1: 104\n\n[GAME] ### New hand - your private card: J\n[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": "I keep getting J, which is the worst card in Leduc Hold'em. My opponent has been aggressive, betting every time. I've been folding a lot, which might make my opponent think I'm very tight. At some point I need to fight back or I'll just bleed chips.\n\nWith J, I'm at a significant disadvantage. But folding every J is exploitable. Let me consider calling here to see the flop - if I hit a J on the board I have a pair, which is strong. The probability of hitting J on the flop is 2/5 (since 2 Js remain out of 5 unseen cards... wait, deck has 6 cards: JJQQKK, I have one J, so 5 remaining: J, Q, Q, K, K). So 1/5 chance of hitting a J on the flop.\n\nActually, let me think about this more carefully. The opponent has been betting aggressively every hand. They might be exploiting my tight fold strategy. If I call here and hit a J, I can win big. If I miss, I can fold on the flop.\n\nBut calling with J against a bet costs 2 chips, and I only hit a pair 1/5 of the time. When I miss, I'll likely face another bet on the flop and have to fold. So expected cost is about 2 chips for 1/5 chance of winning.\n\nActually, let me think about whether I should raise here as a bluff/defense. If I raise, it costs 4 more chips (2 to call + 2 to raise? No, raise means I put in 4 total since bet size is 2). The opponent might fold a Q or K... no, they probably won't fold those. They might fold a J though, but if they have J it's a chop.\n\nI think calling is reasonable here to stop being exploited by constant aggression. Let me call and see the flop."
+  },
+  {
+   "step": 10,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand3/rd1",
+   "private": {
+    "card": 2,
+    "board_card": 1,
+    "round": 1,
+    "pot": 6,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[Player 0] [call]\n[GAME] Player 0 calls 2.\n[GAME] Flop card revealed: Q\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "**Evaluating betting strategy**\n\nI need to take action here. It might be good to consider varying my approach. If I go with a high bet on K for either value or bluff, that could be interesting. I'm curious about how this could play out in terms of strategy and its effectiveness in the situation. Adjusting tactics might just be what I need to consider my options thoroughly!"
+  },
+  {
+   "step": 11,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand3/rd1",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 1,
+    "pot": 10,
+    "current_bet": 4
+   },
+   "obs": "[Player 0] [call]\n[GAME] Player 0 calls 2.\n[GAME] Flop card revealed: Q\n[Player 1] [bet]\n[GAME] Player 1 bets 4.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[fold]",
+   "reasoning": "I keep getting J and the board keeps showing Q. I've folded twice to bets on Q boards. My opponent might be exploiting my tight play by betting aggressively. With J on a Q board, I have a high card J - not great, but if my opponent is bluffing or has a K that missed, I might consider calling or raising. But J is the lowest card in the deck, so I lose to any K or Q (and pairs). The only hand I beat is J without a pair on board, which would be a chop if they also have J. \n\nActually, let me think about this more carefully. The deck is J J Q Q K K. I have J, board is Q. So remaining cards: J, Q, K, K. If opponent has K, they have K high vs my J high - I lose. If opponent has Q, they have a pair of Qs - I lose. If opponent has J, we both have J high with Q on board - it's a chop (both have J high, Q kicker... wait, no. I have J and Q on board, they have J and Q on board. Best hand: Q high with J kicker for both - chop).\n\nSo I only chop with J and lose to everything else. Calling here is bad. Folding is correct.\n\nBut I've been folding a lot... my opponent might be exploiting this. Still, the math says fold here. I can only chop at best."
+  },
+  {
+   "step": 12,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand4/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 93; Player 1: 107\n\n[GAME] ### New hand - your private card: J\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "I keep getting J and facing bets. Let me think about this. I have J again. The deck is J J Q Q K K. I've seen a lot of Qs on the flop. My J is a weak card. Let me try checking and see what happens. If opponent bets, I might consider calling or raising occasionally to mix things up, but J is genuinely weak in this game. Let me check."
+  },
+  {
+   "step": 13,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand4/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 1,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 4.\n[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 93; Player 1: 107\n\n[GAME] ### New hand - your private card: Q\n[Player 0] [check]\n[GAME] Player 0 checks.\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 14,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand4/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 0] [check]\n[GAME] Player 0 checks.\n[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[fold]",
+   "reasoning": "I keep getting J and the board keeps hitting Q. I'm bleeding chips by calling pre-flop and folding post-flop. Let me think about this.\n\nI have J. The opponent has been betting aggressively every time. They could have Q or K, or they could be bluffing with J. But I keep folding and losing chips.\n\nAt some point I need to either fold pre-flop to a bet with J, or call down to see if they're bluffing. But J is the weakest card in Leduc. Against a bet, calling with J pre-flop is marginal at best.\n\nActually, let me just fold here. J is the weakest card, and the opponent is betting every time. I'm losing 1 chip (ante) + 2 (call) = 3 per hand when I call and then fold post-flop. If I fold pre-flop, I only lose 1 (ante).\n\nWait, but I should think about whether to call or fold. With J, I'm the weakest card. If opponent has K or Q, I lose. If opponent has J, it's a chop unless the board pairs. The opponent is betting every hand, which could mean they're aggressive with anything, or they actually have good cards.\n\nGiven I keep getting J and they keep betting, folding pre-flop saves me 2 chips per hand compared to calling and folding post-flop. Let me fold here."
+  },
+  {
+   "step": 15,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand5/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 1,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 92; Player 1: 108\n\n[GAME] ### New hand - your private card: Q\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 16,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand5/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 92; Player 1: 108\n\n[GAME] ### New hand - your private card: J\n[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": "I keep getting J and the opponent keeps betting. I've been folding a lot, which is exploitable. Let me think about this.\n\nI have J. The opponent has been aggressive every hand. In Leduc with a 6-card deck (JJQQKK), J is the worst card. But I've folded 5 hands in a row now. My opponent might be exploiting me by betting regardless of their card.\n\nLet me call here and see the flop. If I hit a J on the flop I have a pair, which is strong. If the flop is Q or K, I have a weak hand but I can fold post-flop. But at some point I need to show down or fight back, otherwise I'm just bleeding chips.\n\nActually, let me just call and see the flop. If I pair up, great. If not, I can fold. But I need to stop folding pre-flop every time with J."
+  },
+  {
+   "step": 17,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand5/rd1",
+   "private": {
+    "card": 1,
+    "board_card": 1,
+    "round": 1,
+    "pot": 6,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[Player 0] [call]\n[GAME] Player 0 calls 2.\n[GAME] Flop card revealed: Q\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "**Analyzing hand strength**\n\nI'm recognizing that we have a pair of Queens, but with a King high, the question arises about whether a higher pair beats it. If the opponent has a King or a Jack, my pair of Queens might not hold up. I realize that a Jack/Q pair isn't possible because of the cards in play, plus the fact that both our Queen and the board exhaust others. The opponent could have the nuts here, so I should consider betting."
+  },
+  {
+   "step": 18,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand5/rd1",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 1,
+    "pot": 10,
+    "current_bet": 4
+   },
+   "obs": "[Player 0] [call]\n[GAME] Player 0 calls 2.\n[GAME] Flop card revealed: Q\n[Player 1] [bet]\n[GAME] Player 1 bets 4.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[fold]",
+   "reasoning": "I keep getting J and the flop keeps being Q. I've been folding every time on the flop. My opponent is betting aggressively every time. I'm losing chips steadily. Let me think about this.\n\nI have J, flop is Q. I have nothing - just a high card J, but Q is higher. If my opponent has a Q, they have a pair and I lose. If they have a K, they have high card K which beats my J. If they have a J, we tie on high card but... actually if they have J and board is Q, we both have high card J... wait no, the board card is Q, so if neither of us has a Q, the high card would be Q from the board for both of us. Actually, let me reconsider the rules.\n\nIn Leduc Hold'em, at showdown: a pair with the board beats a high card, else higher card wins. So if I have J and board is Q:\n- If opponent has Q: they have a pair (Q,Q) - I lose\n- If opponent has K: they have high card, but K > J, so... wait, the board is Q. So the comparison would be: neither has a pair with the board. Higher card wins. But what cards are compared? My private card is J, board is Q. Opponent's private card is K. So opponent's best hand is K (high card), my best hand is Q (from board)? Or is it J?\n\nActually in Leduc, I think the hand is just your private card + board card. If your private card matches the board, you have a pair. Otherwise, your hand is the higher of your two cards. So with J and board Q, my hand is Q-high (the board card). If opponent has K, their hand is K-high, which beats Q-high. If opponent has J, their hand is also Q-high (tie). If opponent has Q, they have a pair which beats high card.\n\nSo with J and board Q:\n- Opponent has Q: I lose (pair beats high card)\n- Opponent has K: I lose (K > Q)\n- Opponent has J: tie\n\nSo I can only tie at best. Folding is correct here. But I keep bleeding chips from calling pre-flop. \n\nThe issue is I keep calling pre-flop with J and then having to fold on the flop. Maybe I should just fold pre-flop with J when facing a bet? But J isn't terrible pre-flop - 1/3 of the time the flop is J and I have a pair.\n\nActually, let me reconsider. The opponent is betting every time pre-flop and every time post-flop. They could be doing this with any card. If they have J too, the flop Q means we tie. But I can't win, only tie. So calling the flop bet is just burning money when I can only tie at best.\n\nThe real question is whether I should stop calling pre-flop with J. But I've been dealt J every single hand. The opponent is betting every time. \n\nLet me just fold here again. Calling pre-flop costs 2, folding on flop costs 4 more. If I fold pre-flop, I save 2. But sometimes the flop will be J and I'll have a pair.\n\nActually, I should think about the overall strategy. With J facing a bet pre-flop:\n- 1/3 chance flop is J: I have a pair, I'm strong\n- 1/3 chance flop is Q: I can only tie (opponent has J) or lose\n- 1/3 chance flop is K: I can only tie (opponent has J) or lose (opponent has K)\n\nWait, with flop K and I have J: opponent could have K (pair, I lose) or J (high card K from board for both, tie) or Q (high card K from board for both, tie). So with flop K, I can tie or lose.\n\nWith flop Q and I have J: opponent could have Q (pair, I lose), K (high card K > Q, I lose), or J (high card Q for both, tie). So I can only tie or lose.\n\nWith flop J and I have J: I have a pair. Opponent could have J (pair, tie), Q (high card Q, I win with pair), K (high card K, I win with pair). So I win or tie.\n\nSo pre-flop call is +EV only if the J flop case compensates. But the opponent bets post-flop every time, so even when I hit the pair on J flop, I need to call/raise.\n\nThe problem is I keep getting the same card and same flop. Let me just fold this time to stop the bleeding. Actually, let me call pre-flop and if the flop is Q again, fold. The pre-flop call is probably fine because 1/3 of the time I hit a pair.\n\nLet me just fold on the flop as usual."
+  },
+  {
+   "step": 19,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand6/rd0",
+   "private": {
+    "card": 2,
+    "board_card": 1,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 89; Player 1: 111\n\n[GAME] ### New hand - your private card: K\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "I have K, which is the strongest card in Leduc. I should bet for value."
+  },
+  {
+   "step": 20,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand6/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 1,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 4.\n[Player 0] [fold]\n[GAME] Player 0 folds.Current banks: Player 0: 89; Player 1: 111\n\n[GAME] ### New hand - your private card: Q\n[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": ""
+  },
+  {
+   "step": 21,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand6/rd1",
+   "private": {
+    "card": 2,
+    "board_card": 1,
+    "round": 1,
+    "pot": 6,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[Player 1] [call]\n[GAME] Player 1 calls 2.\n[GAME] Flop card revealed: Q\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": "I have K with Q on the board. K high is decent but not a pair. Let me bet for value since K is the highest card and if opponent has J they'd fold or call with worse."
+  },
+  {
+   "step": 22,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand6/rd1",
+   "private": {
+    "card": 1,
+    "board_card": 1,
+    "round": 1,
+    "pot": 6,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [call]\n[GAME] Player 1 calls 2.\n[GAME] Flop card revealed: Q\n[Player 0] [check]\n[GAME] Player 0 checks.\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "**Assessing the hand**\n\nI need to analyze the poker hand carefully. I've got a strong pair with the Q board, but I\u2019m unsure about the King. A pair definitely beats high cards. The only other Q might be impossible for the opponent. If we hold the Q board along with a Q, and if the opponent has a J or a K, then I've got the nuts. It\u2019s time to make a bet!"
+  },
+  {
+   "step": 23,
+   "pid": 0,
+   "model": "z-ai/glm-5.2",
+   "phase": "hand6/rd1",
+   "private": {
+    "card": 2,
+    "board_card": 1,
+    "round": 1,
+    "pot": 10,
+    "current_bet": 4
+   },
+   "obs": "[Player 0] [check]\n[GAME] Player 0 checks.\n[Player 1] [bet]\n[GAME] Player 1 bets 4.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": "I have K with board Q. My K is higher than the board Q, so I have high card K. Opponent bets 4. They could have a Q (pair) or K (tie) or J (I beat them). Given the opponent has been aggressive throughout, they could be betting a Q for value or bluffing with J. With K high card, I should at least call here since I beat J and tie with K, only losing to Q. Let me call."
+  }
+ ]
+}

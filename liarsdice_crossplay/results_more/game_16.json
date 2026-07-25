@@ -1,0 +1,442 @@
+{
+ "game_id": 16,
+ "env": "liars",
+ "players": 2,
+ "seed": 115,
+ "seat_models": [
+  "openai/gpt-5.6-sol-pro",
+  "moonshotai/kimi-k3"
+ ],
+ "rewards": {
+  "0": 1.0,
+  "1": -1.0
+ },
+ "winners": [
+  0
+ ],
+ "winning_models": [
+  "gpt-5.6-sol-pro"
+ ],
+ "win_label": "P0(gpt-5.6-sol-pro)",
+ "reason": "Player 0 wins! Final ranking: [1, 0]",
+ "meta": {
+  "final_remaining_dice": {
+   "0": 3,
+   "1": 0
+  },
+  "elimination_order": [
+   1
+  ]
+ },
+ "n_steps": 19,
+ "timed_out": false,
+ "wall_seconds": 417.1,
+ "transcript": [
+  {
+   "step": 1,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "dice {0: 5, 1: 5}",
+   "private": {
+    "dice": [
+     3,
+     2,
+     1,
+     5,
+     1
+    ],
+    "facing_bid": {
+     "quantity": 0,
+     "face_value": 0
+    },
+    "remaining_dice": 5
+   },
+   "obs": "[GAME] You are Player 0 in an 2-player Liar's Dice game.\nRules:\n- On your turn, you may either:\n  1) Make a new bid with a higher quantity or higher face (or both) than the current bid; i.e. '[Bid: 3, 4]',\n  2) Call the last bid by typing '[Call]'.\n\nIf you call:\n  - If the actual count of that face value among all dice is less than the bid, the last bidder loses one die.\n  - Otherwise, the caller loses one die.\nA player who reaches 0 dice is eliminated. The last remaining player wins.\n[GAME] \nNew round - Remaining dice: \tPlayer 0: 5; \tPlayer 1: 5\nYour current Dice are: 3, 2, 1, 5, 1",
+   "action": "[Bid: 2, 1]",
+   "reasoning": ""
+  },
+  {
+   "step": 2,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "dice {0: 5, 1: 5}",
+   "private": {
+    "dice": [
+     3,
+     5,
+     3,
+     6,
+     6
+    ],
+    "facing_bid": {
+     "quantity": 2,
+     "face_value": 1
+    },
+    "remaining_dice": 5
+   },
+   "obs": "[GAME] You are Player 1 in an 2-player Liar's Dice game.\nRules:\n- On your turn, you may either:\n  1) Make a new bid with a higher quantity or higher face (or both) than the current bid; i.e. '[Bid: 3, 4]',\n  2) Call the last bid by typing '[Call]'.\n\nIf you call:\n  - If the actual count of that face value among all dice is less than the bid, the last bidder loses one die.\n  - Otherwise, the caller loses one die.\nA player who reaches 0 dice is eliminated. The last remaining player wins.\n[GAME] \nNew round - Remaining dice: \tPlayer 0: 5; \tPlayer 1: 5\nYour current Dice are: 3, 5, 3, 6, 6\n[Player 0] [Bid: 2, 1]\n[GAME] Player 0 bids 2 of face 1.",
+   "action": "[Call]",
+   "reasoning": "Let me analyze this Liar's Dice game situation.\n\nMy dice: 3, 5, 3, 6, 6\n- I have: two 3s, one 5, two 6s\n- No 1s, no 2s, no 4s\n\nPlayer 0 bid: 2 of face 1.\n\nTotal dice on table: 10 (5 mine, 5 theirs).\n\nI have zero 1s. For the bid of 2 ones to be true, Player 0 needs at least 2 ones among their 5 dice.\n\nExpected number of 1s in their 5 dice: 5/6 \u2248 0.83. Probability of having 2+ ones:\nP(X \u2265 2) where X ~ Binomial(5, 1/6)\nP(X=0) = (5/6)^5 \u2248 0.4019\nP(X=1) = 5 \u00d7 (1/6) \u00d7 (5/6)^4 \u2248 5 \u00d7 0.1667 \u00d7 0.4823 \u2248 0.4019\nP(X\u22652) \u2248 1 - 0.4019 - 0.4019 \u2248 0.1962\n\nSo there's about a 19.6% chance the bid is true. Calling would give me ~80% chance of winning the call.\n\nBut wait \u2014 should I call immediately or raise? Calling now has a high success rate (~80%). But I could also raise to something safe and continue to gather information.\n\nHowever, in heads-up Liar's Dice, early aggressive calls on unlikely bids are good. The bid of 2 ones when I have zero ones is a good call opportunity.\n\nAlternatively, I could bid something like 2 of 3s (I have two 3s, so guaranteed at least 2) \u2014 wait, the bid needs to be higher than 2 of 1s. Higher quantity or higher face. So I could bid 2 of 2, 2 of 3, etc., or 3 of anything.\n\nIf I bid 2 of 3s, I have both 3s myself, so the bid is guaranteed true (count is at least 2). That's a safe bid and puts pressure on Player 0. They'd have to raise or call. If they call, they lose a die.\n\nHmm, but calling now has ~80% success. Bidding 2 of 3s is safe and forces them into a decision. Let me think about which is better.\n\nIf I call: 80% chance they lose a die (5\u21924), 20% chance I lose a die (5\u21924).\n\nIf I bid 2 of 3s: guaranteed true. Then Player 0 must either raise or call. If they call, they lose a die (bad for them, so they won't call). They'll raise to something. Then I get more info.\n\nActually, calling immediately with an 80% win rate is very strong. But the consideration: bidding 2,3 keeps the game going with no risk, and I might get a better opportunity later. However, in heads-up play with 5 dice each, taking an 80% call now is great value.\n\nActually, let me reconsider. The expected value:\n- Call now: 0.8 probability opponent loses a die.\n- Bid 2,3 (safe): opponent will likely raise. Their raise gives information. But they might also just bid something safe.\n\nIn Liar's Dice strategy, when the opponent makes a bid that's only ~20% likely to be true, calling is usually correct. The alternative of making a safe bid gives them another turn.\n\nAlso consider: they bid 2 of 1s as an opening bid. This might be a bluff or they might have ones. Opening bids are often conservative bluffs.\n\nI'll call. Probability strongly favors me: ~80%.\n\nActually, let me double-check the calculation. I have no 1s. Total needed: 2 ones from opponent's 5 dice.\n\nP(opponent has \u22652 ones) = 1 - P(0) - P(1)\nP(0) = (5/6)^5 = 3125/7776 \u2248 0.4019\nP(1) = C(5,1)(1/6)(5/6)^4 = 5 \u00d7 (1/6) \u00d7 (625/1296) = 5 \u00d7 625 / 7776 = 3125/7776 \u2248 0.4019\nP(\u22652) = 1 - 6250/7776 = 1526/7776 \u2248 0.1962\n\nYes, ~19.6%. Calling wins ~80.4% of the time.\n\nThe answer is [Call]."
+  },
+  {
+   "step": 3,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "dice {0: 5, 1: 4}",
+   "private": {
+    "dice": [
+     3,
+     4,
+     5,
+     4,
+     5
+    ],
+    "facing_bid": {
+     "quantity": 0,
+     "face_value": 0
+    },
+    "remaining_dice": 5
+   },
+   "obs": "[Player 0] [Bid: 2, 1]\n[GAME] Player 0 bids 2 of face 1.\n[Player 1] [Call]\n[GAME] Player 1 calls! The actual count of face 1 is 2, which is >= 2.\nPlayer 1 (the caller) loses one die.\n[GAME] \nNew round - Remaining dice: \tPlayer 0: 5; \tPlayer 1: 4\nYour current Dice are: 3, 4, 5, 4, 5",
+   "action": "[Bid: 2, 5]",
+   "reasoning": "**Considering the bid strategy**\n\nI'm analyzing the bidding options based on the dice available. We have a total of 9 dice which gives us a bit of flexibility. Bidding 2,4 seems like a solid choice as it's guaranteed, but I also think about going for 2,5, although that might be seen as a trap since opponents might be more aggressive. The key is to exploit the opening bid effectively. It's a fine balance!"
+  },
+  {
+   "step": 4,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "dice {0: 5, 1: 4}",
+   "private": {
+    "dice": [
+     1,
+     4,
+     1,
+     3
+    ],
+    "facing_bid": {
+     "quantity": 2,
+     "face_value": 5
+    },
+    "remaining_dice": 4
+   },
+   "obs": "[Player 1] [Call]\n[GAME] Player 1 calls! The actual count of face 1 is 2, which is >= 2.\nPlayer 1 (the caller) loses one die.\n[GAME] \nNew round - Remaining dice: \tPlayer 0: 5; \tPlayer 1: 4\nYour current Dice are: 1, 4, 1, 3\n[Player 0] [Bid: 2, 5]\n[GAME] Player 0 bids 2 of face 5.",
+   "action": "[Call]",
+   "reasoning": "I have no 5s. Total dice: 9. Player 0 bidding 2 fives means they likely have at least one 5. Expected number of 5s among their 5 dice is 5/6 \u2248 0.83. Probability they have \u22652 fives is about 26%.\n\nOptions: call or raise. Raising to 3 of something? I have two 1s. I could bid 3, 1 \u2014 claiming 3 ones total, I have 2, so they need at least 1 one (probability 1 - (5/6)^5 \u2248 60%). Or bid 2, 6 \u2014 higher face. Or bid 3, 5 risky.\n\nBid of 2,5 with my zero 5s: probability actual \u22652 is ~26%. Calling seems good, but last time calling at exact count hurt. Still, statistically calling is favorable: ~74% chance the bid fails (they have 0 or 1 fives). Actually P(they have \u22652 fives among 5 dice) = 1 - (5/6)^5 - 5*(1/6)*(5/6)^4 \u2248 1 - 0.4019 - 0.4019 = 0.196. So ~20%.\n\nCall is good EV (~80% they lose a die). Alternatively raise to 3,1 which is fairly safe and keeps pressure. But calling at 80% is strong. I'll call."
+  },
+  {
+   "step": 5,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "dice {0: 5, 1: 3}",
+   "private": {
+    "dice": [
+     3,
+     6,
+     4,
+     1,
+     2
+    ],
+    "facing_bid": {
+     "quantity": 0,
+     "face_value": 0
+    },
+    "remaining_dice": 5
+   },
+   "obs": "[Player 0] [Bid: 2, 5]\n[GAME] Player 0 bids 2 of face 5.\n[Player 1] [Call]\n[GAME] Player 1 calls! The actual count of face 5 is 2, which is >= 2.\nPlayer 1 (the caller) loses one die.\n[GAME] \nNew round - Remaining dice: \tPlayer 0: 5; \tPlayer 1: 3\nYour current Dice are: 3, 6, 4, 1, 2",
+   "action": "[Bid: 1, 6]",
+   "reasoning": ""
+  },
+  {
+   "step": 6,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "dice {0: 5, 1: 3}",
+   "private": {
+    "dice": [
+     4,
+     1,
+     3
+    ],
+    "facing_bid": {
+     "quantity": 1,
+     "face_value": 6
+    },
+    "remaining_dice": 3
+   },
+   "obs": "[Player 1] [Call]\n[GAME] Player 1 calls! The actual count of face 5 is 2, which is >= 2.\nPlayer 1 (the caller) loses one die.\n[GAME] \nNew round - Remaining dice: \tPlayer 0: 5; \tPlayer 1: 3\nYour current Dice are: 4, 1, 3\n[Player 0] [Bid: 1, 6]\n[GAME] Player 0 bids 1 of face 6.",
+   "action": "[Bid: 2, 4]",
+   "reasoning": "Let me analyze this game. I'm Player 1, and I've been calling aggressive bids and losing. Now I have 3 dice: 4, 1, 3. Player 0 has 5 dice.\n\nPlayer 0 bids 1 of face 6. I have no 6s. Player 0 has 5 dice. The probability of at least one 6 among their 5 dice is 1 - (5/6)^5 = 1 - 0.4019 = 0.598. So there's about a 60% chance the bid of 1 six is true. Calling would lose more often than win.\n\nBetter to bid. I need a strictly higher bid. Options: [Bid: 1, 6] is current. Higher face: I can't bid same quantity with higher face than 6. So I need quantity 2: [Bid: 2, x] for any face.\n\nI have one 1 and... my dice are 4, 1, 3. I have one each of 4, 1, 3.\n\nBid [Bid: 2, 1]: I have one 1, need opponent to have at least one 1. Probability opponent has at least one 1 in 5 dice: ~59.8%. Same as any face.\n\nAlternatively, I could bluff with a face I don't have. Bidding 2 of anything is risky. But calling 1 of 6 is also risky (~60% chance I lose).\n\nActually, wait\u2014note ones are wild in many Liar's Dice variants, but this game doesn't mention wilds. Previous rounds: face 1 counted as 2 when actual count of face 1 was 2. No wild indication. So treat all faces equal.\n\nBid [Bid: 2, 1] or [Bid: 2, 3] or [Bid: 2, 4] \u2014 each gives me one matching die. Expected count for a face: mine (1) + opponent's expected 5/6 \u2248 1.83. So bidding 2 of a face I hold one of is roughly a coin flip slightly under 50%? Actually expected total is 1.833, probability of at least 2 given I have 1 = probability opponent has at least 1 = 59.8%. So bidding 2 of a face I have is safe-ish (I only lose if opponent calls and has zero of that face... wait no, if opponent calls, I need total \u2265 2, i.e., opponent has \u22651, which happens 59.8% of time).\n\nIf I call 1 of 6: I win only if opponent has zero 6s: 40.2%. Bad.\n\nSo bidding 2 of a face I have is better (survives call 59.8% of the time, plus opponent might bid higher instead). \n\nWhich face? Doesn't matter much. Maybe bid 2 of 1 since... earlier opponent bid 2 of 1 and it was true \u2014 but dice are re-rolled each round presumably. Actually dice seem re-rolled each round (my dice changed). No info carryover.\n\nBluff consideration: bidding a face I don't have (like 2, 5 or 2, 6) would be pure bluff, needing opponent to have 2 of them (probability of \u22652 in 5 dice = 1 - (5/6)^5 - 5*(1/6)*(5/6)^4 = 1 - 0.4019 - 0.4019 = 0.196). Bad.\n\nSo bid 2 of a face I have: [Bid: 2, 1], [Bid: 2, 3], or [Bid: 2, 4]. Any is fine. Maybe pick [Bid: 2, 4] arbitrarily. Or 2, 1 \u2014 bidding ones sometimes signals strength. I'll go [Bid: 2, 4]."
+  },
+  {
+   "step": 7,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "dice {0: 5, 1: 3}",
+   "private": {
+    "dice": [
+     4,
+     1,
+     3
+    ],
+    "facing_bid": {
+     "quantity": 1,
+     "face_value": 6
+    },
+    "remaining_dice": 3
+   },
+   "obs": "[Player 1] [Bid: 2, 4]\n[GAME] Player 1 attempted an invalid move. Reason: Invalid bid: New face value 4 is lower than current 6. Please resubmit a valid move and remember to follow the game rules to avoid penalties.",
+   "action": "[Bid: 2, 6]",
+   "reasoning": ""
+  },
+  {
+   "step": 8,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "dice {0: 5, 1: 3}",
+   "private": {
+    "dice": [
+     3,
+     6,
+     4,
+     1,
+     2
+    ],
+    "facing_bid": {
+     "quantity": 2,
+     "face_value": 6
+    },
+    "remaining_dice": 5
+   },
+   "obs": "[Player 0] [Bid: 1, 6]\n[GAME] Player 0 bids 1 of face 6.\n[Player 1] [Bid: 2, 4]\n[Player 1] [Bid: 2, 6]\n[GAME] Player 1 bids 2 of face 6.",
+   "action": "[Call]",
+   "reasoning": "**Evaluating dice game strategy**\n\nI have one six, and my opponent has three dice. They need at least one six to win, which gives them a probability of 42.1%. This means I have a 57.9% chance of winning if I call. I'm thinking about whether I should raise with three, but that feels risky. Given the odds, I\u2019ll just call instead. It seems like the best choice for this situation!"
+  },
+  {
+   "step": 9,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "dice {0: 5, 1: 2}",
+   "private": {
+    "dice": [
+     2,
+     5
+    ],
+    "facing_bid": {
+     "quantity": 0,
+     "face_value": 0
+    },
+    "remaining_dice": 2
+   },
+   "obs": "[Player 1] [Bid: 2, 6]\n[GAME] Player 1 bids 2 of face 6.\n[Player 0] [Call]\n[GAME] Player 0 calls! The actual count of face 6 is 1, which is LESS than 2.\nPlayer 1 (the last bidder) loses one die.\n[GAME] \nNew round - Remaining dice: \tPlayer 0: 5; \tPlayer 1: 2\nYour current Dice are: 2, 5",
+   "action": "[Bid: 1, 5]",
+   "reasoning": "Let me review what's happening. I'm Player 1. Wait, the game setup said \"You are Player 1\" but also the first message said Player 0 bids first. Actually looking at the history, Player 0 always opens the bidding, and I'm Player 1.\n\nWait, I need to reconsider my strategy. I've been calling too aggressively and losing dice. Now I have 2 dice, opponent has 5.\n\nCurrent situation: My dice are 2, 5. It's a new round. Player 0 hasn't bid yet? Actually the message just shows the new round with my dice. It's probably Player 0's turn to start... Actually wait, typically the player who lost the die starts the next round, or the winner. Let me look \u2014 the message ends with my dice being shown, so it's my turn to act (I need to make an opening bid).\n\nActually, in previous rounds, Player 0 always opened. But now the prompt shows just my dice, meaning it's my turn to bid.\n\nWith 7 total dice (2 mine + 5 theirs), expected count per face = 7/6 \u2248 1.17.\n\nMy dice: 2, 5.\n\nSafe opening bid: [Bid: 1, 5] or [Bid: 1, 2] \u2014 guaranteed true since I have one each. That's the safest.\n\nLet me bid [Bid: 1, 5]."
+  },
+  {
+   "step": 10,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "dice {0: 5, 1: 2}",
+   "private": {
+    "dice": [
+     1,
+     6,
+     4,
+     1,
+     4
+    ],
+    "facing_bid": {
+     "quantity": 1,
+     "face_value": 5
+    },
+    "remaining_dice": 5
+   },
+   "obs": "[Player 0] [Call]\n[GAME] Player 0 calls! The actual count of face 6 is 1, which is LESS than 2.\nPlayer 1 (the last bidder) loses one die.\n[GAME] \nNew round - Remaining dice: \tPlayer 0: 5; \tPlayer 1: 2\nYour current Dice are: 1, 6, 4, 1, 4\n[Player 1] [Bid: 1, 5]\n[GAME] Player 1 bids 1 of face 5.",
+   "action": "[Call]",
+   "reasoning": "**Calculating probability for action**\n\nI\u2019m thinking we need to take action. We have no five and the opponent has two dice. The probability of rolling at least one five is 11/36, which is about 30.6%. Given that, it makes sense to call based on that probability. I wonder if the odds are favorable enough for further moves, so I'll keep that in mind as I weigh my options. Let's see how this plays out!"
+  },
+  {
+   "step": 11,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "dice {0: 4, 1: 2}",
+   "private": {
+    "dice": [
+     3,
+     1
+    ],
+    "facing_bid": {
+     "quantity": 0,
+     "face_value": 0
+    },
+    "remaining_dice": 2
+   },
+   "obs": "[Player 1] [Bid: 1, 5]\n[GAME] Player 1 bids 1 of face 5.\n[Player 0] [Call]\n[GAME] Player 0 calls! The actual count of face 5 is 1, which is >= 1.\nPlayer 0 (the caller) loses one die.\n[GAME] \nNew round - Remaining dice: \tPlayer 0: 4; \tPlayer 1: 2\nYour current Dice are: 3, 1",
+   "action": "[Bid: 1, 3]",
+   "reasoning": ""
+  },
+  {
+   "step": 12,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "dice {0: 4, 1: 2}",
+   "private": {
+    "dice": [
+     2,
+     6,
+     6,
+     4
+    ],
+    "facing_bid": {
+     "quantity": 1,
+     "face_value": 3
+    },
+    "remaining_dice": 4
+   },
+   "obs": "[Player 0] [Call]\n[GAME] Player 0 calls! The actual count of face 5 is 1, which is >= 1.\nPlayer 0 (the caller) loses one die.\n[GAME] \nNew round - Remaining dice: \tPlayer 0: 4; \tPlayer 1: 2\nYour current Dice are: 2, 6, 6, 4\n[Player 1] [Bid: 1, 3]\n[GAME] Player 1 bids 1 of face 3.",
+   "action": "[Bid: 2, 6]",
+   "reasoning": "**Evaluating probabilities**\n\nI need to determine the probability of rolling a 3 with four dice. The chance of getting at least one 3 is about 30.6%, which means roughly 69% is the chance of not rolling a 3. I could also consider using two sixes, which is legal, to increase my chances. My opponent might respond positively, so it seems reasonable to bid 2,6 from my perspective\u2014it feels like a solid strategy!"
+  },
+  {
+   "step": 13,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "dice {0: 4, 1: 2}",
+   "private": {
+    "dice": [
+     3,
+     1
+    ],
+    "facing_bid": {
+     "quantity": 2,
+     "face_value": 6
+    },
+    "remaining_dice": 2
+   },
+   "obs": "[Player 1] [Bid: 1, 3]\n[GAME] Player 1 bids 1 of face 3.\n[Player 0] [Bid: 2, 6]\n[GAME] Player 0 bids 2 of face 6.",
+   "action": "[Call]",
+   "reasoning": ""
+  },
+  {
+   "step": 14,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "dice {0: 4, 1: 1}",
+   "private": {
+    "dice": [
+     3,
+     6,
+     4,
+     5
+    ],
+    "facing_bid": {
+     "quantity": 0,
+     "face_value": 0
+    },
+    "remaining_dice": 4
+   },
+   "obs": "[Player 0] [Bid: 2, 6]\n[GAME] Player 0 bids 2 of face 6.\n[Player 1] [Call]\n[GAME] Player 1 calls! The actual count of face 6 is 2, which is >= 2.\nPlayer 1 (the caller) loses one die.\n[GAME] \nNew round - Remaining dice: \tPlayer 0: 4; \tPlayer 1: 1\nYour current Dice are: 3, 6, 4, 5",
+   "action": "[Bid: 1, 6]",
+   "reasoning": "**Deciding on bidding strategy**\n\nI\u2019m thinking about our bidding approach. We're likely to start safely, and it looks like we can bid 1,6, which seems guaranteed. The opponent has one die, so bidding 1,6 is the best option considering their previous aggressive calls. It makes sense because it limits their ability to raise to a quantity of two. From there, I\u2019ll decide on my next move. This strategy feels solid!"
+  },
+  {
+   "step": 15,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "dice {0: 4, 1: 1}",
+   "private": {
+    "dice": [
+     6
+    ],
+    "facing_bid": {
+     "quantity": 1,
+     "face_value": 6
+    },
+    "remaining_dice": 1
+   },
+   "obs": "[Player 1] [Call]\n[GAME] Player 1 calls! The actual count of face 6 is 2, which is >= 2.\nPlayer 1 (the caller) loses one die.\n[GAME] \nNew round - Remaining dice: \tPlayer 0: 4; \tPlayer 1: 1\nYour current Dice are: 6\n[Player 0] [Bid: 1, 6]\n[GAME] Player 0 bids 1 of face 6.",
+   "action": "[Bid: 2, 6]",
+   "reasoning": ""
+  },
+  {
+   "step": 16,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "dice {0: 4, 1: 1}",
+   "private": {
+    "dice": [
+     3,
+     6,
+     4,
+     5
+    ],
+    "facing_bid": {
+     "quantity": 2,
+     "face_value": 6
+    },
+    "remaining_dice": 4
+   },
+   "obs": "[Player 0] [Bid: 1, 6]\n[GAME] Player 0 bids 1 of face 6.\n[Player 1] [Bid: 2, 6]\n[GAME] Player 1 bids 2 of face 6.",
+   "action": "[Call]",
+   "reasoning": ""
+  },
+  {
+   "step": 17,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "dice {0: 3, 1: 1}",
+   "private": {
+    "dice": [
+     5
+    ],
+    "facing_bid": {
+     "quantity": 0,
+     "face_value": 0
+    },
+    "remaining_dice": 1
+   },
+   "obs": "[Player 1] [Bid: 2, 6]\n[GAME] Player 1 bids 2 of face 6.\n[Player 0] [Call]\n[GAME] Player 0 calls! The actual count of face 6 is 2, which is >= 2.\nPlayer 0 (the caller) loses one die.\n[GAME] \nNew round - Remaining dice: \tPlayer 0: 3; \tPlayer 1: 1\nYour current Dice are: 5",
+   "action": "[Bid: 1, 5]",
+   "reasoning": ""
+  },
+  {
+   "step": 18,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "dice {0: 3, 1: 1}",
+   "private": {
+    "dice": [
+     3,
+     5,
+     4
+    ],
+    "facing_bid": {
+     "quantity": 1,
+     "face_value": 5
+    },
+    "remaining_dice": 3
+   },
+   "obs": "[Player 0] [Call]\n[GAME] Player 0 calls! The actual count of face 6 is 2, which is >= 2.\nPlayer 0 (the caller) loses one die.\n[GAME] \nNew round - Remaining dice: \tPlayer 0: 3; \tPlayer 1: 1\nYour current Dice are: 3, 5, 4\n[Player 1] [Bid: 1, 5]\n[GAME] Player 1 bids 1 of face 5.",
+   "action": "[Bid: 2, 5]",
+   "reasoning": ""
+  },
+  {
+   "step": 19,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "dice {0: 3, 1: 1}",
+   "private": {
+    "dice": [
+     5
+    ],
+    "facing_bid": {
+     "quantity": 2,
+     "face_value": 5
+    },
+    "remaining_dice": 1
+   },
+   "obs": "[Player 1] [Bid: 1, 5]\n[GAME] Player 1 bids 1 of face 5.\n[Player 0] [Bid: 2, 5]\n[GAME] Player 0 bids 2 of face 5.",
+   "action": "[Call]",
+   "reasoning": ""
+  }
+ ]
+}

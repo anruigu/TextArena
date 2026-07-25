@@ -1,0 +1,546 @@
+{
+ "game_id": 6,
+ "env": "leduc",
+ "players": 2,
+ "seed": 105,
+ "seat_models": [
+  "moonshotai/kimi-k3",
+  "openai/gpt-5.6-sol-pro"
+ ],
+ "rewards": {
+  "0": 1,
+  "1": -1
+ },
+ "winners": [
+  0
+ ],
+ "winning_models": [
+  "kimi-k3"
+ ],
+ "win_label": "P0(kimi-k3)",
+ "reason": "Reached hand limit | stacks 121>79",
+ "meta": {
+  "final_bank": {
+   "0": 121,
+   "1": 79
+  },
+  "hands_dealt": 6
+ },
+ "n_steps": 32,
+ "timed_out": false,
+ "wall_seconds": 309.6,
+ "transcript": [
+  {
+   "step": 1,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand1/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[GAME] You are Player 1 in Leduc Hold'em.\nRespond with one action token like '[check]', '[bet]', '[call]', '[raise]', or '[fold]' when it is your turn.\nFixed bet sizes: 2 chips pre-flop, 4 chips post-flop (max 2 raises per round).\n[GAME] ### New hand - your private card: Q\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": ""
+  },
+  {
+   "step": 2,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand1/rd0",
+   "private": {
+    "card": 2,
+    "board_card": 0,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[GAME] You are Player 0 in Leduc Hold'em.\nRespond with one action token like '[check]', '[bet]', '[call]', '[raise]', or '[fold]' when it is your turn.\nFixed bet sizes: 2 chips pre-flop, 4 chips post-flop (max 2 raises per round).\n[GAME] ### New hand - your private card: K\n[Player 1] [check]\n[GAME] Player 1 checks.\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "We are Player 0 in Leduc Hold'em. Private card: K. Pre-flop, Player 1 checked. We can check or bet 2.\n\nK is the highest card. Pre-flop with K, we should bet for value. Bet size 2 pre-flop.\n\nAction: [bet]."
+  },
+  {
+   "step": 3,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand1/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 1] [check]\n[GAME] Player 1 checks.\n[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": "**Considering betting strategy**\n\nI need to think about the play action here, especially when facing a bet with a queen in heads-up play. A mixed call or raise strategy seems necessary. I wonder if the equilibrium suggests that queens often raise. If the first player checks preflop and the opponent bets, calling with my queen seems likely to preserve my position since a king can dominate. Raising the queen could value a jack but might also lead to folds. A max raise of two feels like a good idea, so I'd call."
+  },
+  {
+   "step": 4,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand1/rd1",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 1,
+    "pot": 6,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [call]\n[GAME] Player 1 calls 2.\n[GAME] Flop card revealed: J\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": ""
+  },
+  {
+   "step": 5,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand1/rd1",
+   "private": {
+    "card": 2,
+    "board_card": 0,
+    "round": 1,
+    "pot": 6,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[Player 1] [call]\n[GAME] Player 1 calls 2.\n[GAME] Flop card revealed: J\n[Player 1] [check]\n[GAME] Player 1 checks.\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "I have K, board is J. I don't have a pair. I have K high.\n\nOpponent checked pre-flop, then called my bet. Now checks on flop.\n\nIf opponent has a J, they have a pair and beat me. If they have Q, I beat them with K high. If they have K, we tie.\n\nPre-flop: opponent checked (as first player? Actually player 1 checked first, meaning they're the... in Leduc heads-up, player 1 acted first pre-flop here). They checked, I bet with K, they called.\n\nTheir call suggests they have something decent - could be a J, Q, or K. A J would give them a pair now. A Q would be losing to my K.\n\nThey checked the flop. If they had a pair of Jacks, they might check to trap or bet. A check could be weak (Q) or a trap (J).\n\nStandard strategy: with K high on J board, I could bet to bluff out... no wait, if they have J they won't fold. If they have Q, they might call hoping... actually Q high vs my K high, they'd need to think I'm bluffing.\n\nIf I bet and they have Q, they might fold or call. If they have J, they call or raise. Betting risks 4 chips into raising war against a J.\n\nPot is 1+1 (antes) + 2+2 (pre-flop) = 6 chips.\n\nGiven opponent checked, I think checking back is reasonable to control pot, but betting could win if they have Q. Actually, with K high, betting for value against Q is good - Q might call. But if they have J (pair), I lose.\n\nOpponent called pre-flop. Range: probably any card they'd call with. They might fold Q pre-flop? Unlikely - Q is decent. They could have J, Q, or K.\n\nIf they have J: I'm behind, they have pair.\nIf they have Q: I'm ahead.\nIf they have K: tie.\n\nBetting: Q calls or folds (if fold, I win pot; if call, I win at showdown usually). J raises or calls. K calls.\n\nI think a bet is reasonable - it can win the pot immediately against Q, and against J I'll likely face a raise and can fold. Actually if I bet and they raise, I'm likely beat (pair of Jacks) and can fold losing 4 more. If I check, I see showdown for free.\n\nHmm, let me think about optimal play. In Leduc, with a K on a J board, betting is often good because you can get folds from Q (actually would Q fold? Q high facing a bet on J board... the bettor could have J, K, or bluff. Q is a bluff-catcher). \n\nI'll bet - it puts pressure and can win the pot. If raised, fold."
+  },
+  {
+   "step": 6,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand1/rd1",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 1,
+    "pot": 10,
+    "current_bet": 4
+   },
+   "obs": "[Player 1] [check]\n[GAME] Player 1 checks.\n[Player 0] [bet]\n[GAME] Player 0 bets 4.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[fold]",
+   "reasoning": ""
+  },
+  {
+   "step": 7,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand2/rd0",
+   "private": {
+    "card": 2,
+    "board_card": 0,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0 bets 4.\n[Player 1] [fold]\n[GAME] Player 1 folds.Current banks: Player 0: 103; Player 1: 97\n\n[GAME] ### New hand - your private card: K\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 8,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand2/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 1] [fold]\n[GAME] Player 1 folds.Current banks: Player 0: 103; Player 1: 97\n\n[GAME] ### New hand - your private card: Q\n[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": "**Evaluating poker strategy**\n\nI'm analyzing a poker scenario where I only need the token for the decision. Considering a Q versus an opening bet, I think HU Leduc strategy suggests that I might raise sometimes or value bet. If I'm acting second preflop against an opponent, whether to call or raise with Q becomes important. It seems like a standard equilibrium involves calling with Q but some raises might be in play. I need to factor in the unknowns and exploit them."
+  },
+  {
+   "step": 9,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand2/rd1",
+   "private": {
+    "card": 2,
+    "board_card": 0,
+    "round": 1,
+    "pot": 6,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[Player 1] [call]\n[GAME] Player 1 calls 2.\n[GAME] Flop card revealed: J\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 10,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand2/rd1",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 1,
+    "pot": 10,
+    "current_bet": 4
+   },
+   "obs": "[Player 1] [call]\n[GAME] Player 1 calls 2.\n[GAME] Flop card revealed: J\n[Player 0] [bet]\n[GAME] Player 0 bets 4.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[fold]",
+   "reasoning": ""
+  },
+  {
+   "step": 11,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand3/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [fold]\n[GAME] Player 1 folds.Current banks: Player 0: 106; Player 1: 94\n\n[GAME] ### New hand - your private card: Q\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "**Considering betting strategy**\n\nI'm thinking we need to focus on taking action. In this case, we have Q as the first option to act pre-flop. My strategy might involve betting Q frequently, especially since the opponent is aggressive. Maybe I can exploit that. In the context of Leduc equilibrium, Q can check or mix in some bets. I really need to choose bets that are most likely to succeed. Let's see how this plays out!"
+  },
+  {
+   "step": 12,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand3/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 0,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0 bets 4.\n[Player 1] [fold]\n[GAME] Player 1 folds.Current banks: Player 0: 106; Player 1: 94\n\n[GAME] ### New hand - your private card: J\n[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[raise]",
+   "reasoning": ""
+  },
+  {
+   "step": 13,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand3/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 0,
+    "pot": 6,
+    "current_bet": 4
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[Player 0] [raise]\n[GAME] Player 0 raises 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": "**Considering poker actions**\n\nI\u2019m thinking about what to do when Leduc has a Q facing a raise preflop. Should I call or fold? It really depends on the situation. Given that the opponent has raised to 4, continuing with a call seems like the right move. I can handle two raises, and maybe think about reraising if I have a strong hand like K or if I sense a bluff with J. So, calling with my Q feels right here."
+  },
+  {
+   "step": 14,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand3/rd1",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 1,
+    "pot": 10,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [call]\n[GAME] Player 1 calls 4.\n[GAME] Flop card revealed: J\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": ""
+  },
+  {
+   "step": 15,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand3/rd1",
+   "private": {
+    "card": 0,
+    "board_card": 0,
+    "round": 1,
+    "pot": 10,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [raise]\n[GAME] Player 0 raises 2.\n[Player 1] [call]\n[GAME] Player 1 calls 4.\n[GAME] Flop card revealed: J\n[Player 1] [check]\n[GAME] Player 1 checks.\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 16,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand3/rd1",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 1,
+    "pot": 14,
+    "current_bet": 4
+   },
+   "obs": "[Player 1] [check]\n[GAME] Player 1 checks.\n[Player 0] [bet]\n[GAME] Player 0 bets 4.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[fold]",
+   "reasoning": "**Analyzing poker strategy**\n\nI'm trying to figure out the best strategy for this poker situation. The opponent raised initially, which makes me think they could have J, Q, or K. Given the cards I can see, I wonder about the unseen cards left. I also consider that the opponent tends to bluff a lot \u2014 perhaps I should raise to put pressure on them. Although folding seems safer due to my hand's weakness, I might exploit their aggression and call occasionally. I need to weigh the pot odds and equilibriums carefully.**Evaluating poker outcomes**\n\nI'm analyzing the situation and figuring out the possible hands the opponent could have. They might hold J, Q, or K. Since Q can't beat anything outright, I'm considering the implications. I realize that even if I call, I\u2019d only tie, which isn\u2019t profitable against a bet. The safer option is to fold, unless I'm bluffing to represent a J. However, given the opponent's strength, it feels more prudent to just fold."
+  },
+  {
+   "step": 17,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand4/rd0",
+   "private": {
+    "card": 2,
+    "board_card": 1,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0 bets 4.\n[Player 1] [fold]\n[GAME] Player 1 folds.Current banks: Player 0: 113; Player 1: 87\n\n[GAME] ### New hand - your private card: K\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 18,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand4/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 1] [fold]\n[GAME] Player 1 folds.Current banks: Player 0: 113; Player 1: 87\n\n[GAME] ### New hand - your private card: J\n[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": ""
+  },
+  {
+   "step": 19,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand4/rd1",
+   "private": {
+    "card": 2,
+    "board_card": 1,
+    "round": 1,
+    "pot": 6,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[Player 1] [call]\n[GAME] Player 1 calls 2.\n[GAME] Flop card revealed: Q\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 20,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand4/rd1",
+   "private": {
+    "card": 0,
+    "board_card": 1,
+    "round": 1,
+    "pot": 10,
+    "current_bet": 4
+   },
+   "obs": "[Player 1] [call]\n[GAME] Player 1 calls 2.\n[GAME] Flop card revealed: Q\n[Player 0] [bet]\n[GAME] Player 0 bets 4.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[fold]",
+   "reasoning": ""
+  },
+  {
+   "step": 21,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand5/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [fold]\n[GAME] Player 1 folds.Current banks: Player 0: 116; Player 1: 84\n\n[GAME] ### New hand - your private card: Q\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": "**Formulating a strategy**\n\nI\u2019m focusing on the need for action, particularly to adapt to the opponent's aggression. It sounds like assessing the first position is crucial here. I think I\u2019ll need to consider how best to bet in this scenario, as it seems likely to influence the outcome. Let's analyze and ensure that the approach is strategic, aligning with the situation at hand!"
+  },
+  {
+   "step": 22,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand5/rd0",
+   "private": {
+    "card": 0,
+    "board_card": 0,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0 bets 4.\n[Player 1] [fold]\n[GAME] Player 1 folds.Current banks: Player 0: 116; Player 1: 84\n\n[GAME] ### New hand - your private card: J\n[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": ""
+  },
+  {
+   "step": 23,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand5/rd1",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 1,
+    "pot": 6,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [bet]\n[GAME] Player 1 bets 2.\n[Player 0] [call]\n[GAME] Player 0 calls 2.\n[GAME] Flop card revealed: J\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": ""
+  },
+  {
+   "step": 24,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand5/rd1",
+   "private": {
+    "card": 0,
+    "board_card": 0,
+    "round": 1,
+    "pot": 6,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [call]\n[GAME] Player 0 calls 2.\n[GAME] Flop card revealed: J\n[Player 1] [check]\n[GAME] Player 1 checks.\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 25,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand5/rd1",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 1,
+    "pot": 10,
+    "current_bet": 4
+   },
+   "obs": "[Player 1] [check]\n[GAME] Player 1 checks.\n[Player 0] [bet]\n[GAME] Player 0 bets 4.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[raise]",
+   "reasoning": ""
+  },
+  {
+   "step": 26,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand5/rd1",
+   "private": {
+    "card": 0,
+    "board_card": 0,
+    "round": 1,
+    "pot": 14,
+    "current_bet": 8
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0 bets 4.\n[Player 1] [raise]\n[GAME] Player 1 raises 4.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[raise]",
+   "reasoning": ""
+  },
+  {
+   "step": 27,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand5/rd1",
+   "private": {
+    "card": 1,
+    "board_card": 0,
+    "round": 1,
+    "pot": 18,
+    "current_bet": 12
+   },
+   "obs": "[Player 1] [raise]\n[GAME] Player 1 raises 4.\n[Player 0] [raise]\n[GAME] Player 0 raises 4.\n[GAME] Valid actions: '[fold]', '[call]'",
+   "action": "[fold]",
+   "reasoning": "**Analyzing poker strategy**\n\nI need to decide on my next move in this poker hand. The board shows a Q and a high J. My opponent made a solid bet after I called pre-flop, then pushed back with a 3-bet after my check-raise. Their range feels strong, especially with a J and possibly bluffing with high cards like K. Given that situation, I might need to fold instead of calling, considering the pot odds."
+  },
+  {
+   "step": 28,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand6/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 2,
+    "round": 0,
+    "pot": 2,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [raise]\n[GAME] Player 0 raises 4.\n[Player 1] [fold]\n[GAME] Player 1 folds.Current banks: Player 0: 123; Player 1: 77\n\n[GAME] ### New hand - your private card: Q\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[bet]",
+   "reasoning": ""
+  },
+  {
+   "step": 29,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand6/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 2,
+    "round": 0,
+    "pot": 4,
+    "current_bet": 2
+   },
+   "obs": "[Player 1] [fold]\n[GAME] Player 1 folds.Current banks: Player 0: 123; Player 1: 77\n\n[GAME] ### New hand - your private card: Q\n[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[raise]",
+   "reasoning": "**Deciding on the next move**\n\nI need to focus on taking action here since my opponent is being aggressive. In this scenario, facing a preflop bet with a Q, I might consider raising for value or mixing my approach. Adapting is crucial, especially if the opponent is exploiting folds. Given the position\u2014I'm acting first\u2014I'll think about raising, especially with a Q against the opponent's range in this heads-up ante situation. Raising seems like the right call!"
+  },
+  {
+   "step": 30,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand6/rd0",
+   "private": {
+    "card": 1,
+    "board_card": 2,
+    "round": 0,
+    "pot": 6,
+    "current_bet": 4
+   },
+   "obs": "[Player 0] [bet]\n[GAME] Player 0 bets 2.\n[Player 1] [raise]\n[GAME] Player 1 raises 2.\n[GAME] Valid actions: '[fold]', '[call]', '[raise]'",
+   "action": "[call]",
+   "reasoning": ""
+  },
+  {
+   "step": 31,
+   "pid": 0,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand6/rd1",
+   "private": {
+    "card": 1,
+    "board_card": 2,
+    "round": 1,
+    "pot": 10,
+    "current_bet": 0
+   },
+   "obs": "[Player 0] [call]\n[GAME] Player 0 calls 4.\n[GAME] Flop card revealed: K\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": ""
+  },
+  {
+   "step": 32,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand6/rd1",
+   "private": {
+    "card": 1,
+    "board_card": 2,
+    "round": 1,
+    "pot": 10,
+    "current_bet": 0
+   },
+   "obs": "[Player 1] [raise]\n[GAME] Player 1 raises 2.\n[Player 0] [call]\n[GAME] Player 0 calls 4.\n[GAME] Flop card revealed: K\n[Player 0] [check]\n[GAME] Player 0 checks.\n[GAME] Valid actions: '[check]', '[bet]'",
+   "action": "[check]",
+   "reasoning": ""
+  }
+ ]
+}

@@ -1,0 +1,381 @@
+{
+ "game_id": 16,
+ "env": "poker",
+ "players": 2,
+ "seed": 115,
+ "seat_models": [
+  "openai/gpt-5.6-sol-pro",
+  "moonshotai/kimi-k3"
+ ],
+ "rewards": {
+  "0": -1.0,
+  "1": 1.0
+ },
+ "final_chips": {
+  "0": 265,
+  "1": 1735
+ },
+ "winners": [
+  1
+ ],
+ "winning_models": [
+  "kimi-k3"
+ ],
+ "win_label": "P1(kimi-k3)",
+ "reason": "Final ranking (low\u2192high): [0, 1]. Winner: Player 1",
+ "meta": {
+  "final_chips": {
+   "0": 265,
+   "1": 1735
+  },
+  "hands_played": 10,
+  "elimination_order": []
+ },
+ "n_steps": 38,
+ "timed_out": false,
+ "wall_seconds": 282.1,
+ "transcript": [
+  {
+   "step": 1,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 1/10 bet-round 0",
+   "obs": "[GAME] You are Player 0 in a 2-player Texas Hold'em Poker game.\nGame Information:\n- 10 hands total\n- Starting stack: 1000 chips\n- Blinds: 10/20\n\nAvailable actions (exact tokens):\n  '[Check]'  - when no bet is live\n  '[Call]'   - match the current bet\n  '[Fold]'   - discard your hand\n  '[Bet N]'  - open for N chips\n  '[Raise N]'- raise by N chips\n\n[GAME] Starting a new 10-round Texas Hold'em game with 2 players.\n[GAME] ===== Hand 1 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 990.00 chips | bet 10.00 | active\nP1 (SB): 980.00 chips | bet 20.00 | active\nYour hole: 7\u2665, A\u2660\n==============================================",
+   "action": "[Raise 40]",
+   "reasoning": "**Interpreting poker labels**\n\nI need to figure out what the labels like P0 dealer/BB and P1 SB bet20 mean in this context. So, if the current bet is 20 and we've invested 10, that suggests we're in the small blind position facing the big blind. I believe raising A7o heads-up should be standard. I think raising by 40 to a total of 60 should be the right move here, considering the typical game structure. The starting pot is 30, and a raise to 60 would make sense."
+  },
+  {
+   "step": 2,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand 1/10 bet-round 0",
+   "obs": "[GAME] You are Player 1 in a 2-player Texas Hold'em Poker game.\nGame Information:\n- 10 hands total\n- Starting stack: 1000 chips\n- Blinds: 10/20\n\nAvailable actions (exact tokens):\n  '[Check]'  - when no bet is live\n  '[Call]'   - match the current bet\n  '[Fold]'   - discard your hand\n  '[Bet N]'  - open for N chips\n  '[Raise N]'- raise by N chips\n\n[GAME] Starting a new 10-round Texas Hold'em game with 2 players.\n[Player 0] [Raise 40]\n[GAME] Player 0 raises to 60.\n[GAME] ===== Hand 1 / 10 - Pre\u2011flop =====\nPot: 80 | Current bet: 60\nVisible board: []\nP0 (Dealer/BB): 940.00 chips | bet 60.00 | active\nP1 (SB): 980.00 chips | bet 20.00 | active\nYour hole: Q\u2663, 9\u2660\n==============================================",
+   "action": "[Call]",
+   "reasoning": "Let me analyze this poker situation.\n\nI'm Player 1 with Q\u2663, 9\u2660 (Q9 offsuit) in the small blind. Player 0 is the dealer/big blind and raised to 60. Wait, that's unusual - normally the dealer is the button and acts first preflop. Let me re-read.\n\nP0 (Dealer/BB): 940 chips, bet 60\nP1 (SB): 980 chips, bet 20\n\nSo Player 0 posted 20 (BB) and raised to 60. Player 1 (me) posted 20 (SB)? Wait, blinds are 10/20, so SB should be 10 and BB should be 20. But P1 has bet 20 and P0 has bet 60. Hmm, maybe the SB is 20 in this setup, or maybe there's some variation. Anyway, the current bet is 60, pot is 80.\n\nI need to call 40 more to see the flop with Q9 offsuit. The pot would be 120 if I call, so I'm getting 40 to win 80+40 = pot odds of 40:80, meaning I need 33% equity roughly... wait, pot is 80, I need to call 40, so pot after my call is 120. I need 40/120 = 33% equity.\n\nQ9 offsuit against a raise from the BB... The BB raising over the SB's completion? Wait, actually the action was: Player 0 raises to 60. But if P0 is the BB, the action would start with P1 (SB). Hmm, but the game log says \"[Player 0] [Raise 40]\" and \"Player 0 raises to 60\" at the start of the hand. This suggests maybe P0 acted first (dealer acts first preflop heads-up). Actually in heads-up, the dealer is the small blind and acts first preflop. But here P0 is labeled \"Dealer/BB\" which is contradictory with standard rules, but whatever - the game says P0 raised to 60 and I need to respond.\n\nQ9 offsuit is a decent hand heads-up. Heads-up, Q9o is well above average. Against a raise to 3x, calling 40 more with Q9o heads-up is reasonable. Q9o has decent playability. Folding would be too tight heads-up. Raising is also an option, but Q9o is more of a call.\n\nActually, let me think about whether to 3-bet. Heads-up, Q9o is a strong-ish hand. But without knowing opponent tendencies, calling is standard. The raise was to 60 (3x the 20 blind, or P0 raised by 40 over the 20 BB).\n\nI'll call. Pot will be 120 going to the flop.\n\nActually, let me consider: my call is 40 chips. Q9o heads-up against a random raising range has maybe 45-50% equity. Definitely a call. Could also 3-bet to like 180, but with 1000 chip stacks and this being hand 1 of 10, a call is fine and keeps the pot manageable.\n\nDecision: [Call]"
+  },
+  {
+   "step": 3,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand 1/10 bet-round 1",
+   "obs": "[Player 1] [Call]\n[GAME] Player 1 calls 40.\n[GAME] ===== Hand 1 / 10 - Flop =====\nPot: 120 | Current bet: 0\nVisible board: [10\u2666, J\u2663, 10\u2665]\nP0 (Dealer/BB): 940.00 chips | bet 0.00 | active\nP1 (SB): 940.00 chips | bet 0.00 | active\nYour hole: Q\u2663, 9\u2660\n==============================================",
+   "action": "[Bet 80]",
+   "reasoning": "The flop is 10\u2666, J\u2663, 10\u2665. I have Q\u2663, 9\u2660.\n\nI have an open-ended straight draw: I need a K or an 8 for a straight. Actually with Q, 9 and board J, 10 \u2014 I have 9, 10, J, Q \u2014 need K or 8 for a straight. That's 8 outs.\n\nAlso, the board is paired (two 10s), so full house possibilities exist for opponent.\n\nI'm first to act (SB acts first post-flop in heads-up). I could semi-bluff here. Opponent raised pre-flop from the button, so they have a wide range.\n\nOptions: check and see what opponent does, or bet as a semi-bluff. Betting around 60-80 into 120 as a semi-bluff with 8 outs is reasonable. If called, I still have outs. If they have a 10, I'm in trouble, but a 10 is not that common in their range.\n\nLet me bet 80 \u2014 a semi-bluff with the open-ender. Actually let me think about check-raising or just betting. Leading out (donk bet) can take down the pot if they missed. With a paired board, many hands miss. I'll bet 80."
+  },
+  {
+   "step": 4,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 1/10 bet-round 1",
+   "obs": "[Player 0] [Raise 40]\n[GAME] Player 0 raises to 60.\n[Player 1] [Call]\n[GAME] Player 1 calls 40.\n[Player 1] [Bet 80]\n[GAME] Player 1 bets to 80.\n[GAME] ===== Hand 1 / 10 - Flop =====\nPot: 200 | Current bet: 80\nVisible board: [10\u2666, J\u2663, 10\u2665]\nP0 (Dealer/BB): 940.00 chips | bet 0.00 | active\nP1 (SB): 860.00 chips | bet 80.00 | active\nYour hole: 7\u2665, A\u2660\n==============================================",
+   "action": "[Fold]",
+   "reasoning": ""
+  },
+  {
+   "step": 5,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 2/10 bet-round 0",
+   "obs": "[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 200 chips (all others folded).\n[GAME] ===== Hand 2 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 920.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1050.00 chips | bet 10.00 | active\nYour hole: 5\u2663, A\u2660\n==============================================",
+   "action": "[Raise 40]",
+   "reasoning": ""
+  },
+  {
+   "step": 6,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand 2/10 bet-round 0",
+   "obs": "[Player 1] [Bet 80]\n[GAME] Player 1 bets to 80.\n[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 200 chips (all others folded).\n[GAME] ===== Hand 2 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 920.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1050.00 chips | bet 10.00 | active\nYour hole: 7\u2666, 8\u2660\n==============================================\n[Player 0] [Raise 40]\n[GAME] Player 0 raises to 60.\n[GAME] ===== Hand 2 / 10 - Pre\u2011flop =====\nPot: 70 | Current bet: 60\nVisible board: []\nP0 (SB): 880.00 chips | bet 60.00 | active\nP1 (Dealer/BB): 1050.00 chips | bet 10.00 | active\nYour hole: 7\u2666, 8\u2660\n==============================================",
+   "action": "[Call]",
+   "reasoning": "We have 7\u26668\u2660 (suited connector, 78s) in the big blind. Opponent raised to 60 from SB. We need to call 50 more into a pot of 70. 78 suited is a decent speculative hand with good implied odds. Effective stack is 880 behind. Calling 50 to win 120 (pot after call). Good odds for a suited connector.\n\nI'll call."
+  },
+  {
+   "step": 7,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 2/10 bet-round 1",
+   "obs": "[Player 0] [Raise 40]\n[GAME] Player 0 raises to 60.\n[Player 1] [Call]\n[GAME] Player 1 calls 50.\n[GAME] ===== Hand 2 / 10 - Flop =====\nPot: 120 | Current bet: 0\nVisible board: [8\u2665, K\u2663, 5\u2665]\nP0 (SB): 880.00 chips | bet 0.00 | active\nP1 (Dealer/BB): 1000.00 chips | bet 0.00 | active\nYour hole: 5\u2663, A\u2660\n==============================================",
+   "action": "[Check]",
+   "reasoning": "**Evaluating a poker scenario**\n\nI see I need to act now. In this hand, I'm looking at a bottom pair with a King high on a wet board. I wonder if it's out of position. The small blind (SB) is involved, so I might want to check before making a decision. It's crucial to consider all my options here. I'll carefully analyze the situation and choose the best way to proceed."
+  },
+  {
+   "step": 8,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand 2/10 bet-round 1",
+   "obs": "[Player 1] [Call]\n[GAME] Player 1 calls 50.\n[Player 0] [Check]\n[GAME] Player 0 checks.\n[GAME] ===== Hand 2 / 10 - Flop =====\nPot: 120 | Current bet: 0\nVisible board: [8\u2665, K\u2663, 5\u2665]\nP0 (SB): 880.00 chips | bet 0.00 | active\nP1 (Dealer/BB): 1000.00 chips | bet 0.00 | active\nYour hole: 7\u2666, 8\u2660\n==============================================",
+   "action": "[Bet 70]",
+   "reasoning": "We have pair of 8s (middle pair) on 8\u2665 K\u2663 5\u2665. Opponent checked after raising preflop. We're in position (dealer/BB). Opponent checked to us. We have second pair, decent. Bet for value/protection ~70. Or check back. I'll bet 70 to deny equity to overcards/flush draws and get value from weaker."
+  },
+  {
+   "step": 9,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 2/10 bet-round 1",
+   "obs": "[Player 0] [Check]\n[GAME] Player 0 checks.\n[Player 1] [Bet 70]\n[GAME] Player 1 bets to 70.\n[GAME] ===== Hand 2 / 10 - Flop =====\nPot: 190 | Current bet: 70\nVisible board: [8\u2665, K\u2663, 5\u2665]\nP0 (SB): 880.00 chips | bet 0.00 | active\nP1 (Dealer/BB): 930.00 chips | bet 70.00 | active\nYour hole: 5\u2663, A\u2660\n==============================================",
+   "action": "[Call]",
+   "reasoning": "**Evaluating poker strategy**\n\nI'm looking at a situation where I have a pair with an ace kicker. I need to call 70 into a pot of 190, giving me around a 27% chance. My opponent made a stab play after I checked in this heads-up scenario. I think calling here might be a reasonable move given the pot odds and my hand strength, but I'm weighing the risks and potential outcomes carefully. It's definitely a tactical decision!"
+  },
+  {
+   "step": 10,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 2/10 bet-round 2",
+   "obs": "[Player 0] [Call]\n[GAME] Player 0 calls 70.\n[GAME] ===== Hand 2 / 10 - Turn =====\nPot: 260 | Current bet: 0\nVisible board: [8\u2665, K\u2663, 5\u2665, 2\u2665]\nP0 (SB): 810.00 chips | bet 0.00 | active\nP1 (Dealer/BB): 930.00 chips | bet 0.00 | active\nYour hole: 5\u2663, A\u2660\n==============================================",
+   "action": "[Check]",
+   "reasoning": ""
+  },
+  {
+   "step": 11,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand 2/10 bet-round 2",
+   "obs": "[Player 1] [Bet 70]\n[GAME] Player 1 bets to 70.\n[Player 0] [Call]\n[GAME] Player 0 calls 70.\n[Player 0] [Check]\n[GAME] Player 0 checks.\n[GAME] ===== Hand 2 / 10 - Turn =====\nPot: 260 | Current bet: 0\nVisible board: [8\u2665, K\u2663, 5\u2665, 2\u2665]\nP0 (SB): 810.00 chips | bet 0.00 | active\nP1 (Dealer/BB): 930.00 chips | bet 0.00 | active\nYour hole: 7\u2666, 8\u2660\n==============================================",
+   "action": "[Check]",
+   "reasoning": "I have a pair of 8s. The board is 8\u2665, K\u2663, 5\u2665, 2\u2665. Three hearts on board now. I have middle pair. Opponent called my flop bet - could have K, hearts draw, or a pocket pair.\n\nThe turn brings a third heart. I should probably check here to control the pot. My 8s are vulnerable - any K beats me, and flush is possible now.\n\nLet me check and see what opponent does."
+  },
+  {
+   "step": 12,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 2/10 bet-round 3",
+   "obs": "[Player 0] [Check]\n[GAME] Player 0 checks.\n[Player 1] [Check]\n[GAME] Player 1 checks.\n[GAME] ===== Hand 2 / 10 - River =====\nPot: 260 | Current bet: 0\nVisible board: [8\u2665, K\u2663, 5\u2665, 2\u2665, 5\u2660]\nP0 (SB): 810.00 chips | bet 0.00 | active\nP1 (Dealer/BB): 930.00 chips | bet 0.00 | active\nYour hole: 5\u2663, A\u2660\n==============================================",
+   "action": "[Bet 180]",
+   "reasoning": "**Evaluating bet strategy**\n\nI\u2019m considering the situation where we have trips, and I\u2019m thinking flushing might be a possibility but also checking could be the right move. I wonder if a value bet of about 180 would be appropriate. The opponent might call with hands like Kx or 8x, or even consider bluff raising. It seems like betting 180 could create an interesting dynamic! Let\u2019s see how this plays out."
+  },
+  {
+   "step": 13,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand 2/10 bet-round 3",
+   "obs": "[Player 1] [Check]\n[GAME] Player 1 checks.\n[Player 0] [Bet 180]\n[GAME] Player 0 bets to 180.\n[GAME] ===== Hand 2 / 10 - River =====\nPot: 440 | Current bet: 180\nVisible board: [8\u2665, K\u2663, 5\u2665, 2\u2665, 5\u2660]\nP0 (SB): 630.00 chips | bet 180.00 | active\nP1 (Dealer/BB): 930.00 chips | bet 0.00 | active\nYour hole: 7\u2666, 8\u2660\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "The board is 8\u2665 K\u2663 5\u2665 2\u2665 5\u2660. I have 7\u2666 8\u2660 \u2014 two pair, eights and fives. Opponent bets 180 into 260. They could have a flush (three hearts on board), a king, a 5 (trips/full house), or a bluff. I called a raise preflop and bet the flop with middle pair, they called. Turn went check-check? Actually I checked, they bet 180 on river. River is 5\u2660, pairing the board. My two pair (8s and 5s) loses to any K, any flush, any 5, any pocket pair above 8.\n\nPot odds: 180 to win 620, need ~22.5% equity. Opponent's line: raised preflop, checked flop, called my bet, bet river. Hmm, they could have a flush draw that got there (hearts), a king, or a 5. Or bluffing a missed hand. Their raise preflop suggests strength. A delayed bet on river could be a value bet with K or flush, or bluff.\n\nWith two pair here, it's marginal. The bet is 180 into 260, sizable. Opponent seems aggressive (raising preflop both hands). Could be a bluff. But my hand only beats a bluff. I think fold is reasonable, but two pair with the board pairing... The 5 pairing gives me two pair but also gives trips to any 5.\n\nOpponent checked the flop, then called, then bet the river when 5 hit. That timing suggests the 5 helped them or they're bluffing the scare card. If they had a 5, they'd bet. If they had a flush, they'd bet. If they had a K, they might check-call. The river bet after I checked looks like value or a bluff on the paired card.\n\n22.5% equity needed. Against an aggressive opponent, bluffs are possible. But they called my flop bet \u2014 they had something: flush draw, K, or 8. Flush draw got there. K beats me. 8 splits... no, I have 8. They called with a draw likely. Hearts got there.\n\nI'll fold. Actually, wait \u2014 need to consider: they could have been calling with a flush draw and now bluffing with... no, flush got there, that's value. Calling with Kx beats me. Calling with a straight draw (7-6, 9-7) missed \u2014 could bluff. Hmm.\n\nThe 5 pairing the board: my two pair. Honestly I think this is a fold more often than not. But pot odds of 3.4:1... Against an aggressive player in a 10-hand match, a call isn't terrible. But the line strongly suggests value. Flush is very likely given hearts. I'll fold.\n\nActually, let me reconsider: opponent raised to 60 preflop from SB, then CHECKED the flop out of position? Wait, I'm BB/dealer. P0 is SB. Post-flop, SB acts first? In heads-up, the dealer is SB preflop... Actually the description says P0 is SB in hand 2, and I (P1) am Dealer/BB. That's odd labeling but whatever. Post-flop, the non-dealer acts first. The action shows P0 bet 180 first on the river, so P0 acts first post-flop.\n\nFlop: P0 checked (implicitly \u2014 actually I bet 70, so they must have checked). Turn: I checked, P0 checked (shows \"Player 0 checks\" before river? Actually turn shows I checked then P0 bet... no wait. Let me re-read.\n\nFlop: I bet 70, P0 calls. Then \"Player 0 checks\" \u2014 that's the turn? The transcript shows: after call, \"[Player 0] [Check]\" then turn card comes with pot 260, current bet 0. Then I check, P0 bets 180, and river comes. Wait no \u2014 the 180 bet came, then river card shown with current bet 180. So P0's 180 bet was on the turn? The header says \"Hand 2 / 10 - River\" with board of 5 cards and current bet 180. Hmm, confusing. It seems the 180 bet is on the river actually (after river dealt). Board: 8\u2665 K\u2663 5\u2665 2\u2665 5\u2660.\n\nSequence: Flop bet 70/call. Turn: P0 check, I check. River: P0 bets 180. That's the read. So P0 checked twice then bet river when the 5 paired. That smells like a 5, a flush, or a bluff on scare card.\n\nMy two pair beats bluffs and maybe some Kx that would've bet earlier... Kx probably bets flop or turn. A check-check then river bet with K is possible but less likely. Flush draw (A\u2665x\u2665) would check-call flop, check turn, bet river \u2014 very consistent. Also 5x would limp... they raised preflop with 5x? Unlikely unless A5.\n\nGiven the strong consistency with flush, I fold. Final: [Fold]."
+  },
+  {
+   "step": 14,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand 3/10 bet-round 0",
+   "obs": "[Player 1] [Fold]\n[GAME] Player 1 folds.\n[GAME] Player 0 wins the pot of 440 chips (all others folded).\n[GAME] ===== Hand 3 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 1060.00 chips | bet 10.00 | active\nP1 (SB): 910.00 chips | bet 20.00 | active\nYour hole: 8\u2663, 4\u2666\n==============================================",
+   "action": "[Fold]",
+   "reasoning": ""
+  },
+  {
+   "step": 15,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 4/10 bet-round 0",
+   "obs": "[Player 0] [Bet 180]\n[GAME] Player 0 bets to 180.\n[Player 1] [Fold]\n[GAME] Player 1 folds.\n[GAME] Player 0 wins the pot of 440 chips (all others folded).\n[GAME] ===== Hand 3 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 1060.00 chips | bet 10.00 | active\nP1 (SB): 910.00 chips | bet 20.00 | active\nYour hole: 5\u2665, Q\u2666\n==============================================\n[Player 1] [Fold]\n[GAME] Player 1 folds.\n[GAME] Player 0 wins the pot of 30 chips (all others folded).\n[GAME] ===== Hand 4 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 1070.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 900.00 chips | bet 10.00 | active\nYour hole: 6\u2660, 3\u2665\n==============================================",
+   "action": "[Check]",
+   "reasoning": "**Assessing poker actions**\n\nIt seems there's some confusion with the betting labels: we have the current bet at 20, but it feels like they\u2019re reversed. In hand two, player 0 (P0) bet 20 while the big blind (BB) bet 10, and I'm left wondering about our actions. Since we matched the current bet of 20, maybe we should check? With a weak hand like 63o, checking sounds reasonable."
+  },
+  {
+   "step": 16,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand 4/10 bet-round 0",
+   "obs": "[Player 1] [Fold]\n[GAME] Player 1 folds.\n[GAME] Player 0 wins the pot of 30 chips (all others folded).\n[GAME] ===== Hand 4 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 1070.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 900.00 chips | bet 10.00 | active\nYour hole: 8\u2660, 8\u2665\n==============================================\n[Player 0] [Check]\n[GAME] Player 0 checks.\n[GAME] ===== Hand 4 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 1070.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 900.00 chips | bet 10.00 | active\nYour hole: 8\u2660, 8\u2665\n==============================================",
+   "action": "[Raise 60]",
+   "reasoning": ""
+  },
+  {
+   "step": 17,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 4/10 bet-round 0",
+   "obs": "[Player 0] [Check]\n[GAME] Player 0 checks.\n[Player 1] [Raise 60]\n[GAME] Player 1 raises to 80.\n[GAME] ===== Hand 4 / 10 - Pre\u2011flop =====\nPot: 100 | Current bet: 80\nVisible board: []\nP0 (SB): 1070.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 830.00 chips | bet 80.00 | active\nYour hole: 6\u2660, 3\u2665\n==============================================",
+   "action": "[Fold]",
+   "reasoning": ""
+  },
+  {
+   "step": 18,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand 5/10 bet-round 0",
+   "obs": "[Player 1] [Raise 60]\n[GAME] Player 1 raises to 80.\n[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 100 chips (all others folded).\n[GAME] ===== Hand 5 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 1060.00 chips | bet 10.00 | active\nP1 (SB): 910.00 chips | bet 20.00 | active\nYour hole: 7\u2660, 4\u2663\n==============================================",
+   "action": "[Fold]",
+   "reasoning": ""
+  },
+  {
+   "step": 19,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 6/10 bet-round 0",
+   "obs": "[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 100 chips (all others folded).\n[GAME] ===== Hand 5 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 1060.00 chips | bet 10.00 | active\nP1 (SB): 910.00 chips | bet 20.00 | active\nYour hole: 2\u2665, 4\u2665\n==============================================\n[Player 1] [Fold]\n[GAME] Player 1 folds.\n[GAME] Player 0 wins the pot of 30 chips (all others folded).\n[GAME] ===== Hand 6 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 1070.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 900.00 chips | bet 10.00 | active\nYour hole: K\u2666, A\u2666\n==============================================",
+   "action": "[Raise 60]",
+   "reasoning": ""
+  },
+  {
+   "step": 20,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand 6/10 bet-round 0",
+   "obs": "[Player 1] [Fold]\n[GAME] Player 1 folds.\n[GAME] Player 0 wins the pot of 30 chips (all others folded).\n[GAME] ===== Hand 6 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 1070.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 900.00 chips | bet 10.00 | active\nYour hole: Q\u2660, Q\u2665\n==============================================\n[Player 0] [Raise 60]\n[GAME] Player 0 raises to 80.\n[GAME] ===== Hand 6 / 10 - Pre\u2011flop =====\nPot: 90 | Current bet: 80\nVisible board: []\nP0 (SB): 1010.00 chips | bet 80.00 | active\nP1 (Dealer/BB): 900.00 chips | bet 10.00 | active\nYour hole: Q\u2660, Q\u2665\n==============================================",
+   "action": "[Raise 200]",
+   "reasoning": ""
+  },
+  {
+   "step": 21,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 6/10 bet-round 0",
+   "obs": "[Player 0] [Raise 60]\n[GAME] Player 0 raises to 80.\n[Player 1] [Raise 200]\n[GAME] Player 1 raises to 280.\n[GAME] ===== Hand 6 / 10 - Pre\u2011flop =====\nPot: 360 | Current bet: 280\nVisible board: []\nP0 (SB): 1010.00 chips | bet 80.00 | active\nP1 (Dealer/BB): 630.00 chips | bet 280.00 | active\nYour hole: K\u2666, A\u2666\n==============================================",
+   "action": "[Raise 630]",
+   "reasoning": ""
+  },
+  {
+   "step": 22,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand 6/10 bet-round 0",
+   "obs": "[Player 1] [Raise 200]\n[GAME] Player 1 raises to 280.\n[Player 0] [Raise 630]\n[GAME] Player 0 raises to 910.\n[GAME] ===== Hand 6 / 10 - Pre\u2011flop =====\nPot: 1190 | Current bet: 910\nVisible board: []\nP0 (SB): 180.00 chips | bet 910.00 | active\nP1 (Dealer/BB): 630.00 chips | bet 280.00 | active\nYour hole: Q\u2660, Q\u2665\n==============================================",
+   "action": "[Call]",
+   "reasoning": ""
+  },
+  {
+   "step": 23,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 6/10 bet-round 0",
+   "obs": "[Player 0] [Raise 630]\n[GAME] Player 0 raises to 910.\n[Player 1] [Call]\n[GAME] Player 1 calls 630.\n[GAME] ===== Hand 6 / 10 - Pre\u2011flop =====\nPot: 1820 | Current bet: 910\nVisible board: []\nP0 (SB): 180.00 chips | bet 910.00 | active\nP1 (Dealer/BB): 0.00 chips | bet 910.00 | all-in\nYour hole: K\u2666, A\u2666\n==============================================",
+   "action": "[Check]",
+   "reasoning": "**Evaluating betting actions**\n\nI\u2019m wondering if I need to check on the current actions taking place. It seems odd that the betting round should run out automatically, but it\u2019s asking for something. There's no explicit prompt for a check, so maybe I need to think about that. The current bet is 910, but we\u2019ve matched, so I\u2019m questioning if I should check legally or if things are functioning correctly."
+  },
+  {
+   "step": 24,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 7/10 bet-round 0",
+   "obs": "[Player 0] [Check]\n[GAME] Player 0 checks.\n[GAME] Showdown round 6:\nPlayer 0: K\u2666 A\u2666\nPlayer 1: Q\u2660 Q\u2665\nCommunity cards: 5\u2665, 3\u2665, 5\u2660, 4\u2665, J\u2663\n[GAME] Player 1 wins the pot of 1820 chips.\n[GAME] ===== Hand 7 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 170.00 chips | bet 10.00 | active\nP1 (SB): 1800.00 chips | bet 20.00 | active\nYour hole: A\u2665, K\u2663\n==============================================\n[GAME] ===== Hand 7 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 170.00 chips | bet 10.00 | active\nP1 (SB): 1800.00 chips | bet 20.00 | active\nYour hole: A\u2665, K\u2663\n==============================================",
+   "action": "[Raise 160]",
+   "reasoning": ""
+  },
+  {
+   "step": 25,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand 7/10 bet-round 0",
+   "obs": "[Player 1] [Call]\n[GAME] Player 1 calls 630.\n[Player 0] [Check]\n[GAME] Player 0 checks.\n[GAME] Showdown round 6:\nPlayer 0: K\u2666 A\u2666\nPlayer 1: Q\u2660 Q\u2665\nCommunity cards: 5\u2665, 3\u2665, 5\u2660, 4\u2665, J\u2663\n[GAME] Player 1 wins the pot of 1820 chips.\n[Player 0] [Raise 160]\n[GAME] Player 0 raises to 180.\n[GAME] ===== Hand 7 / 10 - Pre\u2011flop =====\nPot: 200 | Current bet: 180\nVisible board: []\nP0 (Dealer/BB): 0.00 chips | bet 180.00 | all-in\nP1 (SB): 1800.00 chips | bet 20.00 | active\nYour hole: 2\u2665, Q\u2660\n==============================================",
+   "action": "[Call]",
+   "reasoning": ""
+  },
+  {
+   "step": 26,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand 8/10 bet-round 0",
+   "obs": "[Player 1] [Call]\n[GAME] Player 1 calls 160.\n[GAME] Showdown round 7:\nPlayer 0: A\u2665 K\u2663\nPlayer 1: 2\u2665 Q\u2660\nCommunity cards: K\u2660, 6\u2665, 9\u2663, 10\u2660, 7\u2660\n[GAME] Player 0 wins the pot of 360 chips.\n[GAME] ===== Hand 8 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 340.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1630.00 chips | bet 10.00 | active\nYour hole: 2\u2663, 5\u2665\n==============================================\n[GAME] ===== Hand 8 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 340.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1630.00 chips | bet 10.00 | active\nYour hole: 2\u2663, 5\u2665\n==============================================",
+   "action": "[Check]",
+   "reasoning": ""
+  },
+  {
+   "step": 27,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand 8/10 bet-round 0",
+   "obs": "[Player 1] [Check]\n[GAME] Player 1 attempted an invalid move. Reason: Cannot check facing a bet. Please resubmit a valid move and remember to follow the game rules to avoid penalties.",
+   "action": "[Call]",
+   "reasoning": ""
+  },
+  {
+   "step": 28,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 8/10 bet-round 1",
+   "obs": "[Player 0] [Raise 160]\n[GAME] Player 0 raises to 180.\n[Player 1] [Call]\n[GAME] Player 1 calls 160.\n[GAME] Showdown round 7:\nPlayer 0: A\u2665 K\u2663\nPlayer 1: 2\u2665 Q\u2660\nCommunity cards: K\u2660, 6\u2665, 9\u2663, 10\u2660, 7\u2660\n[GAME] Player 0 wins the pot of 360 chips.\n[Player 1] [Check]\n[Player 1] [Call]\n[GAME] Player 1 calls 10.\n[GAME] ===== Hand 8 / 10 - Flop =====\nPot: 40 | Current bet: 0\nVisible board: [4\u2665, A\u2660, 6\u2663]\nP0 (SB): 340.00 chips | bet 0.00 | active\nP1 (Dealer/BB): 1620.00 chips | bet 0.00 | active\nYour hole: J\u2665, 6\u2666\n==============================================",
+   "action": "[Bet 25]",
+   "reasoning": "**Determining betting strategy**\n\nI need to take action in this poker scenario. It seems the preflop play was off, likely a limp. I have a bottom/mid pair on an A46 rainbow board. I should consider a value or protection bet, maybe around 25. Given my opponent's passive play and a stack of 340, betting 25 seems reasonable. This will help me gauge where I stand in the hand while also protecting my hand a bit."
+  },
+  {
+   "step": 29,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand 8/10 bet-round 1",
+   "obs": "[Player 1] [Call]\n[GAME] Player 1 calls 10.\n[Player 0] [Bet 25]\n[GAME] Player 0 bets to 25.\n[GAME] ===== Hand 8 / 10 - Flop =====\nPot: 65 | Current bet: 25\nVisible board: [4\u2665, A\u2660, 6\u2663]\nP0 (SB): 315.00 chips | bet 25.00 | active\nP1 (Dealer/BB): 1620.00 chips | bet 0.00 | active\nYour hole: 2\u2663, 5\u2665\n==============================================",
+   "action": "[Call]",
+   "reasoning": ""
+  },
+  {
+   "step": 30,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 8/10 bet-round 2",
+   "obs": "[Player 0] [Bet 25]\n[GAME] Player 0 bets to 25.\n[Player 1] [Call]\n[GAME] Player 1 calls 25.\n[GAME] ===== Hand 8 / 10 - Turn =====\nPot: 90 | Current bet: 0\nVisible board: [4\u2665, A\u2660, 6\u2663, J\u2666]\nP0 (SB): 315.00 chips | bet 0.00 | active\nP1 (Dealer/BB): 1595.00 chips | bet 0.00 | active\nYour hole: J\u2665, 6\u2666\n==============================================",
+   "action": "[Bet 70]",
+   "reasoning": "**Evaluating poker strategy**\n\nI\u2019m thinking about a poker hand where I have two pairs and there's 90 in the pot with stacks around 315. I feel like a bet of 70 might be appropriate, especially since the board has rainbow and straight draws. My opponent could also have Ax, which makes me consider the range around 65-75. So, a bet of 70 seems like a solid move here."
+  },
+  {
+   "step": 31,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand 8/10 bet-round 2",
+   "obs": "[Player 1] [Call]\n[GAME] Player 1 calls 25.\n[Player 0] [Bet 70]\n[GAME] Player 0 bets to 70.\n[GAME] ===== Hand 8 / 10 - Turn =====\nPot: 160 | Current bet: 70\nVisible board: [4\u2665, A\u2660, 6\u2663, J\u2666]\nP0 (SB): 245.00 chips | bet 70.00 | active\nP1 (Dealer/BB): 1595.00 chips | bet 0.00 | active\nYour hole: 2\u2663, 5\u2665\n==============================================",
+   "action": "[Fold]",
+   "reasoning": ""
+  },
+  {
+   "step": 32,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand 9/10 bet-round 0",
+   "obs": "[Player 1] [Fold]\n[GAME] Player 1 folds.\n[GAME] Player 0 wins the pot of 160 chips (all others folded).\n[GAME] ===== Hand 9 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 395.00 chips | bet 10.00 | active\nP1 (SB): 1575.00 chips | bet 20.00 | active\nYour hole: Q\u2666, 3\u2666\n==============================================",
+   "action": "[Raise 60]",
+   "reasoning": ""
+  },
+  {
+   "step": 33,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 9/10 bet-round 0",
+   "obs": "[Player 0] [Bet 70]\n[GAME] Player 0 bets to 70.\n[Player 1] [Fold]\n[GAME] Player 1 folds.\n[GAME] Player 0 wins the pot of 160 chips (all others folded).\n[GAME] ===== Hand 9 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 395.00 chips | bet 10.00 | active\nP1 (SB): 1575.00 chips | bet 20.00 | active\nYour hole: Q\u2660, J\u2663\n==============================================\n[Player 1] [Raise 60]\n[GAME] Player 1 raises to 80.\n[GAME] ===== Hand 9 / 10 - Pre\u2011flop =====\nPot: 90 | Current bet: 80\nVisible board: []\nP0 (Dealer/BB): 395.00 chips | bet 10.00 | active\nP1 (SB): 1515.00 chips | bet 80.00 | active\nYour hole: Q\u2660, J\u2663\n==============================================",
+   "action": "[Call]",
+   "reasoning": ""
+  },
+  {
+   "step": 34,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand 9/10 bet-round 1",
+   "obs": "[Player 1] [Raise 60]\n[GAME] Player 1 raises to 80.\n[Player 0] [Call]\n[GAME] Player 0 calls 70.\n[GAME] ===== Hand 9 / 10 - Flop =====\nPot: 160 | Current bet: 0\nVisible board: [4\u2666, 3\u2663, 7\u2660]\nP0 (Dealer/BB): 325.00 chips | bet 0.00 | active\nP1 (SB): 1515.00 chips | bet 0.00 | active\nYour hole: Q\u2666, 3\u2666\n==============================================",
+   "action": "[Bet 100]",
+   "reasoning": ""
+  },
+  {
+   "step": 35,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 9/10 bet-round 1",
+   "obs": "[Player 0] [Call]\n[GAME] Player 0 calls 70.\n[Player 1] [Bet 100]\n[GAME] Player 1 bets to 100.\n[GAME] ===== Hand 9 / 10 - Flop =====\nPot: 260 | Current bet: 100\nVisible board: [4\u2666, 3\u2663, 7\u2660]\nP0 (Dealer/BB): 325.00 chips | bet 0.00 | active\nP1 (SB): 1415.00 chips | bet 100.00 | active\nYour hole: Q\u2660, J\u2663\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "**Considering poker strategy**\n\nI\u2019m thinking through a poker scenario where I need the exact token. I\u2019m not sure if it\u2019s wise to fold; I don't want to draw overcards with such a low stack-to-pot ratio. Betting 100 into 160 seems risky. Maybe I should consider a bluff shove? My opponent just raised and c-bet, so surviving maybe this hand is crucial. I wonder if the stack sizes even matter\u2014max chips are at stake, though I feel I should ultimately fold here."
+  },
+  {
+   "step": 36,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 10/10 bet-round 0",
+   "obs": "[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 260 chips (all others folded).\n[GAME] ===== Hand 10 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 305.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1665.00 chips | bet 10.00 | active\nYour hole: 6\u2665, K\u2666\n==============================================",
+   "action": "[Raise 40]",
+   "reasoning": ""
+  },
+  {
+   "step": 37,
+   "pid": 1,
+   "model": "moonshotai/kimi-k3",
+   "phase": "hand 10/10 bet-round 0",
+   "obs": "[Player 1] [Bet 100]\n[GAME] Player 1 bets to 100.\n[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 260 chips (all others folded).\n[GAME] ===== Hand 10 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 305.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1665.00 chips | bet 10.00 | active\nYour hole: 7\u2666, 9\u2660\n==============================================\n[Player 0] [Raise 40]\n[GAME] Player 0 raises to 60.\n[GAME] ===== Hand 10 / 10 - Pre\u2011flop =====\nPot: 70 | Current bet: 60\nVisible board: []\nP0 (SB): 265.00 chips | bet 60.00 | active\nP1 (Dealer/BB): 1665.00 chips | bet 10.00 | active\nYour hole: 7\u2666, 9\u2660\n==============================================",
+   "action": "[Raise 265]",
+   "reasoning": ""
+  },
+  {
+   "step": 38,
+   "pid": 0,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 10/10 bet-round 0",
+   "obs": "[Player 0] [Raise 40]\n[GAME] Player 0 raises to 60.\n[Player 1] [Raise 265]\n[GAME] Player 1 raises to 325.\n[GAME] ===== Hand 10 / 10 - Pre\u2011flop =====\nPot: 385 | Current bet: 325\nVisible board: []\nP0 (SB): 265.00 chips | bet 60.00 | active\nP1 (Dealer/BB): 1350.00 chips | bet 325.00 | active\nYour hole: 6\u2665, K\u2666\n==============================================",
+   "action": "[Fold]",
+   "reasoning": ""
+  }
+ ]
+}
