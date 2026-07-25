@@ -28,8 +28,7 @@ class CoupEnv(ta.Env):
 
     def reset(self, num_players: int, seed: Optional[int] = None) -> None:
         """ Reset the environment for a new Coup game """
-        self.state = ta.State(num_players=num_players, min_players=2, max_players=6)
-        self.state.error_allowance = 3
+        self.state = ta.FFAMultiPlayerState(num_players=num_players, error_allowance=3)
 
         # Create deck with three of each card
         deck = ["Duke", "Assassin", "Ambassador", "Captain", "Contessa"] * 3
@@ -63,10 +62,10 @@ class CoupEnv(ta.Env):
         game_state["rendered_board"] = self._render_board(game_state)
         
         # Initialize textarena state
-        self.state.reset(seed=seed, game_state=game_state, player_prompt_function=self._gen_initial_prompt)
+        self.state.reset(game_state=game_state, player_prompt_function=self._gen_initial_prompt)
 
         # Always start with player 0
-        self.state.manually_update_current_player(new_player_id=0)
+        self.state.manually_set_current_player_id(new_player_id=0, force=True)
         self._send_call_to_action_prompt()
             
     
@@ -75,11 +74,13 @@ class CoupEnv(ta.Env):
 
     def step(self, action: str) -> Tuple[bool, ta.Info]:
         """ Process a single step/action from the current player """
-        # Log the player's raw input by sending the action_str to player with id -1
-        self.state.add_observation(from_id=self.state.current_player_id, to_id=-1, message=action, for_logging=True)
+        # (raw-action logging via the old for_logging API was removed during the
+        # API port; the cross-play runner records every raw action itself.)
 
-        # Start with the assumption that we can move to the next player. (is set to True if we detect an invalid move)
-        self.state.prevent_player_change = False
+        # Coup drives turns itself and never calls state.step(), so the invalid-move
+        # flag must be cleared at the top of each step (set True again by
+        # set_invalid_move below if this action is rejected).
+        self.state.made_invalid_move = False
 
         # Game phase is either in play (a player is doing an initial action like income, foreign aid, etc)
         # or challenge (we are querying one or more players about a potential counteraction)
@@ -98,7 +99,7 @@ class CoupEnv(ta.Env):
                 raise Exception(f"Unexpected game phase: {self.state.game_state['phase']}")
 
             
-            if self.state.prevent_player_change:
+            if self.state.made_invalid_move:
                 return False, {"reason": "Invalid move"}
             
             adv_turn = self._advance_turn()
@@ -112,7 +113,7 @@ class CoupEnv(ta.Env):
 
             return adv_turn
         except ValueError as e:
-            self.state.set_invalid_move(player_id=self.state.current_player_id, reason=str(e))
+            self.state.set_invalid_move(reason=str(e))
             return False, {"reason":str(e)}
 
         
@@ -121,17 +122,17 @@ class CoupEnv(ta.Env):
         This validates state and updates state as needed. NOTE THAT ONLY ALLOWABLE ACTIONS HERE ARE THE ONES FROM THE OFFICIAL CHEATSHEET "ACTION" COLUMN (see README.md)
         """
         if self.state.game_state["coins"][self.state.current_player_id] >= 10 and action_type is not CoupActionType.Coup:
-            self.state.set_invalid_move(player_id=self.state.current_player_id, reason=f"Invalid move. You cannot do anything other than coup when you have 10 or more coins. Please pick a player id to Coup and respond with: [coup x].")
+            self.state.set_invalid_move(reason=f"Invalid move. You cannot do anything other than coup when you have 10 or more coins. Please pick a player id to Coup and respond with: [coup x].")
             return
         if action_type is CoupActionType.Income:
             self.state.game_state["action_metadata"] = ActionMetadata(action_type=action_type, source_player_id=self.state.current_player_id, target_player_id=action_target_player_id)
             self._execute_current_action()
         elif action_type is CoupActionType.Coup:
             if self.state.game_state["coins"][self.state.current_player_id] < 7:
-                self.state.set_invalid_move(player_id=self.state.current_player_id, reason=f"Invalid move. You don't have enough coins to coup.")
+                self.state.set_invalid_move(reason=f"Invalid move. You don't have enough coins to coup.")
                 return
             if self.state.game_state["hidden_hand"][action_target_player_id] == []:
-                self.state.set_invalid_move(player_id=self.state.current_player_id, reason=f"Invalid move. Can't coup player {action_target_player_id} because they are already eliminated from play.")
+                self.state.set_invalid_move(reason=f"Invalid move. Can't coup player {action_target_player_id} because they are already eliminated from play.")
                 return
             
             self.state.game_state["action_metadata"] = ActionMetadata(action_type=action_type, source_player_id=self.state.current_player_id, target_player_id=action_target_player_id)
@@ -144,19 +145,19 @@ class CoupEnv(ta.Env):
         
         elif action_type is CoupActionType.ForeignAid or action_type is CoupActionType.Assassinate or action_type is CoupActionType.Steal:
             if action_type is CoupActionType.Assassinate and self.state.game_state["coins"][self.state.current_player_id] < 3:
-                self.state.set_invalid_move(player_id=self.state.current_player_id, reason=f"Invalid move. You don't have enough coins to assassinate.")
+                self.state.set_invalid_move(reason=f"Invalid move. You don't have enough coins to assassinate.")
                 return
             if action_type is CoupActionType.Steal and action_target_player_id is not None and action_target_player_id == self.state.current_player_id:
-                self.state.set_invalid_move(player_id=self.state.current_player_id, reason=f"Invalid move. You cannot steal from yourself, the second value in the [steal x] response must be a valid player id.")
+                self.state.set_invalid_move(reason=f"Invalid move. You cannot steal from yourself, the second value in the [steal x] response must be a valid player id.")
                 return
             if action_type is CoupActionType.Steal and action_target_player_id is None and action_target_player_id >= self.state.num_players:
-                self.state.set_invalid_move(player_id=self.state.current_player_id, reason=f"Invalid move. The second value in the [steal x] response must be a valid player id.")
+                self.state.set_invalid_move(reason=f"Invalid move. The second value in the [steal x] response must be a valid player id.")
                 return
             if action_type is CoupActionType.Steal and self.state.game_state["coins"][action_target_player_id] < 2:
-                self.state.set_invalid_move(player_id=self.state.current_player_id, reason=f"Invalid move. Player {action_target_player_id} doesn't have enough coins to steal from.")
+                self.state.set_invalid_move(reason=f"Invalid move. Player {action_target_player_id} doesn't have enough coins to steal from.")
                 return
             if action_type is CoupActionType.Steal and self.state.game_state["hidden_hand"][action_target_player_id] == []:
-                self.state.set_invalid_move(player_id=self.state.current_player_id, reason=f"Invalid move. You cannot steal from Player {action_target_player_id} because they are already eliminated from play.")
+                self.state.set_invalid_move(reason=f"Invalid move. You cannot steal from Player {action_target_player_id} because they are already eliminated from play.")
                 return
 
             # For assassination, deduct the cost immediately (per rules, you pay even if blocked)
@@ -182,13 +183,13 @@ class CoupEnv(ta.Env):
             self._execute_showdown_on_bullshit()
         elif action is CoupActionType.BlockForeignAid or action is CoupActionType.BlockStealAmbassador or action is CoupActionType.BlockStealCaptain or action is CoupActionType.BlockAssassinate:
             if (action is CoupActionType.BlockStealAmbassador or action is CoupActionType.BlockStealCaptain) and self.state.game_state["action_metadata"].action_type is not CoupActionType.Steal:
-                self.state.set_invalid_move(player_id=self.state.current_player_id, reason=f"Invalid move. You cannot call [block steal x] when the last played action is a {self.state.game_state['action_metadata'].action_type.name}.")
+                self.state.set_invalid_move(reason=f"Invalid move. You cannot call [block steal x] when the last played action is a {self.state.game_state['action_metadata'].action_type.name}.")
                 return
             if action is CoupActionType.BlockAssassinate and self.state.game_state["action_metadata"].action_type is not CoupActionType.Assassinate:
-                self.state.set_invalid_move(player_id=self.state.current_player_id, reason=f"Invalid move. You cannot call [block assassinate] when the last played action is a {self.state.game_state['action_metadata'].action_type.name}.")
+                self.state.set_invalid_move(reason=f"Invalid move. You cannot call [block assassinate] when the last played action is a {self.state.game_state['action_metadata'].action_type.name}.")
                 return
             if action is CoupActionType.BlockForeignAid and self.state.game_state["action_metadata"].action_type is not CoupActionType.ForeignAid:
-                self.state.set_invalid_move(player_id=self.state.current_player_id, reason=f"Invalid move. You cannot call [block foreign aid] when the last played action is a {self.state.game_state['action_metadata'].action_type.name}.")
+                self.state.set_invalid_move(reason=f"Invalid move. You cannot call [block foreign aid] when the last played action is a {self.state.game_state['action_metadata'].action_type.name}.")
                 return
             self.state.game_state["phase"] = GamePhase.QueryToChallengeTheBlocker
             self.state.game_state["action_metadata"].blocker_player_id = self.state.current_player_id
@@ -335,9 +336,9 @@ class CoupEnv(ta.Env):
 
         # Broadcast the observations to the players
         if source_player_observation:
-            self.state.add_observation(from_id=ta.GAME_ID, to_id=curr_action.source_player_id, message=source_player_observation, for_logging=False)
+            self.state.add_observation(from_id=ta.GAME_ID, to_id=curr_action.source_player_id, message=source_player_observation, observation_type=ta.ObservationType.GAME_MESSAGE)
         if target_player_observation is not None:
-            self.state.add_observation(from_id=ta.GAME_ID, to_id=curr_action.target_player_id, message=target_player_observation, for_logging=False)
+            self.state.add_observation(from_id=ta.GAME_ID, to_id=curr_action.target_player_id, message=target_player_observation, observation_type=ta.ObservationType.GAME_MESSAGE)
         if other_player_observations is not None:
             exclude_ids = [curr_action.source_player_id]
             if curr_action.target_player_id is not None:
@@ -422,8 +423,8 @@ class CoupEnv(ta.Env):
 
         # Also mark that we have no more players to query so that we can advance the turn
         self.state.game_state["action_metadata"].players_to_query = None
-        self.state.add_observation(from_id=ta.GAME_ID, to_id=challenged_player_id, message=challenged_message, for_logging=False)
-        self.state.add_observation(from_id=ta.GAME_ID, to_id=challenger_player_id, message=challenger_message, for_logging=False)
+        self.state.add_observation(from_id=ta.GAME_ID, to_id=challenged_player_id, message=challenged_message, observation_type=ta.ObservationType.GAME_MESSAGE)
+        self.state.add_observation(from_id=ta.GAME_ID, to_id=challenger_player_id, message=challenger_message, observation_type=ta.ObservationType.GAME_MESSAGE)
         self._broadcast_observations(other_player_observations, exclude_player_ids=[challenged_player_id, challenger_player_id])
     
     def _execute_showdown_on_blocker_bullshit(self):
@@ -485,8 +486,8 @@ class CoupEnv(ta.Env):
             # No need to change action_type
         
         # Send all observations
-        self.state.add_observation(from_id=ta.GAME_ID, to_id=blocker_player_id, message=blocker_msg, for_logging=False)
-        self.state.add_observation(from_id=ta.GAME_ID, to_id=challenger_player_id, message=challenger_msg, for_logging=False)
+        self.state.add_observation(from_id=ta.GAME_ID, to_id=blocker_player_id, message=blocker_msg, observation_type=ta.ObservationType.GAME_MESSAGE)
+        self.state.add_observation(from_id=ta.GAME_ID, to_id=challenger_player_id, message=challenger_msg, observation_type=ta.ObservationType.GAME_MESSAGE)
         self._broadcast_observations(others_msg, exclude_player_ids=[blocker_player_id, challenger_player_id])
         
         # Mark that we're done querying
@@ -524,7 +525,7 @@ class CoupEnv(ta.Env):
             source_observation = f"You have completed your exchange and kept: {', '.join(cards_to_keep)}"
         other_observation = f"Player #{player_id} has completed their exchange."
         
-        self.state.add_observation(from_id=ta.GAME_ID, to_id=player_id, message=source_observation, for_logging=False)
+        self.state.add_observation(from_id=ta.GAME_ID, to_id=player_id, message=source_observation, observation_type=ta.ObservationType.GAME_MESSAGE)
         self._broadcast_observations(other_observation, exclude_player_ids=[player_id])
 
     def _broadcast_observations(self, other_player_observations: str, exclude_player_ids: Optional[List[int]] = None):
@@ -532,7 +533,7 @@ class CoupEnv(ta.Env):
         for pid in range(self.state.num_players):
             if pid in exclude_player_ids:
                 continue
-            self.state.add_observation(from_id=ta.GAME_ID, to_id=pid, message=other_player_observations, for_logging=False)
+            self.state.add_observation(from_id=ta.GAME_ID, to_id=pid, message=other_player_observations, observation_type=ta.ObservationType.GAME_MESSAGE)
 
     # ---------------------------------------------------------------------
     # PROMPT GENERATION METHODS -- CONVERTS GAME STATE TO PROMPT
@@ -686,7 +687,7 @@ class CoupEnv(ta.Env):
         msg = msg.replace("<CALL_TO_ACTION_OR_CHALLENGE>", call_to_action_str)
         
         # Send the message to the current player
-        self.state.add_observation(from_id=ta.GAME_ID, to_id=self.state.current_player_id, message=msg, for_logging=False)
+        self.state.add_observation(from_id=ta.GAME_ID, to_id=self.state.current_player_id, message=msg, observation_type=ta.ObservationType.GAME_MESSAGE)
 
     def _action_to_card(self, action: CoupActionType) -> str:
         """ Convert a CoupActionType to a card """
@@ -796,7 +797,7 @@ class CoupEnv(ta.Env):
         else:
             raise Exception(f"Unexpected game phase: {self.state.game_state['phase']}")
         
-        self.state.manually_update_current_player(new_player_id=next_pid)
+        self.state.manually_set_current_player_id(new_player_id=next_pid, force=True)
         
         # Check for winner
         winner = self._get_winner()

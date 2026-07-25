@@ -58,7 +58,7 @@ class DiplomacyEnv(ta.Env):
 
     def reset(self, num_players: int, seed: Optional[int] = None):
         """ Reset the environment and start a new game """
-        self.state = ta.State(num_players=num_players, min_players=3, max_players=7, seed=seed)
+        self.state = ta.FFAMultiPlayerState(num_players=num_players, seed=seed)
         
         # Initialize game engine
         self.engine = DiplomacyGameEngine(max_turns=self.max_turns)
@@ -94,6 +94,7 @@ class DiplomacyEnv(ta.Env):
         self.state.reset(
             game_state=game_state,
             player_prompt_function=player_prompt_function,
+            role_mapping=dict(self.player_power_map),  # copy: reset injects GAME_ID into role_mapping
         )
         
         # Send initial game state announcement to all players
@@ -427,7 +428,6 @@ class DiplomacyEnv(ta.Env):
             possible_orders_text=game_state['possible_orders_text'],
         )
 
-        print(prompt)
         game_settings_prompt = self._generate_player_prompt(player_power_map=self.player_power_map, player_id=player_id, game_state=game_state, start_of_game=False)
 
         return game_settings_prompt + "\n\n" + prompt
@@ -557,7 +557,7 @@ class DiplomacyEnv(ta.Env):
         current_player_id = self.state.current_player_id
         next_player_id = (current_player_id + 1) % self.state.num_players
         while next_player_id != current_player_id:
-            self.state.manually_update_current_player(new_player_id=next_player_id)
+            self.state.manually_set_current_player_id(new_player_id=next_player_id, force=True)
             break
             # if self.state.game_state["remaining_dice"][next_player_id] > 0:
             #     self.state.manually_update_current_player(new_player_id=next_player_id)
@@ -710,10 +710,12 @@ class DiplomacyEnv(ta.Env):
                 centers = len(self.engine.powers[power_name].controlled_centers)
                 announcement += f"- Player {player_id} ({power_name}): {centers} centers\n"
         
-        # Add game history summary
-        announcement += "\nGame Summary:\n"
-        for entry in self.engine.history:
-            announcement += f"- {entry['phase']}\n"
+        # Add game history summary (engine may not track a phase history)
+        history = getattr(self.engine, "history", None) or []
+        if history:
+            announcement += "\nGame Summary:\n"
+            for entry in history:
+                announcement += f"- {entry['phase']}\n"
 
         # Send to all players
         for player_id in self.player_power_map.keys():
@@ -729,7 +731,8 @@ class DiplomacyEnv(ta.Env):
             "to_power": self.player_power_map.get(to_id),
             "message": message
         })
-        self.state.add_observation(from_id=from_id, to_id=to_id, message=message)
+        self.state.add_observation(from_id=from_id, to_id=to_id, message=message,
+                                   observation_type=ta.ObservationType.GAME_MESSAGE)
 
     def get_game_state(self):
         game_state = {

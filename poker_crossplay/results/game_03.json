@@ -1,0 +1,345 @@
+{
+ "game_id": 3,
+ "env": "poker",
+ "players": 2,
+ "seed": 10,
+ "seat_models": [
+  "deepseek/deepseek-v4-pro",
+  "openai/gpt-5.6-sol-pro"
+ ],
+ "rewards": {
+  "0": -1.0,
+  "1": 1.0
+ },
+ "final_chips": {
+  "0": 910,
+  "1": 1090
+ },
+ "winners": [
+  1
+ ],
+ "winning_models": [
+  "gpt-5.6-sol-pro"
+ ],
+ "win_label": "P1(gpt-5.6-sol-pro)",
+ "reason": "Final ranking (low\u2192high): [0, 1]. Winner: Player 1",
+ "meta": {
+  "final_chips": {
+   "0": 910,
+   "1": 1090
+  },
+  "hands_played": 10,
+  "elimination_order": []
+ },
+ "n_steps": 34,
+ "timed_out": false,
+ "wall_seconds": 314.5,
+ "transcript": [
+  {
+   "step": 1,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 1/10 bet-round 0",
+   "obs": "[GAME] You are Player 0 in a 2-player Texas Hold'em Poker game.\nGame Information:\n- 10 hands total\n- Starting stack: 1000 chips\n- Blinds: 10/20\n\nAvailable actions (exact tokens):\n  '[Check]'  - when no bet is live\n  '[Call]'   - match the current bet\n  '[Fold]'   - discard your hand\n  '[Bet N]'  - open for N chips\n  '[Raise N]'- raise by N chips\n\n[GAME] Starting a new 10-round Texas Hold'em game with 2 players.\n[GAME] ===== Hand 1 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 990.00 chips | bet 10.00 | active\nP1 (SB): 980.00 chips | bet 20.00 | active\nYour hole: Q\u2666, 4\u2660\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "We are playing heads-up Texas Hold'em. We are Player 0, the dealer/BB. The blinds are 10/20. P1 is the small blind and has posted 10, we posted 20. The pot is 30. The current bet is 20 (our big blind). P1 has bet 20, which is actually the small blind? Wait: \"P0 (Dealer/BB): 990.00 chips | bet 10.00 | active\" and \"P1 (SB): 980.00 chips | bet 20.00 | active\". That seems off: normally in heads-up, the dealer is the small blind and the other player is the big blind. But the description says P0 is Dealer/BB, and has bet 10, while P1 is SB and bet 20. This might be a mistake in the game state? Actually, in heads-up, the button is the small blind and acts first pre-flop. So the dealer should be SB and post 10, and the other player is BB and posts 20. But here it says P0 is Dealer/BB with bet 10, P1 is SB with bet 20. That's inconsistent. Perhaps the roles are reversed: P0 is actually the small blind (dealer) and posted 10, P1 is big blind and posted 20. But the label says \"P0 (Dealer/BB)\". I'll assume the numbers are correct: P0 has bet 10, P1 has bet 20. So the current bet is 20, and it's P0's turn? The state says both are active, but the current bet is 20, and P0 has only bet 10 so far. So P0 needs to act: either call the extra 10, raise, or fold. The pot is 30. Our hole cards: Q\u2666 4\u2660. That's a terrible hand. We are out of position? Actually, if P0 is the dealer, in heads-up the dealer acts last post-flop, but pre-flop the dealer (SB) acts first. So P0 acts first pre-flop. We have Q4o. Facing a bet of 20 (the big blind), we need to call 10 to see a flop. The pot is 30, so we're getting 3:1 on a call. But Q4o is very weak. In heads-up, any two cards can be playable, but Q4o is among the worst. We can fold and lose our 10, or call 10 to see a flop. Since it's only 10 more, and we have position post-flop (dealer acts last), maybe we can call? But Q4o doesn't play well. Folding is fine. Alternatively, we could raise as a bluff, but with a weak hand, not recommended. I think folding is best. But let's consider stack sizes: 1000 chips, blinds 10/20, so deep. We can afford to fold. I'll fold."
+  },
+  {
+   "step": 2,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 2/10 bet-round 0",
+   "obs": "[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 30 chips (all others folded).\n[GAME] ===== Hand 2 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 970.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1000.00 chips | bet 10.00 | active\nYour hole: 5\u2666, 4\u2663\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "We are in the small blind with 54o. The pot is 30, we have to call 10 more to see a flop. Our hand is weak, but we are getting good pot odds: 10 to win 40 (if BB checks) which is 4:1. However, we are out of position. 54o is a very weak hand. We could consider folding, but since it's only 10 more chips and we have position? Wait, no, we are SB, so we act first postflop. Actually, in heads-up, the SB acts first preflop but acts last postflop? Wait, rules: In heads-up, the dealer is the small blind and acts first preflop, but acts last postflop. In this hand, P1 is Dealer/BB, so P1 is the dealer and big blind. P0 is SB. So preflop, P0 (SB) acts first. Postflop, the dealer (P1) acts first? Let's recall: In heads-up, the button/dealer is the small blind and acts first preflop, but acts last on all subsequent rounds. So after the flop, the non-dealer (big blind) acts first. So in this hand: P0 is SB (non-dealer), P1 is Dealer/BB. Preflop: P0 acts first, then P1. Postflop: P1 (dealer) acts first? No, the dealer acts last postflop. So the non-dealer (P0, SB) acts first postflop. So we are out of position postflop. That's bad. With 54o, we should probably fold despite the odds because we have a very weak hand and are out of position. But 10 chips is small relative to stacks. However, 54o has very little playability. I think folding is fine. Alternatively, we could call and see a flop, but we'd be OOP with a weak hand. I lean towards folding. But let's consider stack sizes: we have 970, P1 has 1000. It's early. I'll fold."
+  },
+  {
+   "step": 3,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 3/10 bet-round 0",
+   "obs": "[GAME] You are Player 1 in a 2-player Texas Hold'em Poker game.\nGame Information:\n- 10 hands total\n- Starting stack: 1000 chips\n- Blinds: 10/20\n\nAvailable actions (exact tokens):\n  '[Check]'  - when no bet is live\n  '[Call]'   - match the current bet\n  '[Fold]'   - discard your hand\n  '[Bet N]'  - open for N chips\n  '[Raise N]'- raise by N chips\n\n[GAME] Starting a new 10-round Texas Hold'em game with 2 players.\n[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 30 chips (all others folded).\n[GAME] ===== Hand 2 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 970.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1000.00 chips | bet 10.00 | active\nYour hole: 6\u2665, 2\u2666\n==============================================\n[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 30 chips (all others folded).\n[GAME] ===== Hand 3 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 960.00 chips | bet 10.00 | active\nP1 (SB): 1010.00 chips | bet 20.00 | active\nYour hole: K\u2665, K\u2660\n==============================================",
+   "action": "[Raise 40]",
+   "reasoning": ""
+  },
+  {
+   "step": 4,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 3/10 bet-round 0",
+   "obs": "[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 30 chips (all others folded).\n[GAME] ===== Hand 3 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 960.00 chips | bet 10.00 | active\nP1 (SB): 1010.00 chips | bet 20.00 | active\nYour hole: Q\u2666, 10\u2660\n==============================================\n[Player 1] [Raise 40]\n[GAME] Player 1 raises to 60.\n[GAME] ===== Hand 3 / 10 - Pre\u2011flop =====\nPot: 70 | Current bet: 60\nVisible board: []\nP0 (Dealer/BB): 960.00 chips | bet 10.00 | active\nP1 (SB): 970.00 chips | bet 60.00 | active\nYour hole: Q\u2666, 10\u2660\n==============================================",
+   "action": "[Call]",
+   "reasoning": "We are in Hand 3, P0 is Dealer/BB with Q\u266610\u2660. P1 raised to 60 from SB. We need to call 50 more into a pot of 70. Our hand is decent but not premium. QTo is a marginal hand. Against a raise from SB, it's borderline. We are in position. We can call, fold, or re-raise. Given we have position and a playable hand, calling is reasonable. But we should consider stack sizes: we have 960, opponent has 970. This is early in the match. I'll call."
+  },
+  {
+   "step": 5,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 3/10 bet-round 1",
+   "obs": "[Player 1] [Raise 40]\n[GAME] Player 1 raises to 60.\n[Player 0] [Call]\n[GAME] Player 0 calls 50.\n[GAME] ===== Hand 3 / 10 - Flop =====\nPot: 120 | Current bet: 0\nVisible board: [3\u2663, J\u2660, 8\u2665]\nP0 (Dealer/BB): 910.00 chips | bet 0.00 | active\nP1 (SB): 970.00 chips | bet 0.00 | active\nYour hole: K\u2665, K\u2660\n==============================================",
+   "action": "[Bet 60]",
+   "reasoning": "**Deciding on a bet**\n\nI need to choose a bet for a dry board with an overpair. The pot is 120, and my stacks are also in play. I'm thinking betting around 60 could be a good idea; it\u2019s heads-up, so there\u2019s value there. I also need to consider that I want to keep it simple while maximizing the potential. Let\u2019s see how it plays out!"
+  },
+  {
+   "step": 6,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 3/10 bet-round 1",
+   "obs": "[Player 0] [Call]\n[GAME] Player 0 calls 50.\n[Player 1] [Bet 60]\n[GAME] Player 1 bets to 60.\n[GAME] ===== Hand 3 / 10 - Flop =====\nPot: 180 | Current bet: 60\nVisible board: [3\u2663, J\u2660, 8\u2665]\nP0 (Dealer/BB): 910.00 chips | bet 0.00 | active\nP1 (SB): 910.00 chips | bet 60.00 | active\nYour hole: Q\u2666, 10\u2660\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "We're on the flop. The board is 3\u2663 J\u2660 8\u2665. We have Q\u2666 10\u2660. We have no pair, no flush draw. We have a gutshot straight draw: we need a 9 to make a straight (Q-10-9-8-J? Actually, J-10-9-8-7? Wait, our cards are Q and 10. The board is 3, J, 8. So if a 9 comes, we have Q-10-9-8-J? That's not a straight because we need 10-J-Q-K-A? No, for a straight we need five consecutive cards. With Q-10 and J-8-3, a 9 gives us 8-9-10-J-Q, which is a straight. So we have a gutshot to the nuts? Not the nuts, because AK would be higher, but it's a strong straight. So we have 4 outs to a straight. Also we have two overcards to the board (Q and 10), but they might not be clean outs if opponent has a J or better. The opponent bet 60 into a pot of 180. We need to call 60 to win 240 (pot + bet). That's 4:1 odds. Our gutshot is about 4 outs, which is roughly 16% chance by the river, or about 8% on the turn. The immediate odds are not good enough for just the gutshot. But we also have position? Actually, we are the dealer? The game state says P0 (Dealer/BB) is active, and P1 (SB) bet. So we are in position. We could consider calling to see a turn, but we don't have much else. The opponent raised pre-flop and now bets the flop. They likely have a decent hand, maybe a J or an overpair. Our Q-10 might be behind. Folding is probably best. But maybe we can float? With only 910 chips, calling 60 is a significant portion. I think folding is prudent. We have a weak draw and no pair. Let's fold."
+  },
+  {
+   "step": 7,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 4/10 bet-round 0",
+   "obs": "[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 180 chips (all others folded).\n[GAME] ===== Hand 4 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 890.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1080.00 chips | bet 10.00 | active\nYour hole: 4\u2666, 4\u2665\n==============================================",
+   "action": "[Raise 40]",
+   "reasoning": "We are in the small blind with pocket fours. The opponent is in the big blind. We have 890 chips, opponent has 1080. Blinds 10/20. Our current bet is 20 (the small blind). The pot is 30, current bet is 20. We need to decide whether to call, raise, or fold. Pocket fours is a decent hand heads-up, but we are out of position. Typically, in heads-up, we should be raising or calling with small pairs. Given the opponent has been aggressive (raised preflop in previous hand), we might want to raise to take control. But we could also just call and see a flop. Since it's early in the match, we can play a bit cautiously. However, folding is too weak. I'll call and see a flop. But the action is on us: we have already posted the small blind of 20, and the big blind is 10? Wait, the game state says: P0 (SB): 890 chips, bet 20.00, active. P1 (Dealer/BB): 1080 chips, bet 10.00. That seems off: usually SB posts small blind, BB posts big blind. Here SB posted 20, BB posted 10? That's reversed. But according to the game, blinds are 10/20. In heads-up, the dealer is the small blind? Actually, in heads-up, the dealer is the small blind and acts first preflop. But here P0 is SB and P1 is Dealer/BB. That means P1 is both dealer and big blind? That's unusual. In standard heads-up, the button is the small blind and the other player is big blind. Here it says P0 (SB) and P1 (Dealer/BB). So P1 is dealer and big blind? That would mean P1 acts last preflop. So P0 is SB and acts first preflop. We are P0, so we act first. The current bet is 20, which is our posted blind. We have the option to call (but we already have 20 in, so calling would mean putting in more to match? Actually, the current bet is 20, and we have already bet 20, so we don't need to call anything. The action is on us: we can check (if no raise), but there's no raise yet. Wait, the game state says \"Current bet: 20\" and we have \"bet 20.00\". So the bet is exactly what we have in. So we can check or raise. But the available actions include '[Call]' only if there is a bet to call. Since we are the small blind and the big blind is 20? Actually, blinds are 10/20. Typically, small blind is 10, big blind is 20. But here P0 (SB) bet 20 and P1 (BB) bet 10. That's swapped. Maybe it's a mistake? Let's read carefully: \"P0 (SB): 890.00 chips | bet 20.00 | active\" and \"P1 (Dealer/BB): 1080.00 chips | bet 10.00 | active\". So P0 is SB but bet 20, P1 is BB but bet 10. That's inconsistent. Perhaps the labels are just positional: P0 is small blind because they are first to act preflop? In heads-up, the button/small blind acts first preflop. So P0 might be the button/small blind, and P1 is the big blind. But then the bet amounts: small blind should be 10, big blind 20. Here it's reversed. Could be a bug in the game state? I'll assume the current bet is 20, and we have already put in 20, so we can check or raise. Since we have a pair, we should raise. But we need to choose an action. The allowed actions are '[Check]', '[Call]', '[Fold]', '[Bet N]', '[Raise N]'. Since the current bet is 20 and we have exactly 20 in, we can check (which means we don't increase the bet) or we can raise. But raising would be to a higher amount. Typically, the minimum raise is to 40 (since the big blind is 20). But we can also bet? Actually, if the bet is already 20, we can't bet, we can only raise. So '[Raise N]' where N is the amount we raise by. Or we can '[Check]'. Given pocket fours, I think raising is good to build the pot and take initiative. I'll raise to 60 (raising by 40). So '[Raise 40]'? Wait, the syntax: '[Raise N]' means raise by N chips. So if current bet is 20, and we want to make it 60 total, we raise by 40. So '[Raise 40]'. But let's consider: opponent has been aggressive, might re-raise. Pocket fours is not great against aggression. But folding is too weak. I'll raise."
+  },
+  {
+   "step": 8,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 4/10 bet-round 0",
+   "obs": "[Player 1] [Bet 60]\n[GAME] Player 1 bets to 60.\n[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 180 chips (all others folded).\n[GAME] ===== Hand 4 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 890.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1080.00 chips | bet 10.00 | active\nYour hole: 5\u2660, 4\u2660\n==============================================\n[Player 0] [Raise 40]\n[GAME] Player 0 raises to 60.\n[GAME] ===== Hand 4 / 10 - Pre\u2011flop =====\nPot: 70 | Current bet: 60\nVisible board: []\nP0 (SB): 850.00 chips | bet 60.00 | active\nP1 (Dealer/BB): 1080.00 chips | bet 10.00 | active\nYour hole: 5\u2660, 4\u2660\n==============================================",
+   "action": "[Call]",
+   "reasoning": "**Clarifying poker actions**\n\nI need to be precise in my approach here. The labels for positions are a bit confusing\u2014like what\u2019s the role of P1 as both dealer and big blind? With a raise to 60 and needing to put in 50 into a 70 pot, the odds are about 29.4%. Calling with suited connectors could be a good move, but I need to evaluate the position. It seems P1 is indeed in a dealer position after the flop; calling with 54 suited against a smaller raise seems reasonable."
+  },
+  {
+   "step": 9,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 4/10 bet-round 1",
+   "obs": "[Player 0] [Raise 40]\n[GAME] Player 0 raises to 60.\n[Player 1] [Call]\n[GAME] Player 1 calls 50.\n[GAME] ===== Hand 4 / 10 - Flop =====\nPot: 120 | Current bet: 0\nVisible board: [K\u2660, 7\u2665, Q\u2665]\nP0 (SB): 850.00 chips | bet 0.00 | active\nP1 (Dealer/BB): 1030.00 chips | bet 0.00 | active\nYour hole: 4\u2666, 4\u2665\n==============================================",
+   "action": "[Check]",
+   "reasoning": "We are heads-up, P0 (SB) with 44 on a Ks7hQh flop. Pot is 120, no bet yet. We have a low pair, board is two overcards and a flush draw. We need to decide whether to bet or check. We raised pre-flop, so we have initiative. However, this flop hits our opponent's calling range quite well: Kx, Qx, hearts, straight draws. Our pair is weak and unlikely to improve. We could continuation bet to represent a strong hand and try to fold out better hands like 55-99, but many of those might call. Alternatively, we could check and give up, or check with the intention of folding to a bet. Given stacks, we still have plenty behind. It's early in the match. I think a check is prudent here. If opponent bets, we can fold. No need to get involved with a weak hand on a dangerous board."
+  },
+  {
+   "step": 10,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 4/10 bet-round 1",
+   "obs": "[Player 1] [Call]\n[GAME] Player 1 calls 50.\n[Player 0] [Check]\n[GAME] Player 0 checks.\n[GAME] ===== Hand 4 / 10 - Flop =====\nPot: 120 | Current bet: 0\nVisible board: [K\u2660, 7\u2665, Q\u2665]\nP0 (SB): 850.00 chips | bet 0.00 | active\nP1 (Dealer/BB): 1030.00 chips | bet 0.00 | active\nYour hole: 5\u2660, 4\u2660\n==============================================",
+   "action": "[Check]",
+   "reasoning": "**Evaluating poker strategy**\n\nI\u2019m considering the current position in the game. We've checked P0 and are thinking of our options. I see a potential play with the spade and heart cards, but noticing my opponent's unusual limp gives me pause. Although a stab bet could make them fold underpairs or A highs, the board does hit their range. Since this match is finite, maybe keeping a check is the best move for now."
+  },
+  {
+   "step": 11,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 4/10 bet-round 2",
+   "obs": "[Player 0] [Check]\n[GAME] Player 0 checks.\n[Player 1] [Check]\n[GAME] Player 1 checks.\n[GAME] ===== Hand 4 / 10 - Turn =====\nPot: 120 | Current bet: 0\nVisible board: [K\u2660, 7\u2665, Q\u2665, 9\u2666]\nP0 (SB): 850.00 chips | bet 0.00 | active\nP1 (Dealer/BB): 1030.00 chips | bet 0.00 | active\nYour hole: 4\u2666, 4\u2665\n==============================================",
+   "action": "[Check]",
+   "reasoning": "We're on the turn with a board of K\u2660 7\u2665 Q\u2665 9\u2666. We have pocket fours. The board is relatively dry but has two broadway cards and a flush draw. Our hand is a small underpair to the board. We raised preflop and got called. Flop went check-check. Now we are first to act on the turn. The pot is 120. We have 850 chips, opponent has 1030. We need to decide whether to bet, check, or maybe even check-fold. Our hand has very little showdown value, but we might be able to bluff if we think opponent is weak. However, the board is getting coordinated, and opponent called our preflop raise. They could have a wide range, including many hands that hit this board (Kx, Qx, maybe 9x, draws). Since flop went check-check, opponent might have missed or be slowplaying. We can try to bet to represent strength, but we have no draw. If we bet and get called, we are likely behind. If we check, opponent might bet and we'd have to fold. I think checking is standard, but we might consider a small bet to take it down. However, with no equity, it's risky. Since it's early in the match, maybe we should just check and give up if opponent bets. But we are first to act, so we check. If opponent bets, we fold. So I'll check."
+  },
+  {
+   "step": 12,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 4/10 bet-round 2",
+   "obs": "[Player 1] [Check]\n[GAME] Player 1 checks.\n[Player 0] [Check]\n[GAME] Player 0 checks.\n[GAME] ===== Hand 4 / 10 - Turn =====\nPot: 120 | Current bet: 0\nVisible board: [K\u2660, 7\u2665, Q\u2665, 9\u2666]\nP0 (SB): 850.00 chips | bet 0.00 | active\nP1 (Dealer/BB): 1030.00 chips | bet 0.00 | active\nYour hole: 5\u2660, 4\u2660\n==============================================",
+   "action": "[Bet 70]",
+   "reasoning": "**Evaluating poker strategy**\n\nI\u2019m considering our position and checking P0. There's a possibility to bluff, but the board connects well with the raiser's range. The opponent has checked twice, but with a 54, I don\u2019t have much equity. I think a bet around 70 targeting A-high and low pairs could be effective. However, since the opponent raised preflop, I wonder if that indicates strength, but I need to exploit their limited hands in this tournament. So, I\u2019ll go ahead and bet 70."
+  },
+  {
+   "step": 13,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 4/10 bet-round 2",
+   "obs": "[Player 0] [Check]\n[GAME] Player 0 checks.\n[Player 1] [Bet 70]\n[GAME] Player 1 bets to 70.\n[GAME] ===== Hand 4 / 10 - Turn =====\nPot: 190 | Current bet: 70\nVisible board: [K\u2660, 7\u2665, Q\u2665, 9\u2666]\nP0 (SB): 850.00 chips | bet 0.00 | active\nP1 (Dealer/BB): 960.00 chips | bet 70.00 | active\nYour hole: 4\u2666, 4\u2665\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "We are heads-up. The board is K\u2660 7\u2665 Q\u2665 9\u2666. We have 4\u2666 4\u2665, a pair of fours. There are two overcards, a flush draw, and straight draws. Our hand is very weak on this board. The opponent bet 70 into 120, making the pot 190. We are out of position. Our pair of fours is likely beaten by any K, Q, 9, 7, or even a draw with overcards. We have no realistic chance to improve to a winner (only a 4 gives us a set, but that's unlikely and still might lose to a straight). Calling here would be bad because we'd face another bet on the river. Folding is the best option."
+  },
+  {
+   "step": 14,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 5/10 bet-round 0",
+   "obs": "[Player 1] [Bet 70]\n[GAME] Player 1 bets to 70.\n[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 190 chips (all others folded).\n[GAME] ===== Hand 5 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 840.00 chips | bet 10.00 | active\nP1 (SB): 1130.00 chips | bet 20.00 | active\nYour hole: 8\u2660, 3\u2663\n==============================================",
+   "action": "[Check]",
+   "reasoning": "**Considering betting actions**\n\nI see we need to make a decision here. The positions are a bit odd: Player 1 (P1) has already put in 20 as the small blind (SB), and the opponent in the big blind (BB) has 10, with a current bet of 20. It\u2019s interesting to consider how the opponent will act next, but the prompt says there\u2019s no additional live amount to check. In a prior hand, P1 raised to 40, which was legal, so checking is a likely option. However, with 83 offsuit, it's weak, so checking seems best."
+  },
+  {
+   "step": 15,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 5/10 bet-round 0",
+   "obs": "[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 190 chips (all others folded).\n[GAME] ===== Hand 5 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 840.00 chips | bet 10.00 | active\nP1 (SB): 1130.00 chips | bet 20.00 | active\nYour hole: 9\u2666, Q\u2666\n==============================================\n[Player 1] [Check]\n[GAME] Player 1 checks.\n[GAME] ===== Hand 5 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 840.00 chips | bet 10.00 | active\nP1 (SB): 1130.00 chips | bet 20.00 | active\nYour hole: 9\u2666, Q\u2666\n==============================================",
+   "action": "[Raise 40]",
+   "reasoning": "We are in the big blind with Q9s. The SB limped (checked). We can check or raise. Q9s is a decent hand to raise here for value and to take control. We have position postflop. Let's raise to 60 (40 more). That seems standard."
+  },
+  {
+   "step": 16,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 5/10 bet-round 0",
+   "obs": "[Player 1] [Check]\n[GAME] Player 1 checks.\n[Player 0] [Raise 40]\n[GAME] Player 0 raises to 60.\n[GAME] ===== Hand 5 / 10 - Pre\u2011flop =====\nPot: 80 | Current bet: 60\nVisible board: []\nP0 (Dealer/BB): 790.00 chips | bet 60.00 | active\nP1 (SB): 1130.00 chips | bet 20.00 | active\nYour hole: 8\u2660, 3\u2663\n==============================================",
+   "action": "[Fold]",
+   "reasoning": ""
+  },
+  {
+   "step": 17,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 6/10 bet-round 0",
+   "obs": "[Player 0] [Raise 40]\n[GAME] Player 0 raises to 60.\n[Player 1] [Fold]\n[GAME] Player 1 folds.\n[GAME] Player 0 wins the pot of 80 chips (all others folded).\n[GAME] ===== Hand 6 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 850.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1120.00 chips | bet 10.00 | active\nYour hole: 3\u2663, 4\u2663\n==============================================",
+   "action": "[Call]",
+   "reasoning": "We are in the small blind with 3\u26634\u2663, a weak hand. The opponent is in the big blind with 1120 chips. We have 850 chips. The pot is 30, and we need to call 10 more to see the flop, or we can raise. 3\u26634\u2663 is suited, but low. Heads-up, it's playable from the small blind, but we are out of position. We can limp by calling, or raise. Given the opponent's stack, we might want to see a cheap flop with a speculative hand. Folding is too tight. Calling is standard. Raising might be an option to steal, but we have a hand that can flop well. I'll just call."
+  },
+  {
+   "step": 18,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 6/10 bet-round 0",
+   "obs": "[Player 1] [Fold]\n[GAME] Player 1 folds.\n[GAME] Player 0 wins the pot of 80 chips (all others folded).\n[GAME] ===== Hand 6 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 850.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1120.00 chips | bet 10.00 | active\nYour hole: J\u2660, 8\u2660\n==============================================\n[Player 0] [Call]\n[GAME] ===== Hand 6 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 850.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1120.00 chips | bet 10.00 | active\nYour hole: J\u2660, 8\u2660\n==============================================",
+   "action": "[Raise 40]",
+   "reasoning": "**Considering betting strategies**\n\nI'm thinking we're in a situation where we might face a limp. Can we raise to 50? If we raise N, that means we\u2019re incrementing based on prior raises\u2014like from 20 to 60. I should check the figures. Raising with J8s, increasing from 40 to 60, seems like a solid move. I\u2019ll weigh my options carefully!"
+  },
+  {
+   "step": 19,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 6/10 bet-round 0",
+   "obs": "[Player 0] [Call]\n[Player 1] [Raise 40]\n[GAME] Player 1 raises to 60.\n[GAME] ===== Hand 6 / 10 - Pre\u2011flop =====\nPot: 80 | Current bet: 60\nVisible board: []\nP0 (SB): 850.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1070.00 chips | bet 60.00 | active\nYour hole: 3\u2663, 4\u2663\n==============================================",
+   "action": "[Call]",
+   "reasoning": "We are in the small blind with 3\u26634\u2663. The pot is 80, and we need to call 40 more to see a flop. Our hand is a suited connector, which has decent playability postflop, especially in position? Actually we are out of position (SB vs BB). The opponent raised to 60 from the BB after we completed. We have 850 chips, opponent has 1070. We are getting 80:40 = 2:1 pot odds. With a suited connector, we can call and see a flop, but we must be cautious because we are out of position. However, folding is also fine given the marginal hand and position. But in heads-up, we can call with a wide range. I think calling is reasonable. Raising would be too aggressive with this hand. So I'll call."
+  },
+  {
+   "step": 20,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 6/10 bet-round 1",
+   "obs": "[Player 0] [Call]\n[GAME] Player 0 calls 40.\n[GAME] ===== Hand 6 / 10 - Flop =====\nPot: 120 | Current bet: 0\nVisible board: [10\u2663, K\u2663, 3\u2666]\nP0 (SB): 810.00 chips | bet 0.00 | active\nP1 (Dealer/BB): 1070.00 chips | bet 0.00 | active\nYour hole: 3\u2663, 4\u2663\n==============================================",
+   "action": "[Check]",
+   "reasoning": "We have bottom pair and a flush draw (4\u26633\u2663 on 10\u2663K\u26633\u2666). We have 5 outs to two pair/trips (three 4s, two 3s) and 9 outs to a flush, but some of those might be dirty if opponent has a higher flush draw. We are out of position. Pot is 120, stacks are deep. We can check and see what opponent does, or bet. Betting might build the pot with our draw, but we're not a favorite against a king or ten. Checking is standard to control pot and see a free card or call a reasonable bet. Let's check."
+  },
+  {
+   "step": 21,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 6/10 bet-round 1",
+   "obs": "[Player 1] [Raise 40]\n[GAME] Player 1 raises to 60.\n[Player 0] [Call]\n[GAME] Player 0 calls 40.\n[Player 0] [Check]\n[GAME] Player 0 checks.\n[GAME] ===== Hand 6 / 10 - Flop =====\nPot: 120 | Current bet: 0\nVisible board: [10\u2663, K\u2663, 3\u2666]\nP0 (SB): 810.00 chips | bet 0.00 | active\nP1 (Dealer/BB): 1070.00 chips | bet 0.00 | active\nYour hole: J\u2660, 8\u2660\n==============================================",
+   "action": "[Bet 40]",
+   "reasoning": "**Analyzing poker strategy**\n\nI'm focusing on the action here. I've got a flop with a J8, and I need to consider my straight possibilities. The board shows KT3, and if I hit a Q, it gives me the straight with 8-J. However, I still need a 9 for a full straight, which I\u2019m lacking. With J on the board, the turn could give me a potential straight. I should consider a small bet of 40 since my opponent tends to fold to aggression."
+  },
+  {
+   "step": 22,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 6/10 bet-round 1",
+   "obs": "[Player 0] [Check]\n[GAME] Player 0 checks.\n[Player 1] [Bet 40]\n[GAME] Player 1 bets to 40.\n[GAME] ===== Hand 6 / 10 - Flop =====\nPot: 160 | Current bet: 40\nVisible board: [10\u2663, K\u2663, 3\u2666]\nP0 (SB): 810.00 chips | bet 0.00 | active\nP1 (Dealer/BB): 1030.00 chips | bet 40.00 | active\nYour hole: 3\u2663, 4\u2663\n==============================================",
+   "action": "[Call]",
+   "reasoning": "We have bottom pair and a flush draw (4\u26633\u2663 on T\u2663K\u26633\u2666 board). We have 5 outs to two pair/trips (three 3s, two 4s) plus 9 clubs for a flush (but 3\u2663 already counted, so 8 flush outs). Total 13 outs, roughly 26% equity by the turn. Pot odds: 40 to win 160+40=200, so 40/200 = 20%. We have direct odds to call. Also we are in position? Actually P0 is SB, so we are first to act on flop, we checked, P1 bet. We are out of position but we can call profitably. We could also consider raising as a semi-bluff, but with bottom pair and a draw, call is fine. We'll call."
+  },
+  {
+   "step": 23,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 6/10 bet-round 2",
+   "obs": "[Player 0] [Call]\n[GAME] Player 0 calls 40.\n[GAME] ===== Hand 6 / 10 - Turn =====\nPot: 200 | Current bet: 0\nVisible board: [10\u2663, K\u2663, 3\u2666, 4\u2665]\nP0 (SB): 770.00 chips | bet 0.00 | active\nP1 (Dealer/BB): 1030.00 chips | bet 0.00 | active\nYour hole: 3\u2663, 4\u2663\n==============================================",
+   "action": "[Bet 120]",
+   "reasoning": "We hit two pair on the turn: 3\u2663 4\u2663 with board 10\u2663 K\u2663 3\u2666 4\u2665. We have bottom two pair, but there's a flush draw (clubs) and straight draws possible. Opponent bet small on the flop (40 into 120), which could be a continuation bet with a wide range, including top pair, middle pair, draws, or even air. We just called. Now we improved. We should consider betting for value and protection. The pot is 200. Opponent has 1030, we have 770. We can bet around half to two-thirds pot to charge draws and get value from worse hands like top pair or second pair. Let's bet 120."
+  },
+  {
+   "step": 24,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 6/10 bet-round 2",
+   "obs": "[Player 1] [Bet 40]\n[GAME] Player 1 bets to 40.\n[Player 0] [Call]\n[GAME] Player 0 calls 40.\n[Player 0] [Bet 120]\n[GAME] Player 0 bets to 120.\n[GAME] ===== Hand 6 / 10 - Turn =====\nPot: 320 | Current bet: 120\nVisible board: [10\u2663, K\u2663, 3\u2666, 4\u2665]\nP0 (SB): 650.00 chips | bet 120.00 | active\nP1 (Dealer/BB): 1030.00 chips | bet 0.00 | active\nYour hole: J\u2660, 8\u2660\n==============================================",
+   "action": "[Fold]",
+   "reasoning": ""
+  },
+  {
+   "step": 25,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 7/10 bet-round 0",
+   "obs": "[Player 1] [Fold]\n[GAME] Player 1 folds.\n[GAME] Player 0 wins the pot of 320 chips (all others folded).\n[GAME] ===== Hand 7 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 960.00 chips | bet 10.00 | active\nP1 (SB): 1010.00 chips | bet 20.00 | active\nYour hole: A\u2666, 3\u2663\n==============================================",
+   "action": "[Raise 40]",
+   "reasoning": "**Analyzing poker strategy**\n\nIt looks like I'm thinking about a poker scenario where I have SB with 20 and BB with 10, which feels a bit reversed. I should definitely consider checking or raising here. With A3o heads-up, raising to 60 seems reasonable based on my sizing history, especially against an opponent who's aggressive compared to limp. So, in this case, I think raising is the right move!"
+  },
+  {
+   "step": 26,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 7/10 bet-round 0",
+   "obs": "[Player 0] [Bet 120]\n[GAME] Player 0 bets to 120.\n[Player 1] [Fold]\n[GAME] Player 1 folds.\n[GAME] Player 0 wins the pot of 320 chips (all others folded).\n[GAME] ===== Hand 7 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 960.00 chips | bet 10.00 | active\nP1 (SB): 1010.00 chips | bet 20.00 | active\nYour hole: 7\u2666, J\u2665\n==============================================\n[Player 1] [Raise 40]\n[GAME] Player 1 raises to 60.\n[GAME] ===== Hand 7 / 10 - Pre\u2011flop =====\nPot: 70 | Current bet: 60\nVisible board: []\nP0 (Dealer/BB): 960.00 chips | bet 10.00 | active\nP1 (SB): 970.00 chips | bet 60.00 | active\nYour hole: 7\u2666, J\u2665\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "We are heads-up, Hand 7/10. We are Dealer/BB with 960 chips, opponent SB with 970 after betting 60. Our hole: J7o. We need to call 50 more into a pot of 70. That's not great odds with a weak offsuit hand. We can fold, but we might also consider 3-betting as a bluff occasionally. However, J7o is very weak, and folding is standard. We have been playing tight, but we can afford to fold here. Let's fold."
+  },
+  {
+   "step": 27,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 8/10 bet-round 0",
+   "obs": "[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 70 chips (all others folded).\n[GAME] ===== Hand 8 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 940.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1030.00 chips | bet 10.00 | active\nYour hole: Q\u2665, 6\u2665\n==============================================",
+   "action": "[Check]",
+   "reasoning": "We are in the small blind with Q\u26656\u2665. It's a weak hand, but suited. We have 940 chips, opponent has 1030. The pot is 30, current bet is 20. We need to call 10 to see a flop. Since we're in the small blind, we can call or raise. Q6s is not a strong hand, but it's playable in position? Wait, we are the small blind, so we are out of position postflop. The big blind is the dealer. So we are first to act on all postflop streets. Q6s is a bit too weak to raise, and calling 10 into a pot of 30 is getting 3:1 odds. But we are out of position with a weak hand. Folding is reasonable. However, we've been folding a lot, and we might want to see a flop occasionally to not be too predictable. But Q6s is still a fold from the SB in heads-up? Actually, in heads-up, the small blind is the button? No, here it says P0 is SB and P1 is Dealer/BB. So the dealer is the big blind. That means we are in the small blind and act first preflop? Wait, in heads-up, the dealer is the small blind? Typically in heads-up, the dealer is the small blind and acts first preflop, then acts last postflop. But here it says P0 (SB) and P1 (Dealer/BB). That's unusual. Let's read the game state: \"P0 (SB): 940.00 chips | bet 20.00 | active\" and \"P1 (Dealer/BB): 1030.00 chips | bet 10.00 | active\". So the dealer is the big blind. That means the small blind is not the dealer. In standard heads-up, the dealer is the small blind. But here it's reversed. So the small blind acts first preflop? The action is on us, P0 (SB), and we have bet 20 (the small blind), and the current bet is 20. So we need to either call the 20? Actually, the current bet is 20, and we have already put in 20. So we have no additional bet to call? Wait, the blinds are 10/20. P0 is SB and bet 20? That would be the big blind amount. And P1 is BB and bet 10? That's inconsistent. Let's check: \"Pot: 30 | Current bet: 20\". Blinds are 10/20. Normally, small blind is 10, big blind is 20. But here P0 (SB) bet 20 and P1 (BB) bet 10. That's reversed. So maybe the labels are swapped? Actually, it says \"P0 (SB): 940.00 chips | bet 20.00 | active\" and \"P1 (Dealer/BB): 1030.00 chips | bet 10.00\". So the small blind put in 20, the big blind put in 10. That means the blinds are reversed: the small blind is 20 and big blind is 10? That's odd. But the pot is 30, so 20+10=30. So the current bet is 20. Since we are the small blind and we already have 20 in, the action is on us? But we have already matched the current bet? Actually, the current bet is 20, and we have bet 20. So we are not facing a raise. The big blind has only put in 10, so they have not completed the blind? Wait, in preflop, the big blind is the last to act and has the option to raise if the small blind just calls. But here, the small blind has already put in 20, which is more than the big blind's 10. So the big blind is short. That means the small blind has actually raised? No, the blinds are posted. Typically, the small blind posts the small blind amount, and the big blind posts the big blind amount. Here, the amounts are swapped. So maybe it's a mistake in the labeling? Let's assume the game state is correct: we are P0, we have 940 chips, we have bet 20, and the current bet is 20. The big blind has bet 10. So the action is on us? But we have already bet 20, which is the current bet. So we don't need to call anything. The big blind is the one who needs to act? Actually, in standard preflop action, after blinds are posted, the player to the left of the big blind acts first. In heads-up, the dealer (small blind) acts first preflop. But here, the dealer is the big blind. So the small blind is not the dealer. So the small blind is first to act? If the small blind is first to act, then they have already posted 20, and the big blind posted 10. The small blind would then have the option to call the big blind's 10? That doesn't make sense. The big blind should be the larger blind. So I think the labels might be reversed: P0 is actually the big blind? But it says P0 (SB). Let's look at previous hands. In Hand 7: P0 (Dealer/BB): 960 chips, bet 10; P1 (SB): 1010 chips, bet 20. That was normal: dealer is BB with 10? No, dealer was BB with bet 10, and SB bet 20. That's reversed from standard (dealer is usually SB). In Hand 6: P0 (SB): 850, bet 20; P1 (Dealer/BB): 1120, bet 10. Again, SB bet 20, BB bet 10. So consistently, the small blind is posting 20 and the big blind is posting 10. That means the blinds are 20/10 instead of 10/20? But the game says blinds are 10/20. So maybe the small blind is 10 and big blind is 20, but the labels are swapped? Actually, in Hand 6, P0 is SB with bet 20, P1 is BB with bet 10. So the small blind is putting in 20, which is the big blind amount. So it's mislabeled. Perhaps the positions are: the player who posts the small blind is the one who acts first preflop? In standard heads-up, the dealer/button posts the small blind and acts first preflop, then acts last postflop. Here, they have the dealer posting the big blind? That would be unusual. Let's just go with the flow: we are P0, we have Q6s, we are in the small blind (according to the label), we have already put in 20, and the current bet is 20. The big blind has put in 10. So the action is on us? But we have already matched the bet. Actually, the current bet is 20, and we have bet 20. So there is no outstanding bet for us to call. The big blind has only put in 10, so they are short 10. So the action should be on the big blind to either call the remaining 10 or raise. But the game says we are active. That implies it's our turn. So maybe the preflop action is: small blind posts 20, big blind posts 10, then the small blind acts first? That would mean the small blind can check (since they have already posted the full bet) or raise. In some structures, if the small blind is larger than the big blind, the small blind is considered the bring-in, and the big blind has the option to raise. But here it says current bet is 20, and we are active. So we can check or raise. Since we have Q6s, a weak hand, and we are out of position, checking seems fine. But we could also raise as a bluff. However, with only 3 hands left after this, we need to be cautious. We have 940 chips, opponent 1030. We are slightly behind. We don't need to force anything. Q6s is not a hand to go crazy with. I'll check and see a flop cheaply. But wait, if we check, the big blind might raise? Actually, if we check, that means we are not raising, so the big blind then has the option to check or raise. Since the big blind has only put in 10, they would need to put in 10 more to call, or they can raise. So checking gives them a free chance to raise. Alternatively, we could raise to put pressure on. But Q6s is too weak. I think folding is too nitty given the odds. Let's just call? But we don't need to call anything; we can check. So the action is either check or raise. I'll check, and if the big blind raises, we can fold. So [Check] is the action. But the available actions are [Check], [Call], [Fold], [Bet N], [Raise N]. Since no bet is live? Current bet is 20, and we have bet 20, so there is no bet to call. So we can check. [Check] means we are not increasing the bet. So I'll check."
+  },
+  {
+   "step": 28,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 8/10 bet-round 0",
+   "obs": "[Player 1] [Raise 40]\n[GAME] Player 1 raises to 60.\n[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 70 chips (all others folded).\n[GAME] ===== Hand 8 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 940.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1030.00 chips | bet 10.00 | active\nYour hole: A\u2660, 7\u2663\n==============================================\n[Player 0] [Check]\n[GAME] Player 0 checks.\n[GAME] ===== Hand 8 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 940.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1030.00 chips | bet 10.00 | active\nYour hole: A\u2660, 7\u2663\n==============================================",
+   "action": "[Raise 50]",
+   "reasoning": "**Figuring out the raise**\n\nI\u2019m trying to understand the raise situation here. If we have a limp followed by a raise, what does that mean? The raise amount should be interpreted, right? Earlier, the current was 20, and our bet was 10, so now we might consider raising to 50 or even 70. My thought is to choose 50. I want to isolate with A7o and see if that will work out. So, I\u2019ll raise to 50!"
+  },
+  {
+   "step": 29,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 8/10 bet-round 0",
+   "obs": "[Player 0] [Check]\n[GAME] Player 0 checks.\n[Player 1] [Raise 50]\n[GAME] Player 1 raises to 70.\n[GAME] ===== Hand 8 / 10 - Pre\u2011flop =====\nPot: 90 | Current bet: 70\nVisible board: []\nP0 (SB): 940.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 970.00 chips | bet 70.00 | active\nYour hole: Q\u2665, 6\u2665\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "We are heads-up, blinds 10/20. Player 1 (Dealer/BB) raised to 70 from his BB after we completed the SB. We hold Q\u26656\u2665. This is a marginal hand, but suited and connected. However, we are out of position (SB) and facing a raise. The pot is 90, we need to call 50 more. We have 940 chips. Q6s is not strong enough to call a raise out of position, especially against a player who has been aggressive. We can fold and preserve chips for better spots.\n\nAction: [Fold]"
+  },
+  {
+   "step": 30,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 9/10 bet-round 0",
+   "obs": "[Player 1] [Raise 50]\n[GAME] Player 1 raises to 70.\n[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 90 chips (all others folded).\n[GAME] ===== Hand 9 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 930.00 chips | bet 10.00 | active\nP1 (SB): 1040.00 chips | bet 20.00 | active\nYour hole: K\u2663, 8\u2663\n==============================================",
+   "action": "[Raise 40]",
+   "reasoning": "**Evaluating poker strategy**\n\nI think I need to take a precise action here. The situation seems a bit odd with SB at 20, BB at 10, and the current bet also at 20. I could either check or raise. K8s heads up suggests a raise. Since my opponent folds often, it might make sense to raise to 60 with a token raise of 40. Just need to keep everything clear and focused on the best play to make!"
+  },
+  {
+   "step": 31,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 9/10 bet-round 0",
+   "obs": "[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 90 chips (all others folded).\n[GAME] ===== Hand 9 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (Dealer/BB): 930.00 chips | bet 10.00 | active\nP1 (SB): 1040.00 chips | bet 20.00 | active\nYour hole: 8\u2666, 5\u2663\n==============================================\n[Player 1] [Raise 40]\n[GAME] Player 1 raises to 60.\n[GAME] ===== Hand 9 / 10 - Pre\u2011flop =====\nPot: 70 | Current bet: 60\nVisible board: []\nP0 (Dealer/BB): 930.00 chips | bet 10.00 | active\nP1 (SB): 1000.00 chips | bet 60.00 | active\nYour hole: 8\u2666, 5\u2663\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "We are in Hand 9 of 10, stacks are P0: 930, P1: 1000. Blinds 10/20. P1 raised to 60 from SB. We have 8\u26665\u2663 in the BB. This is a weak hand, not worth calling a raise, especially out of position. We should fold."
+  },
+  {
+   "step": 32,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 10/10 bet-round 0",
+   "obs": "[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 70 chips (all others folded).\n[GAME] ===== Hand 10 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 910.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1060.00 chips | bet 10.00 | active\nYour hole: 9\u2666, 7\u2660\n==============================================",
+   "action": "[Check]",
+   "reasoning": "We're on the final hand. We're in the small blind with 9d7s. It's a marginal hand, but we can consider limping or raising. The opponent has been aggressive, raising often from the button. We have 910 chips, they have 1060. We need to make a decision. Given it's the last hand and we're slightly behind, we might want to see a flop cheaply or try to steal. But 97o is weak. Let's just fold or call? Actually, we can check (call the 10 to complete) and see a flop. But the action says we're SB with bet 20, meaning we already posted 20. The current bet is 20, so we can check or raise. Wait, the state says: \"P0 (SB): 910.00 chips | bet 20.00 | active\" and \"Current bet: 20\". So we have already put in 20, and the BB has 10. The action is on us? Actually, the SB acts first preflop after blinds. So we can either call (but we already have 20, so we'd need to raise to increase the bet) or check (which means we just call the big blind? No, in standard heads-up, SB is dealer? Wait, the game says: P0 is SB, P1 is Dealer/BB. So P0 is small blind and acts first preflop. The current bet is 20, which is the big blind. The SB has already posted 20? That would be the small blind? No, blinds: 10/20. SB posts 10, BB posts 20. But the state says: \"P0 (SB): 910.00 chips | bet 20.00 | active\" and \"P1 (Dealer/BB): 1060.00 chips | bet 10.00\". That seems reversed: SB should have bet 10, BB 20. But maybe the game has the dealer as SB? Actually, in heads-up, the dealer is the small blind. So P1 is Dealer/BB? That's contradictory. The game info says: \"P0 (Dealer/BB)\" in some hands, but now it's \"P0 (SB)\" and \"P1 (Dealer/BB)\". So P0 is SB, P1 is both dealer and BB? That's weird. In heads-up, the dealer is the small blind. So if P1 is Dealer/BB, that's inconsistent. Let's look at previous hands: Hand 1: P0 (Dealer/BB), P1 (SB). Hand 2: P0 (SB), P1 (Dealer/BB). So they alternate. So in this hand, P0 is SB, P1 is Dealer/BB. That means P1 is the dealer and also the big blind? In heads-up, the dealer is the small blind. So this is a mistake in the game's labeling? But we'll go with the state: P0 has bet 20, P1 has bet 10. The pot is 30. Current bet is 20. So it seems the blinds are 10/20, but P0 (SB) has put in 20? That would mean we posted a big blind? Actually, maybe the \"bet\" amount is the total amount they've put in this round. Since we're SB, we should have posted 10, but it says bet 20. That suggests the game might have mislabeled positions, or the SB is actually 20? No, blinds are 10/20. So SB is 10, BB is 20. But here P0 has 20, P1 has 10. So it's like we're the BB and they're the SB. But the label says P0 (SB). Could be a display bug. Regardless, the action is on us, and the current bet is 20. We can check (meaning we match the 20? But we already have 20 in, so checking would mean we don't raise, and the betting round ends if P1 checks? Actually, preflop, the SB acts first. If the SB has already posted 10, the BB posted 20. Then the SB can fold, call (put in 10 more to match 20), or raise. Here, P0 has bet 20, meaning they've already put in 20. That suggests they've already called the BB? Or maybe the game state is after some action? The hand just started, so it's preflop. The sequence: Hand starts, blinds posted. P0 is SB, so posts 10. P1 is BB, posts 20. Then action on P0. But the state shows P0 bet 20, P1 bet 10. That's backwards. Possibly the game has the positions reversed: P0 is actually BB? But the label says SB. Let's not overthink; we need to output an action. The available actions: '[Check]' - when no bet is live. But current bet is 20, so there is a bet live. So we cannot check. We can '[Call]' - match the current bet. But we already have 20 in, so calling would mean we don't put more? Actually, if current bet is 20 and we have 20 in, we have already called. So we cannot call again. We can '[Fold]', '[Bet N]', or '[Raise N]'. But to bet or raise, we need to increase the bet. Since the current bet is 20, a bet would be opening? But there's already a bet of 20, so we'd have to raise. So we can raise. Alternatively, if the game considers that we haven't acted yet, we might need to complete the blind. But the state says we've bet 20, which is the BB amount. That implies we've already completed. So maybe the action is actually on P1? Let's read carefully: \"P0 (SB): 910.00 chips | bet 20.00 | active\" - the \"active\" means it's our turn. So we must act. But we've already bet 20, which equals the current bet. So we can only check? But the rules say '[Check]' when no bet is live. Here bet is live (20). So we can't check. This is confusing. In standard poker, if you've already matched the current bet, you can check if no one has raised behind you. But preflop, the SB acts first, and they have only posted 10, so they need to either call 10 more, raise, or fold. Here, if P0 has bet 20, that means they've already called the BB? That would mean the action has passed? Maybe the game state is after P0 called, and now it's on P1? But it says P0 active. Let's look at previous hands for similar situations. Hand 5: P0 (Dealer/BB), P1 (SB) with bet 20. P1 checked. That was preflop. In that hand, P1 (SB) had bet 20, current bet 20, and P1 checked. So they used '[Check]' when they were SB and had already posted 20? That suggests the game allows the SB to check if they've already put in the BB amount? But in Hand 5, P1 was SB and had bet 20, and they checked. That means the SB posted 20? That's odd. In Hand 8: P0 (SB) bet 20, P1 (Dealer/BB) bet 10. P0 checked. So they used '[Check]' in that situation. So it seems that when the SB has bet 20 (which is the BB amount), they can check. So the game might have the SB posting 20 and the BB posting 10? That's reversed. But regardless, the action token '[Check]' was used successfully in Hand 8 when P0 was SB, bet 20, current bet 20. So in this hand, we can also '[Check]'. Then the action would go to P1, who has bet 10, and they would need to call 10 or raise. So let's do that. We have 97o, not a great hand. Checking is fine. We can see a flop cheaply. So I'll check."
+  },
+  {
+   "step": 33,
+   "pid": 1,
+   "model": "openai/gpt-5.6-sol-pro",
+   "phase": "hand 10/10 bet-round 0",
+   "obs": "[Player 1] [Raise 40]\n[GAME] Player 1 raises to 60.\n[Player 0] [Fold]\n[GAME] Player 0 folds.\n[GAME] Player 1 wins the pot of 70 chips (all others folded).\n[GAME] ===== Hand 10 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 910.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1060.00 chips | bet 10.00 | active\nYour hole: Q\u2663, 6\u2663\n==============================================\n[Player 0] [Check]\n[GAME] Player 0 checks.\n[GAME] ===== Hand 10 / 10 - Pre\u2011flop =====\nPot: 30 | Current bet: 20\nVisible board: []\nP0 (SB): 910.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1060.00 chips | bet 10.00 | active\nYour hole: Q\u2663, 6\u2663\n==============================================",
+   "action": "[Raise 50]",
+   "reasoning": "**Considering strategy for poker**\n\nI\u2019m thinking we need to take some action here. With the opponent folding too much, raising between 50 to 70 seems likely to work. Q6s is a decent hand. Okay, we want to match the final hand chip lead, so a token raise might be the way to go. If we raise to 70, that\u2019s good, but a standard raise of around 40 could also play out well, especially since they fold frequently. So, raising to 50 could be the plan."
+  },
+  {
+   "step": 34,
+   "pid": 0,
+   "model": "deepseek/deepseek-v4-pro",
+   "phase": "hand 10/10 bet-round 0",
+   "obs": "[Player 0] [Check]\n[GAME] Player 0 checks.\n[Player 1] [Raise 50]\n[GAME] Player 1 raises to 70.\n[GAME] ===== Hand 10 / 10 - Pre\u2011flop =====\nPot: 90 | Current bet: 70\nVisible board: []\nP0 (SB): 910.00 chips | bet 20.00 | active\nP1 (Dealer/BB): 1000.00 chips | bet 70.00 | active\nYour hole: 9\u2666, 7\u2660\n==============================================",
+   "action": "[Fold]",
+   "reasoning": "We are on the final hand, Hand 10 of 10. The opponent has been aggressive, frequently raising pre-flop. We have 9\u2666 7\u2660, which is a weak hand. The opponent raised to 70 from the BB after we completed the SB. We are out of position and holding a mediocre hand. Folding is the prudent choice to preserve our stack. There's no need to gamble here; we are down but not desperate. We can just fold and end the match."
+  }
+ ]
+}

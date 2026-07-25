@@ -67,12 +67,9 @@ class BlindAuctionEnv(ta.Env):
     def reset(self, num_players: int, seed: Optional[int] = None):
         """Reset the environment to its initial state."""
         # Create the underlying state for N players
-        self.state = ta.State(
-            num_players=num_players, 
-            min_players=3, 
-            max_players=15,
+        self.state = ta.FFAMultiPlayerState(
+            num_players=num_players,
             max_turns=self.conversation_rounds * num_players + num_players,
-            check_truncated=False,
             seed=seed
         )
         
@@ -107,7 +104,8 @@ class BlindAuctionEnv(ta.Env):
             "remaining_capital": {pid: self.starting_capital for pid in range(num_players)},
             "player_bids": {pid: {} for pid in range(num_players)},  # Format: {player_id: {item_id: bid_amount}}
             "auction_results": None,  # Will be populated after bidding phase
-            "conversations_completed": 0  # Track completed conversation turns
+            "conversations_completed": 0,  # Track completed conversation turns
+            "bids_completed": 0  # Track players who have taken their bidding turn
         }
         
         # Reset the state
@@ -143,29 +141,45 @@ class BlindAuctionEnv(ta.Env):
         )
         return prompt
 
+    def _num_alive(self) -> int:
+        return sum(self.state.is_player_alive(p) for p in range(self.state.num_players))
+
     def step(self, action: str) -> Tuple[bool, ta.Info]:
         """Process a player's action based on the current game phase."""
         current_pid = self.state.current_player_id
         game_state = self.state.game_state
-        
+
+        # A player eliminated for repeated invalid moves forfeits their turns;
+        # skip them so the game can never stall on a stuck seat.
+        if not self.state.is_player_alive(current_pid):
+            self.state.made_invalid_move = False
+            if (game_state["phase"] == "bidding" and game_state["auction_results"] is None
+                    and game_state["bids_completed"] >= self._num_alive()):
+                self._determine_auction_results()
+            return self.state.step()
+
         # Log the player's action
-        self.state.add_observation(from_id=current_pid, to_id=current_pid, message=action)
-        
-        # Handle action based on current phase
+        self.state.add_observation(from_id=current_pid, to_id=current_pid, message=action, observation_type=ta.ObservationType.PLAYER_ACTION)
+
+        # Handle action based on current phase. Counters only advance on valid
+        # moves — an invalid move leaves the turn with the same player (retry).
         if game_state["phase"] == "conversation":
             self._handle_conversation_action(current_pid, action)
-            
+
             # Check if we should transition to bidding phase
-            game_state["conversations_completed"] += 1
-            if game_state["conversations_completed"] >= self.conversation_rounds * self.state.num_players:
-                self._transition_to_bidding_phase()
-                
+            if not self.state.made_invalid_move:
+                game_state["conversations_completed"] += 1
+                if game_state["conversations_completed"] >= self.conversation_rounds * self.state.num_players:
+                    self._transition_to_bidding_phase()
+
         elif game_state["phase"] == "bidding":
             self._handle_bidding_action(current_pid, action)
-            
+
             # Check if all players have bid
-            if self.state.turn >= self.conversation_rounds * self.state.num_players + self.state.num_players - 1:
-                self._determine_auction_results()
+            if not self.state.made_invalid_move:
+                game_state["bids_completed"] += 1
+                if game_state["bids_completed"] >= self._num_alive():
+                    self._determine_auction_results()
                 
         # Return the step results
         return self.state.step()
@@ -176,24 +190,21 @@ class BlindAuctionEnv(ta.Env):
         broadcasts = self._parse_broadcasts(action)
         for msg in broadcasts:
             broadcast_msg = f"(Broadcast) Player {player_id} says:{msg}"
-            self.state.add_observation(from_id=player_id, to_id=-1, message=broadcast_msg)
-        
+            self.state.add_observation(from_id=player_id, to_id=-1, message=broadcast_msg, observation_type=ta.ObservationType.PLAYER_ACTION)
+
         # Process whispers
         whispers = self._parse_whispers(action)
         for target_pid_str, msg in whispers:
             try:
                 target_pid = int(target_pid_str)
                 if target_pid not in range(self.state.num_players):
-                    self.state.set_invalid_move(
-                        player_id=player_id, 
-                        reason=f"Attempted to whisper to non-existent Player {target_pid}."
-                    )
+                    self.state.set_invalid_move(reason=f"Attempted to whisper to non-existent Player {target_pid}.")
                     continue
-                
+
                 whisper_msg = f"(Private) Player {player_id} says:{msg}"
-                self.state.add_observation(from_id=player_id, to_id=target_pid, message=whisper_msg)
+                self.state.add_observation(from_id=player_id, to_id=target_pid, message=whisper_msg, observation_type=ta.ObservationType.PLAYER_ACTION)
             except ValueError:
-                self.state.set_invalid_move(player_id=player_id, reason=f"Invalid player target: {target_pid_str}")
+                self.state.set_invalid_move(reason=f"Invalid player target: {target_pid_str}")
 
     def _handle_bidding_action(self, player_id: int, action: str) -> None:
         """Process bidding phase actions: submitting bids for items."""
@@ -203,57 +214,55 @@ class BlindAuctionEnv(ta.Env):
         # Check if player made any bids
         if not bids:
             message=f"Player {player_id} submitted no bids this turn."
-            self.state.add_observation(from_id=ta.GAME_ID, to_id=-1, message=message)
+            self.state.add_observation(from_id=ta.GAME_ID, to_id=-1, message=message, observation_type=ta.ObservationType.GAME_MESSAGE)
             return
-            
-        # Process each bid
+
+        # Validate ALL bids first; record nothing if any bid is invalid, so the
+        # retry granted after an invalid move can't double-spend capital.
         total_bid_amount = 0
         valid_bids = []
-        
+
         for item_id_str, bid_amount_str in bids:
             try:
                 item_id = int(item_id_str)
                 bid_amount = int(bid_amount_str)
-                
+
                 # Validate item ID
                 if item_id not in range(self.num_items):
-                    reason=f"Bid on non-existent Item {item_id}."
-                    self.state.set_invalid_move(player_id=player_id, reason=reason)
-                    continue
-                
+                    self.state.set_invalid_move(reason=f"Bid on non-existent Item {item_id}.")
+                    return
+
                 # Validate bid amount is positive
                 if bid_amount <= 0:
-                    reason=f"Bid amount must be positive, got {bid_amount}."
-                    self.state.set_invalid_move(
-                        player_id=player_id, reason=reason)
-                    continue
-                
+                    self.state.set_invalid_move(reason=f"Bid amount must be positive, got {bid_amount}.")
+                    return
+
                 # Track total bid amount to validate against remaining capital
                 total_bid_amount += bid_amount
                 valid_bids.append((item_id, bid_amount))
-                
+
             except ValueError:
-                reason=f"Invalid bid format: [{item_id_str}:{bid_amount_str}]"
-                self.state.set_invalid_move(player_id=player_id, reason=reason)
-        
+                self.state.set_invalid_move(reason=f"Invalid bid format: [{item_id_str}:{bid_amount_str}]")
+                return
+
         # Check if total bids exceed player's capital
         if total_bid_amount > game_state["remaining_capital"][player_id]:
             reason=f"Total bid amount {total_bid_amount} exceeds your remaining capital {game_state['remaining_capital'][player_id]}."
-            self.state.set_invalid_move(player_id=player_id, reason=reason)
+            self.state.set_invalid_move(reason=reason)
             return
-            
+
         # Record valid bids
         for item_id, bid_amount in valid_bids:
             game_state["player_bids"][player_id][item_id] = bid_amount
-            
+
         # Update the player's remaining capital
         game_state["remaining_capital"][player_id] -= total_bid_amount
-        
+
         # Confirm bids were received (don't reveal specific amounts)
         bid_items = [item_id for item_id, _ in valid_bids]
         if bid_items:
             message=f"Player {player_id} submitted bids for Items: {', '.join(map(str, bid_items))}."
-            self.state.add_observation(from_id=ta.GAME_ID, to_id=player_id, message=message)
+            self.state.add_observation(from_id=ta.GAME_ID, to_id=player_id, message=message, observation_type=ta.ObservationType.GAME_MESSAGE)
 
     def _transition_to_bidding_phase(self) -> None:
         """Transition from conversation phase to bidding phase."""
@@ -262,14 +271,14 @@ class BlindAuctionEnv(ta.Env):
         
         # Announce the transition
         message=f"Conversation phase complete! Now entering the bidding phase. Each player will have one turn to submit bids."
-        self.state.add_observation(from_id=ta.GAME_ID, to_id=-1, message=message)
-        
+        self.state.add_observation(from_id=ta.GAME_ID, to_id=-1, message=message, observation_type=ta.ObservationType.GAME_MESSAGE)
+
         # Reminder of bidding format
         bidding_reminder = (
             "Bidding Format: '[Bid on Item X: amount]' - Bid the specified amount on Item X\n"
             "You have to submit all of your bids in a single turn. Highest bidder wins each item."
         )
-        self.state.add_observation(from_id=ta.GAME_ID, to_id=-1, message=bidding_reminder)
+        self.state.add_observation(from_id=ta.GAME_ID, to_id=-1, message=bidding_reminder, observation_type=ta.ObservationType.GAME_MESSAGE)
 
     def _determine_auction_results(self) -> None:
         """Determine the results of the auction and calculate the winner."""
@@ -318,15 +327,18 @@ class BlindAuctionEnv(ta.Env):
                     auction_results["player_value"][winner_pid] = 0 
                 auction_results["player_value"][winner_pid] += item_value
         
-        # Calculate profit and net worth for each player
+        # Calculate profit and net worth for each player. Bids were escrowed
+        # against capital when submitted, but only winning bids are actually
+        # paid — refund the rest so remaining capital = initial - spent.
         for pid in range(num_players):
             value = auction_results["player_value"].get(pid, 0)
             spent = auction_results["player_spent"].get(pid, 0)
-            remaining = game_state["remaining_capital"].get(pid)
-            
+            game_state["remaining_capital"][pid] = self.starting_capital - spent
+            remaining = game_state["remaining_capital"][pid]
+
             # Profit = value of items - amount spent
             auction_results["player_profit"][pid] = value - spent
-            
+
             # Net worth = remaining capital + value of items
             auction_results["player_net_worth"][pid] = remaining + value
         
@@ -402,7 +414,8 @@ class BlindAuctionEnv(ta.Env):
         self.state.add_observation(
             from_id=ta.GAME_ID,
             to_id=-1,
-            message=message
+            message=message,
+            observation_type=ta.ObservationType.GAME_MESSAGE
         )
 
     def _determine_winner(self) -> None:
@@ -420,10 +433,10 @@ class BlindAuctionEnv(ta.Env):
         # Set the winner(s)
         if len(winners) == 1:
             winner = winners[0]
-            profit = results["player_profit"][winner]
-            spent = results["player_spent"][winner]
+            profit = results["player_profit"].get(winner, 0)
+            spent = results["player_spent"].get(winner, 0)
             remaining = game_state["remaining_capital"][winner]
-            item_value = results["player_value"][winner]
+            item_value = results["player_value"].get(winner, 0)
             
             reason = (
                 f"Player {winner} won with a final net worth of {max_worth} coins! "
@@ -435,7 +448,7 @@ class BlindAuctionEnv(ta.Env):
             # For ties, provide detailed info for all winners
             details = []
             for pid in winners:
-                profit = results["player_profit"][pid]
+                profit = results["player_profit"].get(pid, 0)
                 remaining = game_state["remaining_capital"][pid]
                 details.append(
                     f"Player {pid} (Net worth: {max_worth} coins, "

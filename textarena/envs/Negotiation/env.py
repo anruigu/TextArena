@@ -63,7 +63,7 @@ class NegotiationEnv(ta.Env):
     def reset(self, num_players: int, seed: Optional[int] = None):
         """ Reset the environment to its initial state """
         # Create the underlying game state
-        self.state = ta.State(num_players=num_players, min_players=2, max_players=15, max_turns=int(num_players*self.turn_multiple), seed=seed)
+        self.state = ta.FFAMultiPlayerState(num_players=num_players, max_turns=int(num_players*self.turn_multiple), seed=seed)
 
         # Initialize each player's resources to random amounts
         # and each player's private values for resources
@@ -131,7 +131,7 @@ class NegotiationEnv(ta.Env):
         current_pid = self.state.current_player_id
         # Log the raw action for debugging
         # self.state.add_log(from_id=current_pid, message=action)
-        self.state.add_observation(from_id=current_pid, to_id=current_pid, message=action)
+        self.state.add_observation(from_id=current_pid, to_id=current_pid, message=action, observation_type=ta.ObservationType.PLAYER_ACTION)
 
         # 1. Parse out all tokens in the player's action
         #    We can do each in sequence so a single "action" can contain many instructions.
@@ -188,7 +188,7 @@ class NegotiationEnv(ta.Env):
             # Note: msg_content already has a leading space.
             if msg_content.strip():
                 message = f"(Broadcast) Player {from_pid} says:{msg_content}"
-                self.state.add_observation(from_id=from_pid, to_id=-1, message=message)
+                self.state.add_observation(from_id=from_pid, to_id=-1, message=message, observation_type=ta.ObservationType.PLAYER_ACTION)
 
     def _process_private_messages(self, from_pid: int, action: str):
         """
@@ -201,18 +201,18 @@ class NegotiationEnv(ta.Env):
             try:
                 target_pid = int(target_str)
             except ValueError:
-                self.state.set_invalid_move(player_id=from_pid, reason=f"Invalid private-message target: {target_str}")
+                self.state.set_invalid_move(reason=f"Invalid private-message target: {target_str}")
                 continue
 
             if target_pid not in range(self.state.num_players):
-                self.state.set_invalid_move(player_id=from_pid, reason=f"Attempted to message a non-existent player {target_pid}.")
+                self.state.set_invalid_move(reason=f"Attempted to message a non-existent player {target_pid}.")
                 continue
 
             if msg_content:
                 message = f"(Private) Player {from_pid} says:{msg_content}"
-                self.state.add_observation(from_id=from_pid, to_id=target_pid, message=message)
+                self.state.add_observation(from_id=from_pid, to_id=target_pid, message=message, observation_type=ta.ObservationType.PLAYER_ACTION)
             else:
-                self.state.set_invalid_move(player_id=from_pid, reason="Empty private message?")
+                self.state.set_invalid_move(reason="Empty private message?")
 
     def _process_offers(self, from_pid: int, action: str):
         """
@@ -227,17 +227,17 @@ class NegotiationEnv(ta.Env):
             try:
                 target_pid = int(target_str)
             except ValueError:
-                self.state.set_invalid_move(player_id=from_pid, reason=f"Invalid offer target: {target_str}")
+                self.state.set_invalid_move(reason=f"Invalid offer target: {target_str}")
                 continue
             if target_pid not in range(self.state.num_players):
-                self.state.set_invalid_move(player_id=from_pid, reason=f"Offer made to invalid player ID {target_pid}")
+                self.state.set_invalid_move(reason=f"Offer made to invalid player ID {target_pid}")
                 continue
 
             # Split "2 Wood -> 1 Ore" using "->" as the delimiter.
             parts = re.split(r"->", offer_str)
             if len(parts) != 2:
                 reason = f"Cannot parse Offer: '{offer_str}'. Must be like '2 Wheat -> 3 Wood'."
-                self.state.set_invalid_move(player_id=from_pid, reason=reason)
+                self.state.set_invalid_move(reason=reason)
                 continue
 
             offered_str = parts[0].strip()
@@ -247,13 +247,13 @@ class NegotiationEnv(ta.Env):
             offered_dict = self._parse_resource_list(offered_str)
             requested_dict = self._parse_resource_list(requested_str)
             if offered_dict is None or requested_dict is None:
-                self.state.set_invalid_move(player_id=from_pid, reason=f"Invalid resource format in offer: '{offer_str}'")
+                self.state.set_invalid_move(reason=f"Invalid resource format in offer: '{offer_str}'")
                 continue
 
             # Check if the offering player has enough resources to cover what they are offering
             if not self._check_sufficient_resources(from_pid, offered_dict, game_state["player_resources"]):
                 reason = f"You do not hold enough resources to offer {offered_dict} to Player {target_pid}."
-                self.state.set_invalid_move(player_id=from_pid, reason=reason)
+                self.state.set_invalid_move(reason=reason)
                 continue
 
             # Create a new offer ID
@@ -268,14 +268,14 @@ class NegotiationEnv(ta.Env):
 
             # Broadcast a FYI that an offer was created (without details)
             message = f"Offer #{new_id} created: Player {from_pid} -> Player {target_pid}."
-            self.state.add_observation(from_id=ta.GAME_ID, to_id=-1, message=message)
+            self.state.add_observation(from_id=ta.GAME_ID, to_id=-1, message=message, observation_type=ta.ObservationType.GAME_MESSAGE)
             # Let target know they've received a new offer
             message = (
                 f"You have a new offer [ID #{new_id}] from Player {from_pid}: "
                 f"{self._offer_to_str(offered_dict, requested_dict)}\n"
                 f"You can [accept #{new_id}] or [deny #{new_id}] it."
             )
-            self.state.add_observation(from_id=ta.GAME_ID, to_id=target_pid, message=message)
+            self.state.add_observation(from_id=ta.GAME_ID, to_id=target_pid, message=message, observation_type=ta.ObservationType.GAME_MESSAGE)
 
     def _process_accepts_and_denies(self, current_pid: int, action: str):
         """
@@ -292,7 +292,7 @@ class NegotiationEnv(ta.Env):
             try:
                 offer_id = int(offer_id_str)
             except ValueError:
-                self.state.set_invalid_move(player_id=current_pid, reason=f"Invalid offer ID in Accept: {offer_id_str}")
+                self.state.set_invalid_move(reason=f"Invalid offer ID in Accept: {offer_id_str}")
                 continue
             self._attempt_accept_offer(current_pid, offer_id)
 
@@ -300,7 +300,7 @@ class NegotiationEnv(ta.Env):
             try:
                 offer_id = int(offer_id_str)
             except ValueError:
-                self.state.set_invalid_move(player_id=current_pid, reason=f"Invalid offer ID in Deny: {offer_id_str}")
+                self.state.set_invalid_move(reason=f"Invalid offer ID in Deny: {offer_id_str}")
                 continue
             self._deny_offer(current_pid, offer_id)
 
@@ -312,17 +312,17 @@ class NegotiationEnv(ta.Env):
         """
         game_state = self.state.game_state
         if offer_id not in game_state["pending_offers"]:
-            self.state.set_invalid_move(player_id=current_pid, reason=f"Offer #{offer_id} does not exist.")
+            self.state.set_invalid_move(reason=f"Offer #{offer_id} does not exist.")
             return
         off = game_state["pending_offers"][offer_id]
         if off["to"] != current_pid:
-            self.state.set_invalid_move(player_id=current_pid, reason=f"Offer #{offer_id} is not addressed to you.")
+            self.state.set_invalid_move(reason=f"Offer #{offer_id} is not addressed to you.")
             return
 
         # Check if from-player still has what they offered
         if not self._check_sufficient_resources(off["from"], off["offered_resources"], game_state["player_resources"]):
             # The offering player no longer has enough resources to complete the trade
-            self.state.add_observation(message=f"Offer #{offer_id} canceled because Player {off['from']} no longer has enough resources to fulfill it.")
+            self.state.add_observation(message=f"Offer #{offer_id} canceled because Player {off['from']} no longer has enough resources to fulfill it.", observation_type=ta.ObservationType.GAME_MESSAGE)
             del game_state["pending_offers"][offer_id]
             return
 
@@ -331,7 +331,7 @@ class NegotiationEnv(ta.Env):
             off["to"], off["requested_resources"], game_state["player_resources"]
         ):
             reason=f"You do not have enough resources to fulfill Offer #{offer_id}."
-            self.state.set_invalid_move(player_id=current_pid, reason=reason)
+            self.state.set_invalid_move(reason=reason)
             return
 
         # Execute the trade
@@ -342,7 +342,7 @@ class NegotiationEnv(ta.Env):
             f"Player {off['to']} ACCEPTED Offer #{offer_id} from Player {off['from']}: "
             f"{self._offer_to_str(off['offered_resources'], off['requested_resources'])}"
         )
-        self.state.add_observation(from_id=ta.GAME_ID, to_id=-1, message=message)
+        self.state.add_observation(from_id=ta.GAME_ID, to_id=-1, message=message, observation_type=ta.ObservationType.GAME_MESSAGE)
         # Remove it from pending
         del game_state["pending_offers"][offer_id]
 
@@ -350,16 +350,16 @@ class NegotiationEnv(ta.Env):
         """ Deny (remove) the specified offer, if it targets the current player """
         game_state = self.state.game_state
         if offer_id not in game_state["pending_offers"]:
-            self.state.set_invalid_move(player_id=current_pid, reason=f"Offer #{offer_id} does not exist.")
+            self.state.set_invalid_move(reason=f"Offer #{offer_id} does not exist.")
             return
 
         off = game_state["pending_offers"][offer_id]
         if off["to"] != current_pid:
-            self.state.set_invalid_move(player_id=current_pid, reason=f"Offer #{offer_id} is not addressed to you.")
+            self.state.set_invalid_move(reason=f"Offer #{offer_id} is not addressed to you.")
             return
 
         message=f"Player {current_pid} DENIED Offer #{offer_id} from Player {off['from']}."
-        self.state.add_observation(from_id=ta.GAME_ID, to_id=-1, message=message)
+        self.state.add_observation(from_id=ta.GAME_ID, to_id=-1, message=message, observation_type=ta.ObservationType.GAME_MESSAGE)
         del game_state["pending_offers"][offer_id]
 
     def _check_sufficient_resources(self, pid: int, needed: Dict[str, int],
