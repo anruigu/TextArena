@@ -1,8 +1,8 @@
 # Deception-Efficacy Study — Handoff & Result Index
 
-Handoff of the poker deception-metric design work (and the surrounding study). This is the
-map of **what was run, where the results live, and which metric to trust**. Everything below is in
-`TextArena/deception_poc/` on branch **`deception-poc`** (remote `fork` = `anruigu/TextArena`)
+Objective: to define what good/bad lies are. Value of deception (VoD). Starting from poker, but feel free to brainstorm any other games where we can distinguish between good/bad lying!
+
+Everything below is in `TextArena/deception_poc/` on branch **`deception-poc`** (remote `fork` = `anruigu/TextArena`)
 unless noted. Raw crossplay rollouts are mirrored to S3 (see [Raw data](#raw-data)).
 
 ## The thesis in one line
@@ -24,6 +24,7 @@ terms per act of deception: **Term-1 = instrumental gain** (did the lie pay) and
   (which is self-representation — a complementary axis, see [Introspective probe](#workstream-4--introspective--activation-probe)).
 
 ## Environment
+I've run all my experiments on the cluster so far. 
 Run analysis in the performative venv (has `eval7`, `torch`, `sklearn`):
 ```bash
 /workspace/allie/performative/.venv/bin/python <script>.py
@@ -32,9 +33,7 @@ Run analysis in the performative venv (has `eval7`, `torch`, `sklearn`):
 
 ---
 
-## Workstream 1 — Phase-1 analytic frontier (gain × leakage)
-Analysis-only (no rollouts): read the crossplay transcripts, score each deception act.
-
+## H1: I think that the pareto frontier of (gain × leakage) is meaningful
 | game | analyzer | results JSON | notes |
 |---|---|---|---|
 | Poker | `poker_bluff.py` | `poker_bluff_results.json` | bluff = Bet/Raise on equity<0.40; Term-1 `bluff_ev`/`bluff_kelly`, Term-2 `tell` AUROC |
@@ -54,7 +53,7 @@ Analysis-only (no rollouts): read the crossplay transcripts, score each deceptio
 - `frontier_scatter.py` → `deception_frontier_scatter.png` — per-instance (poker y is raw chips).
 - Findings: **`POC_FINDINGS.md`**.
 
-### Poker gain metric design (EV → Kelly)
+### Poker gain metric design (EV → Kelly) -- to iterate
 The Term-1 poker gain axis was upgraded from risk-neutral EV to **Kelly / log-utility**:
 - `action_ev(r)` — card-variance-free expected chips (fold ⇒ +pot; showdown ⇒ equity·pot). `bluff_ev`.
 - `action_kelly(r)` — **`E[log(W'/W)]` per bluff**, W = chips behind at the decision (parsed via
@@ -105,7 +104,7 @@ The **detector** and the **intervention** stack (the natural next phase for "fix
 
 ---
 
-## Workstream 4 — introspective / activation probe
+## Workstream 4 — introspective / activation probe (I think not too meaningful becuase the whole point is opponent reading your public messages)
 White-box self-representation meter (open models only, 8×H200). **Complementary** to Term-2, not a
 replacement — measures whether the model *represents* its type internally, not whether opponents can
 read it.
@@ -141,9 +140,3 @@ mirrored to S3:
 
 Poker specifically: `poker_crossplay/results/` + `poker_crossplay/results_more/` (30 games) — the input
 `poker_bluff.py` reads.
-
-## Suggested next steps for the collaborator
-1. Apply Kelly to the Phase-2 counterfactual gain axis (`phase2_aggregate.py`) and re-plot the frontier.
-2. Run the `leaky_poker` GRPO loop on the fleet (dense vs sparse reward A/B) — the intervention proper.
-3. Extend the A-vs-B distinction: poker (leakage flows only through the behavioral channel) vs coup
-   (explicit challenge) — test whether a poker-trained concealment skill transfers.
