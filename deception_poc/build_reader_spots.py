@@ -24,6 +24,10 @@ Two sources, combined for n:
 import json, random, re, sys
 from pathlib import Path
 import eval7
+from treys import Card as TCard, Evaluator as TEvaluator
+
+_TEVAL = TEvaluator()
+_TREYS_WORST = 7462  # treys ranks: 1 = royal flush (best) ... 7462 = worst high card
 
 random.seed(1)
 RESULT_DIRS = [Path("/workspace/allie/TextArena/poker_crossplay/results"),
@@ -74,6 +78,22 @@ def equity(hole, board, iters=400):
     return (win + 0.5 * tie) / iters
 
 
+def made_hand_strength(hole, board):
+    """treys made-hand value: absolute strength of the current 5-7 card hand (a fast bitwise
+    lookup, NOT equity). Normalized to [0,1] where 1.0 = royal flush, ~0 = worst high card.
+    Undefined pre-flop (needs board>=3 so total>=5 cards) -> None. Complements eval7 equity:
+    equity = P(win) via rollout; this = how good the made hand is RIGHT NOW."""
+    if len(hole) != 2 or len(board) < 3:
+        return None
+    try:
+        th = [TCard.new(str(c)) for c in hole]
+        tb = [TCard.new(str(c)) for c in board]
+        rank = _TEVAL.evaluate(tb, th)  # 1 (best) .. 7462 (worst)
+    except Exception:
+        return None
+    return round(1.0 - (rank - 1) / (_TREYS_WORST - 1), 4)
+
+
 def strip_hole(obs):
     """Remove the actor's private `Your hole: ...` line -> the opponent's public view."""
     return HOLE_RE.sub("", obs).strip()
@@ -106,7 +126,8 @@ def real_spots():
             pub = strip_hole(obs)
             spots.append({
                 "source": "real", "game": gid, "pid": t["pid"],
-                "obs": pub, "equity": round(eq, 4), "street": street_of(board),
+                "obs": pub, "equity": round(eq, 4),
+                "hand_strength": made_hand_strength(hole, board), "street": street_of(board),
                 "actor_action": (t.get("action", "") or "").strip()[:16],
                 "actor_aggressive": bool(AGGR_RE.search(t.get("action", "") or "")),
             })
@@ -192,7 +213,8 @@ def synth_spots(n=600, tell=0.7):
                f"It is Player {actor}'s turn to act.\n"
                "==============================================")
         spots.append({"source": "synth", "game": f"synth_{len(spots)}", "pid": actor,
-                      "obs": obs, "equity": round(eq, 4), "street": street_of(board),
+                      "obs": obs, "equity": round(eq, 4),
+                      "hand_strength": made_hand_strength(hole, board), "street": street_of(board),
                       "actor_action": None, "actor_aggressive": None})
     return spots
 
@@ -212,6 +234,19 @@ def main():
     # sanity: no hole cards leaked into the public channel
     leaked = sum(1 for s in spots if "Your hole" in s["obs"])
     print(f"hole-card leaks into public obs: {leaked} (must be 0)")
+    # compare the two hand-value notions: eval7 equity (P win) vs treys made-hand strength
+    paired = [(s["equity"], s["hand_strength"]) for s in spots if s.get("hand_strength") is not None]
+    n_hs = len(paired)
+    if n_hs >= 2:
+        import statistics
+        eqs2 = [a for a, _ in paired]
+        hss = [b for _, b in paired]
+        try:
+            r = statistics.correlation(eqs2, hss)
+        except Exception:
+            r = float("nan")
+        print(f"hand_strength (treys) present on {n_hs}/{len(spots)} spots (None pre-flop); "
+              f"corr(eval7 equity, treys made-hand) = {r:.3f}")
 
 
 if __name__ == "__main__":

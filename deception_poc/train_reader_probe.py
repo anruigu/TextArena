@@ -109,9 +109,17 @@ def main():
     print(f"[reader] binary spots: {int(binmask.sum())} (strong {int(strong.sum())}, "
           f"weak {int(weak.sum())})", file=sys.stderr, flush=True)
 
+    # treys made-hand strength: a second continuous "value" target (None pre-flop -> excluded)
+    hs_raw = np.array([s.get("hand_strength") if s.get("hand_strength") is not None else np.nan
+                       for s in spots], dtype=np.float64)
+    hs_mask = ~np.isnan(hs_raw)
+    hs = hs_raw[hs_mask]
+    print(f"[reader] made-hand-strength (treys) target on {int(hs_mask.sum())}/{len(spots)} spots",
+          file=sys.stderr, flush=True)
+
     skf = StratifiedKFold(5, shuffle=True, random_state=0)
     kf = KFold(5, shuffle=True, random_state=0)
-    act_auroc, act_r = [], []
+    act_auroc, act_r, act_r_hs = [], [], []
     for l in range(L):
         Xl = X[:, l, :].astype(np.float32)
         Xb = Xl[binmask]
@@ -125,10 +133,19 @@ def main():
         muA, sdA = Xl.mean(0), Xl.std(0) + 1e-6
         pred = cross_val_predict(Ridge(alpha=100.0), (Xl - muA) / sdA, eq, cv=kf)
         act_r.append(float(np.corrcoef(pred, eq)[0, 1]))
+        # made-hand-strength (treys) regression on the subset where it's defined
+        Xh = Xl[hs_mask]
+        muH, sdH = Xh.mean(0), Xh.std(0) + 1e-6
+        try:
+            predH = cross_val_predict(Ridge(alpha=100.0), (Xh - muH) / sdH, hs, cv=kf)
+            act_r_hs.append(float(np.corrcoef(predH, hs)[0, 1]))
+        except Exception:
+            act_r_hs.append(float("nan"))
 
     best_layer = int(np.nanargmax(act_auroc))
     auroc_best = act_auroc[best_layer]
     r_best_layer = int(np.nanargmax(act_r))
+    hs_r_best_layer = int(np.nanargmax(act_r_hs)) if np.any(~np.isnan(act_r_hs)) else 0
 
     # ---- calibration at the best layer (CV predicted probabilities) ----
     Xb = X[:, best_layer, :].astype(np.float32)[binmask]
@@ -158,6 +175,10 @@ def main():
             "best_layer": best_layer, "auroc_best": round(auroc_best, 4),
             "auroc_by_layer": [round(a, 4) for a in act_auroc],
             "equity_r_best": round(act_r[r_best_layer], 4), "equity_r_best_layer": r_best_layer,
+            "handstrength_r_best": round(act_r_hs[hs_r_best_layer], 4),
+            "handstrength_r_best_layer": hs_r_best_layer,
+            "handstrength_r_by_layer": [round(a, 4) for a in act_r_hs],
+            "n_handstrength": int(hs_mask.sum()),
         },
         "calibration_best_layer": {"brier": round(brier, 4), "ece": round(calib_ece, 4)},
         "probe_npz": str(npz_path),
@@ -172,7 +193,8 @@ def main():
     fig, (ax, ax2) = plt.subplots(1, 2, figsize=(13, 5))
     xs = list(range(L))
     ax.plot(xs, act_auroc, "-o", ms=3, color="#2a78d6", label="reader probe: AUROC(strong|public residual)")
-    ax.plot(xs, act_r, "-o", ms=3, color="#1baf7a", label="reader probe: Pearson r (equity)")
+    ax.plot(xs, act_r, "-o", ms=3, color="#1baf7a", label="reader probe: Pearson r (eval7 equity)")
+    ax.plot(xs, act_r_hs, "-o", ms=3, color="#e8912a", label="reader probe: Pearson r (treys made-hand)")
     ax.axhline(0.5, color="#bbb", lw=1)
     ax.scatter([best_layer], [auroc_best], s=140, edgecolors="#0b0b0b", facecolors="#2a78d6",
                zorder=5, label=f"best layer {best_layer}: {auroc_best:.2f}")
