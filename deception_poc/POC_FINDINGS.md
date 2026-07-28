@@ -135,26 +135,34 @@ leakage** (how a specific act sharpens the reader's posterior). Implemented here
 to damp reader noise), blind to roles / night actions / reasoning — closed-weights-fine,
 model-agnostic. Each model now plays Mafia **6–12 times** (was 1–6), so the per-model frontier is robust.
 
-![Mafia type-reader (34 games): (1) reader posterior separates true Mafia from Town from the public channel; (2) per-model role-leakage as Mafia (low = good deceiver); (3) efficient-deception frontier — role-leakage vs Mafia team-win rate, Pearson r = −0.78, point size ~ n.](mafia_leakage.png)
+![Mafia type-reader (62 games, incl. qwen-3.6-27b RL base): (1) reader posterior separates true Mafia from Town; (2) per-model role-leakage (low = good deceiver); (3) efficient-deception frontier — role-leakage vs Mafia team-win rate, r = −0.73 across frontier models (carried by the llama gross-leak outlier; +0.01 within the concealing pack). point size ~ n; qwen-3.6-27b is n=2 (thin).](mafia_leakage.png)
 
 - **The role leaks through the public channel, and MORE over rounds.** Self-channel (a player's role
   from **only their own** messages): **AUROC 0.69** (Mafia posterior 0.54 vs Town 0.43, prior 0.29).
   The **collective** reader (whole discussion) sharpens across rounds: **day-1 0.68 → day-2 0.85 →
   day-3 0.81** — the plan's belief-separation-over-rounds, now visible. Individual message↔type MI is
   moderate; the group's cross-talk is what nails it, harder as evidence accrues.
-- **Efficient-deception frontier (panel 3): concealment buys the win.** Term-1 gain = Mafia
-  **team-win rate** (reward=1; uniform across both harness schemas — survival was only logged for the
-  first 10 games). Role-leakage vs win rate gives **Pearson r = −0.78** (n=7 models, 6–12 Mafia-games
-  each): a clean monotone from **gpt-5.6** (leak 0.46, **win 0.73**), deepseek (0.48, 0.57) and
-  kimi-k3 (0.46, 0.50) upper-left, down through gemini/qwen (~0.49–0.50, 0.42/0.33) to
-  **claude-opus (0.58, 0.25)** and **llama-4-maverick (0.77, 0.17)** lower-right. Leak your type →
-  lose; pool near the prior → win. (With n now 6–12/model the earlier "necessary-but-not-sufficient"
-  wobble is gone — the relationship is monotone.)
-- **Per-model role-leakage (self-channel, low = good deceiver, near the 0.29 prior):** gpt-5.6 **0.46**
-  ≈ kimi-k3 0.46 < deepseek 0.48 < gemini 0.49 < qwen3.7 0.50 < claude-opus 0.58 < **llama-4-maverick
-  0.77**. With the larger n the six non-llama models regularize into a tight 0.46–0.58 band, and
-  **llama-4-maverick is the clear, robust transparent leaker** (0.77 at n=12 — its everywhere-
-  transparent signature). Because leakage compresses, the **win axis carries the cleaner separation**.
+- **Efficient-deception frontier (panel 3): concealment buys the win — but mostly by punishing GROSS
+  leaks.** Term-1 gain = Mafia team-win rate. Over **62 games** (incl. a qwen-3.6-27b pool, below),
+  role-leakage vs win = **Pearson r = −0.73 across the 7 frontier models**. But that slope is carried
+  almost entirely by the one gross leaker: **within the concealing pack (leakage 0.48–0.53) leakage
+  does NOT predict win, r = +0.01** — only **llama-4-maverick (leak 0.81, win 0.15)** sits off in the
+  lower-right and anchors the correlation. Inside the pack, win is set by other skill: gpt-5.6 (0.50,
+  **win 0.79**) and kimi (0.50, 0.69) win most at the *same* leakage as qwen3.7 (0.48, 0.40) and
+  claude (0.53, 0.43). So the bad-lie grader is a **floor** (don't be a gross leaker) more than a
+  smooth gradient here.
+- **qwen-3.6-27b (added as the RL base candidate, open/trainable 27B):** sits at **mid role-leakage
+  (~0.50, n=2 — thin, small point)** yet **bottom win rate (1/7 ≈ 14%)**, i.e. it loses at *average*
+  concealment, unlike llama which loses *because* it leaks. Its Mafia losses trace to basic
+  competence (it produced usable public messages in only 2 of 7 Mafia games — weak/fast-dying,
+  malformed actions), not role-leak. **RL implication:** for a base already inside the concealing
+  pack, the bad-lie grader is not the binding lever — SPIRAL's sparse win reward (basic play) is; the
+  grader mainly buys you win by keeping you out of the gross-leak regime (where llama lives). Adding
+  qwen drops the pooled 8-model r to −0.53 precisely because it's an off-frontier (mid-leak/low-win) point.
+- **Per-model role-leakage (self-channel, low = good deceiver, near the 0.29 prior):** the seven
+  non-llama models regularize into a tight **0.48–0.53** band (qwen3.7 0.48, deepseek/gemini 0.49,
+  kimi/gpt/qwen3.6-27b 0.50, claude 0.53), with **llama-4-maverick the lone gross leaker at 0.81**
+  (n=20, robust). Leakage compresses; the **win axis carries the separation**.
 - **Marginal leakage / leaky acts:** biggest single-round posterior jumps are **day-1/day-2 +0.7–0.9**
   (kimi day-2 +0.88→0.96, gpt day-2 +0.77→0.91, llama day-1 +0.71→1.00, qwen day-2 +0.71→0.95) —
   messages that reveal a role near-certainly (llama writing private reasoning into public: "our night

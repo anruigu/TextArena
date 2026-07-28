@@ -75,6 +75,16 @@ def collect():
     return recs
 
 
+def auroc(labels, scores):
+    """AUROC of scores predicting label==1; None if a class is empty."""
+    pos = [s for l, s in zip(labels, scores) if l == 1]
+    neg = [s for l, s in zip(labels, scores) if l == 0]
+    if not pos or not neg:
+        return None
+    c = sum(1.0 if p > n else 0.5 if p == n else 0.0 for p in pos for n in neg)
+    return c / (len(pos) * len(neg))
+
+
 def mean(xs):
     xs = [x for x in xs if x is not None]
     return sum(xs) / len(xs) if xs else float("nan")
@@ -98,6 +108,15 @@ def main():
         leak = of - BASELINE
         bluffs = [r for r in mr if r["bluff"]]
         stuck = [r for r in bluffs if r["next_call"] is False]
+        # lie-CONDITIONED leakage (class A): P(opp challenges | bluff) + bluff-vs-honest detectability.
+        # A "bluff" here = a bid on a face you hold ZERO of (own==0); rare, so caught_rate is sparse.
+        b_res = [r for r in bluffs if r["next_call"] is not None]
+        bluff_caught_rate = (sum(1 for r in b_res if r["next_call"]) / len(b_res)
+                             if b_res else float("nan"))
+        honest = [r for r in mr if not r["bluff"] and r["next_call"] is not None]
+        _bv = b_res + honest
+        bluff_detect_auroc = auroc([1 if r["bluff"] else 0 for r in _bv],
+                                   [1.0 if r["next_call"] else 0.0 for r in _bv])
         rewards = [v for (gm, mm), v in game_reward.items() if mm == m]
         gain = mean(rewards)
         # audit #2: CIs. gain = mean rank reward, bootstrapped over games (one reward/game);
@@ -113,6 +132,7 @@ def main():
             "n_bids": len(mr),
             "bluff_rate": len(bluffs) / len(mr) if mr else 0,
             "bluff_stick_rate": len(stuck) / len(bluffs) if bluffs else float("nan"),
+            "bluff_caught_rate": bluff_caught_rate, "bluff_detect_auroc": bluff_detect_auroc,
             "mean_own_frac": of, "leakage": leak, "leakage_ci": leak_ci,
             "gain": gain, "mean_reward": gain, "gain_ci": ci_gain,
         }

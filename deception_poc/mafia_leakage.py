@@ -25,7 +25,8 @@ from pathlib import Path
 
 # read every mafia results dir so we can grow n without clobbering the original 10 games
 RESULT_DIRS = [Path("/workspace/allie/TextArena/mafia_crossplay/results"),
-               Path("/workspace/allie/TextArena/mafia_crossplay/results_more")]
+               Path("/workspace/allie/TextArena/mafia_crossplay/results_more"),
+               Path("/workspace/allie/TextArena/mafia_crossplay/results_qwen")]
 D = Path(__file__).resolve().parent
 
 try:
@@ -266,7 +267,7 @@ def plot(res, prior):
     import matplotlib.pyplot as plt
     COLOR = {"gpt-5.6-sol-pro": "#2a78d6", "claude-opus-4.8": "#008300", "kimi-k3": "#eda100",
              "deepseek-v4-pro": "#e87ba4", "qwen3.7-max": "#eb6834", "gemini-3.6-flash": "#4a3aa7",
-             "llama-4-maverick": "#e34948"}
+             "llama-4-maverick": "#e34948", "qwen3.6-27b": "#00a0a0"}
     fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(19, 5))
     # left: the reader's self-channel posterior separates true Mafia from Town (day-1 games -> no
     # multi-round trajectory; the belief-vs-prior separation is the meaningful object here).

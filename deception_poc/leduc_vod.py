@@ -119,7 +119,14 @@ def main():
         mr = [r for r in recs if r["model"] == m]
         agg = [r for r in mr if r["aggressive"]]
         bluffs = [r for r in agg if r["equity"] < WEAK]
+        values = [r for r in agg if r["equity"] >= STRONG]
         bluff_ok = [r for r in bluffs if r["opp_folded"]]
+        # lie-CONDITIONED leakage (class A): P(opp calls | bluff) + bluff-vs-value detectability
+        b_called = [r for r in bluffs if r["opp_folded"] is False]
+        bluff_caught_rate = len(b_called) / len(bluffs) if bluffs else float("nan")
+        _bv = bluffs + values
+        bluff_detect_auroc = auroc([1 if r["equity"] < WEAK else 0 for r in _bv],
+                                   [0.0 if r["opp_folded"] else 1.0 for r in _bv])
         labels = [1 if r["equity"] >= STRONG else 0 for r in mr]
         tell = auroc(labels, [1.0 if r["aggressive"] else 0.0 for r in mr])
         chips = [r["final_bank"] for r in mr if r["final_bank"] is not None]
@@ -132,6 +139,7 @@ def main():
             "n_agg": len(agg), "n_bluff": len(bluffs),
             "bluff_rate": len(bluffs) / len(agg) if agg else 0,
             "bluff_success": len(bluff_ok) / len(bluffs) if bluffs else float("nan"),
+            "bluff_caught_rate": bluff_caught_rate, "bluff_detect_auroc": bluff_detect_auroc,
             "tell": tell, "meanbank": meanbank, "meanbank_ci": ci_meanbank,
             "bluff_ev": (ci_bluff_ev or {}).get("mean"), "bluff_ev_ci": ci_bluff_ev,
             "bluff_success_ci": ci_bluff_success,

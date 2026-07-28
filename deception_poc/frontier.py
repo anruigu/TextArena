@@ -27,8 +27,10 @@ COLOR = {"gpt-5.6-sol-pro": "#2a78d6", "claude-opus-4.8": "#008300", "kimi-k3": 
 
 # (title, file, leakage-key, gain-key, x-label, y-label, container, ci-key or None)
 PANELS = [
-    ("Poker", "poker_bluff_results.json", "tell", "bluff_ev",
+    ("Poker (EV)", "poker_bluff_results.json", "tell", "bluff_ev",
      "leakage: hand tell (AUROC)", "bluff EV, chips (de-noised) ±95%CI", "models", "bluff_ev_ci"),
+    ("Poker (Kelly)", "poker_bluff_results.json", "tell", "bluff_kelly",
+     "leakage: hand tell (AUROC)", "bluff log-growth E[log(W'/W)] ±95%CI", "models", "bluff_kelly_ci"),
     ("KuhnPoker", "kuhn_bluff_results.json", "tell", "bluff_success",
      "leakage: bet→K tell (AUROC)", "bluff fold-rate (de-noised) ±95%CI", "models", "bluff_success_ci"),
     ("LeducHoldem", "leduc_vod_results.json", "tell", "bluff_ev",
