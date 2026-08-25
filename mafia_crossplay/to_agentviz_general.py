@@ -74,7 +74,9 @@ def to_atif(game, uid):
         pid = t["pid"]
         role = t.get("role")
         phase = t.get("phase") or ""
-        head = f"Player {pid}" + (f" · {role}" if role else "") + (f" · {phase}" if phase else "")
+        mdl = short(t.get("model") or (seat_models[pid] if pid < len(seat_models) else ""))
+        head = (f"Player {pid}" + (f" · {mdl}" if mdl else "")
+                + (f" · {role}" if role else "") + (f" · {phase}" if phase else ""))
         msg = t["action"] or "(no spoken action)"
         add("agent", f"{head}\n{msg}",
             model_name=t["model"],

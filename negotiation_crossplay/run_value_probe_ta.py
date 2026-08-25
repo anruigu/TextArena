@@ -40,6 +40,7 @@ from run_crossplay import (  # noqa: E402
     IntegrativeNegotiationEnv, SYSTEM, render_obs, chat, load_env_file,
     inv_value, max_joint,
 )
+from bluff_prompts import build_seat_messages  # noqa: E402
 
 _THINK_RE = re.compile(r"<think>.*?</think>\s*", re.DOTALL | re.IGNORECASE)
 ESTIMATE_RE = re.compile(r"<estimate>\s*(\{.*?\})\s*</estimate>", re.DOTALL | re.IGNORECASE)
@@ -183,7 +184,8 @@ async def _elicit(client, model, base_hist, resource_names, target_id, temperatu
 # One game + prior/posterior probe on every seat                               #
 # --------------------------------------------------------------------------- #
 async def play_probe_game(client, env_ctor, seat_models, players, turn_multiple, seed,
-                          temperature, max_tokens, est_max_tokens, gid):
+                          temperature, max_tokens, est_max_tokens, gid,
+                          bluff_model=None, bluff_mode="off"):
     env = env_ctor(turn_multiple=turn_multiple)
     env.reset(num_players=players, seed=seed)
     gs = env.state.game_state
@@ -198,13 +200,22 @@ async def play_probe_game(client, env_ctor, seat_models, players, turn_multiple,
     init_prompt = {pid: render_obs(copy.deepcopy(env.state.observations.get(pid, [])))
                    for pid in range(players)}
 
-    histories = {pid: [{"role": "system", "content": SYSTEM}] for pid in range(players)}
+    # Per-seat leading messages: the pinned bluff seat gets BLUFF_SYSTEM (+ few-shot
+    # exemplars in system_fewshot mode); every other seat keeps the native SYSTEM, so
+    # opponents' leakage read of the bluff seat reflects only its *changed talk*.
+    def seat_lead(pid):
+        if bluff_model and seat_models[pid] == bluff_model and bluff_mode != "off":
+            msgs = build_seat_messages(bluff_mode)
+            if msgs is not None:
+                return [dict(m) for m in msgs]
+        return [{"role": "system", "content": SYSTEM}]
+
+    histories = {pid: seat_lead(pid) for pid in range(players)}
 
     # ---- PRIOR beliefs: each seat estimates each opponent, own prompt only ----
     prior = {}  # (reader, target) -> {"est":..., "scores":..., "raw":...}
     for pid in range(players):
-        base = [{"role": "system", "content": SYSTEM},
-                {"role": "user", "content": init_prompt[pid]}]
+        base = seat_lead(pid) + [{"role": "user", "content": init_prompt[pid]}]
         for t in range(players):
             if t == pid:
                 continue
@@ -330,6 +341,15 @@ async def main_async(args):
     sem = asyncio.Semaphore(args.concurrency)
 
     def seats_for(gid):
+        # When pinning, place the bluff model at seat 0 EVERY game and rotate the
+        # remaining (opponent) pool through the other seats. This guarantees the
+        # target plays every game and keeps seats/valuations identical across arms
+        # at a matching seed, so any delta is attributable to the bluff prompting.
+        if args.pin_bluff and args.bluff_model:
+            opp = [m for m in models if m != args.bluff_model] or models[:]
+            k = gid % len(opp)
+            rot = itertools.cycle(opp[k:] + opp[:k])
+            return [args.bluff_model] + [next(rot) for _ in range(args.players - 1)]
         rot = itertools.cycle(models[gid % len(models):] + models[:gid % len(models)])
         return [next(rot) for _ in range(args.players)]
 
@@ -339,7 +359,8 @@ async def main_async(args):
             try:
                 r = await play_probe_game(client, env_ctor, seat_models, args.players,
                                           args.turn_multiple, args.seed + gid, args.temperature,
-                                          args.max_tokens, args.est_max_tokens, gid)
+                                          args.max_tokens, args.est_max_tokens, gid,
+                                          bluff_model=args.bluff_model, bluff_mode=args.bluff_mode)
             except Exception as e:  # noqa: BLE001
                 print(f"game {gid} FAILED: {e!r}", file=sys.stderr, flush=True)
                 return None
@@ -366,7 +387,9 @@ async def main_async(args):
         "config": {"harness": "textarena", "players": args.players, "games": len(results),
                    "regime": args.regime, "turn_multiple": args.turn_multiple,
                    "temperature": args.temperature, "max_tokens": args.max_tokens,
-                   "est_max_tokens": args.est_max_tokens, "seed": args.seed, "models": models},
+                   "est_max_tokens": args.est_max_tokens, "seed": args.seed, "models": models,
+                   "bluff_model": args.bluff_model, "bluff_mode": args.bluff_mode,
+                   "pin_bluff": args.pin_bluff},
         "aggregate_by_reader": agg,
     }
     (out / "vprobe_summary.json").write_text(json.dumps(payload, indent=2))
@@ -386,6 +409,13 @@ def main():
     ap.add_argument("--est-max-tokens", type=int, default=2048)
     ap.add_argument("--concurrency", type=int, default=6)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--bluff-model", default="qwen/qwen3.5-9b",
+                    help="seat treated as the bluffer (gets BLUFF_SYSTEM / few-shot)")
+    ap.add_argument("--bluff-mode", choices=["off", "system", "system_fewshot"], default="off",
+                    help="off=native SYSTEM; system=bluff system prompt; "
+                         "system_fewshot=bluff system prompt + few-shot exemplars")
+    ap.add_argument("--pin-bluff", action=argparse.BooleanOptionalAction, default=True,
+                    help="pin --bluff-model into seat 0 every game (else pure rotation)")
     ap.add_argument("--env-file", default="/workspace/allie/.env")
     ap.add_argument("--game-id", type=int, default=None,
                     help="play only this single game id and exit (process-isolation mode)")

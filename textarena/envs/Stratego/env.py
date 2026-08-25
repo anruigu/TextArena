@@ -329,6 +329,7 @@ class StrategoEnv(ta.Env):
                             self.board[src_row][src_col] = None
                             self.player_pieces[player_id].remove((src_row, src_col))
                             self.player_pieces[player_id].append((dest_row, dest_col))
+                            self.player_pieces[1 - player_id].remove((dest_row, dest_col))
 
                             ## add the observation to both players separately
                             message=f"You have moved your piece from {source} to {dest}. The attacking piece was {attacking_piece['rank']} and the destination piece was {target_piece['rank']}. As miners can defuse bombs, you won the battle."

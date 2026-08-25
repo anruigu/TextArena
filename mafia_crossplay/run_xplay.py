@@ -116,6 +116,13 @@ def _diplomacy_meta(env):
         "winners_powers": list(e.winners or []),
     }
 
+def _diplomacy_start(env):
+    """Starting supply-center counts per seat, captured right after reset."""
+    e = env.engine
+    return {"start_sc": {str(pid): (len(e.powers[pw].controlled_centers) if pw in e.powers else None)
+                         for pid, pw in env.player_power_map.items()
+                         if isinstance(pid, int) and pid >= 0}}
+
 def _mafia_env(cfg):
     from textarena.envs.SecretMafia.env import SecretMafiaEnv
     return SecretMafiaEnv(discussion_rounds=cfg.get("discussion_rounds", 3))
@@ -137,7 +144,8 @@ ADAPTERS = {
     "mafia":         {"build": _mafia_env,      "players": 7, "phase": _mafia_phase,
                       "role": _mafia_role,     "meta": lambda e: {},    "env_key": "secret_mafia"},
     "diplomacy":     {"build": _diplomacy_env,  "players": 7, "phase": _diplomacy_phase,
-                      "role": _diplomacy_role, "meta": _diplomacy_meta, "env_key": "diplomacy"},
+                      "role": _diplomacy_role, "meta": _diplomacy_meta, "env_key": "diplomacy",
+                      "start": _diplomacy_start},
 }
 
 
@@ -217,6 +225,7 @@ async def play_game(client, adapter, cfg, seat_models, players, seed, gid,
     env = adapter["build"](cfg)
     env.reset(num_players=players, seed=seed + gid)
 
+    start_meta = adapter["start"](env) if adapter.get("start") else {}
     role_fn = adapter["role"]
     phase_fn = adapter["phase"]
     roles = {pid: (role_fn(env, pid) if role_fn else None) for pid in range(players)}
@@ -261,6 +270,7 @@ async def play_game(client, adapter, cfg, seat_models, players, seed, gid,
         "winners": winners, "winning_models": win_models, "win_label": win_label,
         "reason": reason,
         "meta": _safe(adapter["meta"](env)),
+        "start_meta": _safe(start_meta),
         "n_steps": steps, "timed_out": not done,
         "wall_seconds": round(time.time() - t0, 1),
         "transcript": transcript,
@@ -330,8 +340,41 @@ def summarize(args, results, models, players, out):
         "per_model": {m: {"seats_played": d["seats"], "win_rate": rate(d["wins"], d["seats"]),
                           "wins": d["wins"]} for m, d in per.items()},
     }
+    if args.env == "diplomacy":
+        summary["per_model_sc"] = _diplomacy_sc_summary(results, models, players)
     (out / "summary.json").write_text(json.dumps(summary, indent=2))
     print(json.dumps(summary, indent=2))
+
+
+def _diplomacy_sc_summary(results, models, players):
+    """Supply-center-based ranking: win-rate is null (games draw), so score by
+    final centers, center delta vs. start, and per-game SC lead."""
+    agg = {m: {"games": 0, "final": 0, "delta": 0, "leads": 0.0} for m in models}
+    for r in results:
+        final = r.get("meta", {}).get("final_sc", {}) or {}
+        start = r.get("start_meta", {}).get("start_sc", {}) or {}
+        scored = {p: final.get(str(p)) for p in range(players) if final.get(str(p)) is not None}
+        if not scored:
+            continue
+        top = max(scored.values())
+        leaders = [p for p, sc in scored.items() if sc == top]
+        for p in range(players):
+            fsc = final.get(str(p))
+            if fsc is None:
+                continue
+            m = r["seat_models"][p]
+            agg[m]["games"] += 1
+            agg[m]["final"] += fsc
+            agg[m]["delta"] += fsc - (start.get(str(p)) or 0)
+            agg[m]["leads"] += (1.0 / len(leaders)) if p in leaders else 0.0
+    rate = lambda a, b: round(a / b, 3) if b else None
+    return {m: {"games": d["games"],
+                "mean_final_sc": rate(d["final"], d["games"]),
+                "mean_sc_delta": rate(d["delta"], d["games"]),
+                "lead_rate": rate(d["leads"], d["games"])}
+            for m, d in sorted(agg.items(),
+                               key=lambda kv: (kv[1]["final"] / kv[1]["games"]) if kv[1]["games"] else -1,
+                               reverse=True)}
 
 
 def main():

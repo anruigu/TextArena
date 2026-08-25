@@ -14,7 +14,7 @@ discards. Analysis `analyze.py`, judge `judge_xp.py`.
 values (the negotiation-skill signal; not zero-sum because trades expand the
 pie). **integrative_ratio** = realized joint value / max achievable (each unit
 to its highest-valuer). Seats rotate models each game so every model plays
-every position.
+every position.s
 
 Batches (all judged with claude-sonnet-4.6):
 `xp_3p_integrative` (40), `xp_4p_integrative` (40), `xp_3p_stock` (24).

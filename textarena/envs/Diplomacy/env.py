@@ -457,37 +457,49 @@ class DiplomacyEnv(ta.Env):
         # Process communications and orders
         actions, game_state_changed = self._process_player_action(current_pid, power_name, action)
         
-        if game_state_changed: # Meaning all players have submitted orders
-            # Check if game is over
-            game_completed = self.engine.game_over
-            if game_completed:
-                self._announce_game_result()
-                done, info = self.state.step(rotate_player=False)
-                info.update({
-                    'reason': "Game Over",
-                    'detailed_reason': f"Game ended after {self.engine.turn_number} turns. The winners are {self.engine.winners}.",
-                    'winners': self.engine.winners,
-                    'winning_players': [self.power_player_map[power] for power in self.engine.winners] if self.engine.winners else [],
-                    'final_sc_count': {power: len(self.engine.powers[power].controlled_centers) for power in self.engine.powers},
-                    'turn_number': self.engine.turn_number
-                })
-                return done, info
-                
+        # Game may have ended if all players submitted orders in this step
+        # (synchronous path). Detect it before rotating to the next player.
+        if game_state_changed and self.engine.game_over:
+            return self._finish_game(current_pid, power_name, actions)
+
         # Move to next player or negotiate a new round
         # self._rotate_players()
-        
+
         done, info = self.state.step(rotate_player=True)
         # If we've completed a full round of negotiations
         if self.state.current_player_id == 0 and not game_state_changed:
             self._advance_negotiation_round()
-        
+
+        # Orders can also be resolved via _advance_negotiation_round's fallback
+        # path (when players don't all submit synchronously). That path can end
+        # the game too, so re-check game_over here or max_turns would never cap.
+        if self.engine.game_over and not self.state.done:
+            return self._finish_game(current_pid, power_name, actions)
+
         # Add detailed game state info
         info.update({
             'current_player': current_pid,
             'current_power': power_name,
             'actions': actions
         })
-        
+
+        return done, info
+
+    def _finish_game(self, current_pid: int, power_name: str, actions) -> Tuple[bool, ta.Info]:
+        """Announce the result, terminate the state, and return game-over info."""
+        self._announce_game_result()
+        done, info = self.state.step(rotate_player=False)
+        info.update({
+            'reason': "Game Over",
+            'detailed_reason': f"Game ended after {self.engine.turn_number} turns. The winners are {self.engine.winners}.",
+            'winners': self.engine.winners,
+            'winning_players': [self.power_player_map[power] for power in self.engine.winners] if self.engine.winners else [],
+            'final_sc_count': {power: len(self.engine.powers[power].controlled_centers) for power in self.engine.powers},
+            'turn_number': self.engine.turn_number,
+            'current_player': current_pid,
+            'current_power': power_name,
+            'actions': actions,
+        })
         return done, info
 
     def _process_player_action(self, player_id: int, power_name: str, action: str) -> Tuple[Dict, bool]:
@@ -624,9 +636,11 @@ class DiplomacyEnv(ta.Env):
                 message="[Final negotiation round: Please submit your orders]"
                 self.add_observation(from_id=ta.GAME_ID, to_id=-1, message=message)
         else:
-            # Force order processing if we've somehow exceeded max rounds
-            if self.pending_orders:
-                self._process_orders()
+            # Negotiation rounds are exhausted: always resolve the phase so the
+            # game advances, even if some (or all) powers submitted no orders.
+            # The engine treats missing/empty powers as civil disorder (holds),
+            # so an unresponsive player can never permanently stall the game.
+            self._process_orders()
 
 
     def _announce_game_state(self):
